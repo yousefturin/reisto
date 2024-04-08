@@ -1,20 +1,20 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect } from "react";
+import * as Font from "expo-font";
+import AuthNavigation from "./src/navigation/AuthNavigation";
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+  useEffect(() => {
+    async function loadFonts() {
+      await Font.loadAsync({
+        Montserrat: require("./assets/fonts/Montserrat-Regular.ttf"),
+        MontserratBold: require("./assets/fonts/Montserrat-Bold.ttf"),
+        TimesRoman: require("./assets/fonts/TimesRoman-Regular.ttf"),
+        lexend: require("./assets/fonts/Lexend-Regular.ttf")
+      });
+    }
+    loadFonts();
+  }, []);
+  return <AuthNavigation />
+
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
