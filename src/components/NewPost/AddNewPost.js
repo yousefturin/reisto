@@ -1,4 +1,4 @@
-import { View, Text, Dimensions, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, Dimensions, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { Divider } from 'react-native-elements';
 import SvgComponent from '../../utils/SvgComponents'
@@ -6,8 +6,7 @@ import initializeScalingUtils from '../../utils/NormalizeSize';
 const { moderateScale } = initializeScalingUtils(Dimensions);
 import { useNavigation } from "@react-navigation/native";
 
-
-const AddNewPostHeader = () => {
+const AddNewPostHeader = ({ handleSubmit, isValid }) => {
     const navigation = useNavigation();
     return (
         <>
@@ -16,15 +15,14 @@ const AddNewPostHeader = () => {
                     <SvgComponent svgKey="CloseSVG" width={moderateScale(30)} height={moderateScale(30)} />
                 </TouchableOpacity>
                 <Text style={{ color: "#fff", fontWeight: "700", fontSize: 20, marginLeft: 15 }}>New Post</Text>
-                <TouchableOpacity style={{ margin: 10 }}>
-                    <Text style={{ color: "#0E7AFE", fontWeight: "600", fontSize: 20, }}>Share</Text>
+                <TouchableOpacity style={{ margin: 10 }} onPress={handleSubmit} disabled={!isValid}>
+                    <Text style={{ color: !isValid ? "#dfdfdf" : "#0E7AFE", fontWeight: "600", fontSize: 20, }}>Share</Text>
                 </TouchableOpacity>
             </View>
             <Divider width={0.3} orientation='horizontal' color="#2b2b2b" />
         </>
     )
 }
-
 
 
 export default AddNewPostHeader
