@@ -13,7 +13,12 @@ const svgData = {
         d="M47.813 3c-26.699 0-47.813 19.114-47.813 42.188 0 9.829 3.889 19.352 10.968 26.897 1.401 5.775-0.3 11.895-4.519 16.114-1.764 1.764-0.516 4.801 1.989 4.801 8.014 0 15.74-3.141 21.483-8.676 5.68 2.025 11.689 3.051 17.892 3.051 26.773 0 48.188-19.17 48.188-42.188 0-23.030-21.429-42.188-48.188-42.188zM47.813 8.588c23.469 0 42.6 16.439 42.6 36.6s-19.131 36.6-42.6 36.6c-6.135 0-12.050-1.154-17.58-3.356-1.086-0.432-2.326-0.148-3.116 0.714-3.397 3.712-7.813 6.301-12.624 7.491 2.65-5.079 3.328-11.067 1.715-16.739-0.127-0.447-0.363-0.856-0.687-1.19-6.381-6.572-9.932-14.925-9.932-23.52 0-20.161 18.963-36.6 42.225-36.6zM31.541 39.066c-3.375 0-6.121 2.746-6.121 6.121s2.746 6.121 6.121 6.121c3.375 0 6.121-2.746 6.121-6.121s-2.746-6.121-6.121-6.121zM47.864 39.066c-3.375 0-6.121 2.746-6.121 6.121s2.746 6.121 6.121 6.121c3.375 0 6.121-2.746 6.121-6.121s-2.746-6.121-6.121-6.121zM64.459 39.066c-3.375 0-6.121 2.746-6.121 6.121s2.746 6.121 6.121 6.121c3.375 0 6.121-2.746 6.121-6.121s-2.746-6.121-6.121-6.121z" />
 </svg>
     `,
-  LikeSVG: `
+  LikeActiveSVG: `
+    <svg  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#d8253c" d="M11.4454 20.7608L3.57617 12.5663C1.35964 10.2582 1.49922 6.4736 3.87922 4.34929C6.24035 2.24181 9.82044 2.65105 11.6863 5.24171L12 5.67724L12.3137 5.24171C14.1796 2.65105 17.7596 2.24181 20.1208 4.34929C22.5008 6.4736 22.6404 10.2582 20.4238 12.5663L12.5546 20.7608C12.2483 21.0797 11.7517 21.0797 11.4454 20.7608Z" stroke="#ca2237" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+  
+    `,
+  LikeNotActiveSVG: `
     <svg  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path fill="none" d="M11.4454 20.7608L3.57617 12.5663C1.35964 10.2582 1.49922 6.4736 3.87922 4.34929C6.24035 2.24181 9.82044 2.65105 11.6863 5.24171L12 5.67724L12.3137 5.24171C14.1796 2.65105 17.7596 2.24181 20.1208 4.34929C22.5008 6.4736 22.6404 10.2582 20.4238 12.5663L12.5546 20.7608C12.2483 21.0797 11.7517 21.0797 11.4454 20.7608Z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
   
@@ -29,10 +34,14 @@ const svgData = {
     <path  fill="none" d="M22 2L2 8.66667L11.5833 12.4167M22 2L15.3333 22L11.5833 12.4167M22 2L11.5833 12.4167" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
   `,
 
-  BookmarkSVG: `
+  BookmarkNotActiveSVG: `
     <svg  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path fill="none" d="M5 22V3C5 2.44772 5.44772 2 6 2H18C18.5523 2 19 2.44772 19 3V22L12 15.8889L5 22Z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
   `,
+  BookmarkActiveSVG: `
+  <svg  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path fill="#ffffff" d="M5 22V3C5 2.44772 5.44772 2 6 2H18C18.5523 2 19 2.44772 19 3V22L12 15.8889L5 22Z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+`,
   SubmitCommentSVG: `
   <svg  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M12 21V3M12 3L5 10M12 3L19 10"  stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"
@@ -101,16 +110,75 @@ const svgData = {
         stroke-linejoin="round"></path>
 </svg>`,
   DummyImage: `
-  <svg  xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 768 768">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 768">
   <g transform="translate(-13.59 -66.639)">
-      <path  fill="#d0d0d0" class="st0" d="M13.6,66.6h767.1v1024H13.6V66.6z" />
-      <path opacity=".675" fill="#fff" d="M459.9,538.4L314.1,684.3l-68-68L67.4,794.9h649L459.9,538.4z" />
-      <circle opacity=".675" fill="#fff"  cx="203.1" cy="432.1" r="50.1" />
-      <path fill="none" d="M66.9,341.2h650v494.5h-650V341.2z" />
+    <path fill="#D0D0D0" d="M13.6,66.6h767.1v1024H13.6V66.6z"/>
+    <g>
+      <polygon opacity="0.675" fill="#FFFFFF" points="425.3,558.3 365.9,617.7 338.2,590 265.4,662.7 529.8,662.7 		"/>
+      
+        <ellipse transform="matrix(0.7071 -0.7071 0.7071 0.7071 -270.1986 377.5812)" opacity="0.675" fill="#FFFFFF" cx="320.7" cy="514.9" rx="20.4" ry="20.4"/>
+    </g>
+    <path class="st2" fill="none" d="M66.9,341.2h650v494.5h-650L66.9,341.2L66.9,341.2z"/>
   </g>
+  </svg>`,
+  MenuSVG: `
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <line x1="5" y1="7" x2="19" y2="7" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"
+        stroke-linejoin="round"></line>
+    <line x1="5" y1="12" x2="19" y2="12" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"
+        stroke-linejoin="round"></line>
+    <line x1="5" y1="17" x2="19" y2="17" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"
+        stroke-linejoin="round"></line>
+</svg>
+  `,
+  LogoutSVG: `
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 12H15" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    </path>
+    <path d="M8 7L3 12L8 17" stroke="#ffffff" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round"></path>
+    <path d="M21 3L21 21" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    </path>
+</svg>
+  `,
+  SettingSVG: `
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+        d="M10.0761 3.16311C10.136 2.50438 10.6883 2 11.3497 2H12.6503C13.3117 2 13.864 2.50438 13.9239 3.16311C13.9731 3.70392 14.3623 4.14543 14.8708 4.336C15.0015 4.38499 15.1307 4.43724 15.2582 4.49263C15.7613 4.71129 16.3531 4.66938 16.7745 4.31818C17.2953 3.8842 18.0611 3.91894 18.5404 4.39829L19.4584 5.31623C19.9154 5.77326 19.9485 6.50338 19.5347 6.99992C19.1901 7.41349 19.158 7.99745 19.3897 8.48341C19.49 8.69386 19.5816 8.90926 19.664 9.12916C19.8546 9.63767 20.2961 10.0269 20.8369 10.0761C21.4956 10.136 22 10.6883 22 11.3497V12.6503C22 13.3117 21.4956 13.864 20.8369 13.9239C20.2961 13.9731 19.8546 14.3623 19.664 14.8708C19.59 15.0682 19.5086 15.262 19.4202 15.4518C19.2053 15.913 19.2401 16.4637 19.5658 16.8546C19.962 17.33 19.9303 18.0291 19.4927 18.4667L18.4667 19.4927C18.0291 19.9303 17.33 19.962 16.8546 19.5658C16.4637 19.2401 15.913 19.2053 15.4518 19.4202C15.262 19.5086 15.0682 19.59 14.8708 19.664C14.3623 19.8546 13.9731 20.2961 13.9239 20.8369C13.864 21.4956 13.3117 22 12.6503 22H11.3497C10.6883 22 10.136 21.4956 10.0761 20.8369C10.0269 20.2961 9.63767 19.8546 9.12917 19.664C8.90927 19.5816 8.69387 19.49 8.48343 19.3897C7.99746 19.158 7.4135 19.1901 6.99992 19.5347C6.50338 19.9485 5.77325 19.9154 5.31622 19.4584L4.39829 18.5404C3.91893 18.0611 3.8842 17.2953 4.31818 16.7745C4.66939 16.3531 4.71129 15.7613 4.49263 15.2582C4.43724 15.1307 4.385 15.0016 4.336 14.8708C4.14544 14.3623 3.70392 13.9731 3.16311 13.9239C2.50438 13.864 2 13.3117 2 12.6503V11.3497C2 10.6883 2.50438 10.136 3.16311 10.0761C3.70393 10.0269 4.14544 9.63768 4.33601 9.12917C4.3936 8.9755 4.45568 8.82402 4.52209 8.67489C4.7571 8.14716 4.71804 7.52257 4.34821 7.07877C3.89722 6.53758 3.93332 5.74179 4.43145 5.24365L5.24364 4.43146C5.74178 3.93332 6.53757 3.89722 7.07876 4.34822C7.52256 4.71805 8.14715 4.7571 8.67488 4.52209C8.82401 4.45568 8.97549 4.3936 9.12916 4.33601C9.63767 4.14544 10.0269 3.70393 10.0761 3.16311Z"
+        stroke="#ffffff" fill="none"  stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+    <path
+        d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
+        stroke="#ffffff"  fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
 </svg>`,
-
-
+  ActivitySVG: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 12H6L9 21L16 3L18 12H21" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </svg>`,
+  CloseCirclerSVG: `
+      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="10"  fill="#656565" stroke-width="1.5" stroke-linecap="round"
+        stroke-linejoin="round"></circle>
+        <path d="M16 8L12 12M12 12L8 16M12 12L8 8M12 12L16 16" stroke="#050505" stroke-width="1.5"
+        stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>`,
+  RectangleBox: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <rect x="0.75" y="0.75" width="18" height="18" rx="2" fill="none" stroke="#ffffff" 
+      stroke-width="1.5" />
+  <line x1="6.25" y1="0.75" x2="6.29" y2="18.75" fill="none" stroke="#ffffff" 
+      stroke-width="1.5" />
+  <line x1="13.21" y1="1.38" x2="13.25" y2="19.38" fill="none" stroke="#ffffff" 
+      stroke-width="1.5" />
+  <line x1="0.44" y1="13.24" x2="18.44" y2="13.2" fill="none" stroke="#ffffff" 
+      stroke-width="1.5" />
+  <line x1="1.06" y1="6.28" x2="19.06" y2="6.25" fill="none" stroke="#ffffff" 
+      stroke-width="1.5" />
+</svg>`,
+  LinkSVG: `
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+        d="M10.4986 7.49586L12.7507 5.24378C14.4091 3.58541 17.0978 3.5854 18.7562 5.24378C20.4146 6.90216 20.4146 9.59093 18.7562 11.2493L16.5041 13.5014M6.5 11.5L5.24378 12.7507C3.58541 14.4091 3.5854 17.0978 5.24378 18.7562C6.90216 20.4146 9.59093 20.4146 11.2493 18.7562L12.5 17.5M9.5 14.5L14.5 9.5"
+        stroke="#d8e0fa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>`,
 
 
 }
