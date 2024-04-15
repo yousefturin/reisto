@@ -1,59 +1,94 @@
-import { SafeAreaView, StyleSheet, ScrollView } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { SafeAreaView, RefreshControl, FlatList } from 'react-native'
+import React, { useEffect, useState, useCallback, useRef, useContext } from 'react'
 import Header from '../components/Home/Header'
 import Post from '../components/Home/Post'
-import { POSTS } from '../data/post/post'
-
-import NavigationStack from '../components/Home/Navigation'
 import { db, firebase } from '../firebase'
+import { UserContext } from '../context/UserDataProvider'
+import { collection } from 'firebase/firestore'
+
+
+
 const HomeScreen = () => {
-    
-    const [activeButton, setActiveButton] = useState("Home");
+    const [refreshing, setRefreshing] = useState(false);
     const [posts, setPosts] = useState([])
-    const [userData, setUserData] = useState([])
+    const scrollViewRef = useRef();
+
+    const userData = useContext(UserContext);
+
+
     useEffect(() => {
-        db.collectionGroup('posts').onSnapshot(snapshot => {
-            const sortedPosts = snapshot.docs
-                .map(doc => doc.data())
-                .sort((a, b) => {
-                    const timeA = a.createdAt.seconds * 1000000000 + a.createdAt.nanoseconds;
-                    const timeB = b.createdAt.seconds * 1000000000 + b.createdAt.nanoseconds;
-                    return timeB - timeA;
-                });
-            setPosts(sortedPosts);
-        });
+        fetchPost()
     }, [])
-    useEffect(() => {
-        getUsernameFromFirebase()
-    }, [])
-    const getUsernameFromFirebase = () => {
-        const user = firebase.auth().currentUser
-        // get the user name 
-        const unsubscribe = db.collection('users').where('owner_uid', '==', user.uid).limit(1).onSnapshot(
-            snapshot => snapshot.docs.map(doc => {
-                setUserData({
-                    username: doc.data().username,
-                    profile_picture: doc.data().profile_picture,
+
+    const fetchPost = () => {
+        // get the id of each post, and destructure the posts then order them based on createdAt as desc
+        db.collectionGroup('posts').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+            const postsWithProfilePictures = snapshot.docs.map(async post => {
+                const dbPostData = post.data();
+                try {
+                    const userDoc = await db.collection('users').doc(dbPostData.owner_email).get()
+                    const dbUserData = userDoc.data()
+                    const dbProfilePicture = dbUserData.profile_picture
+                    return {
+                        id: post.id,
+                        profile_picture: dbProfilePicture, // this is work the picture is from the current logged in user not the one that is mapped to the post!
+                        ...dbPostData
+                    }
+                } catch (error) {
+                    console.error('Error fetching user document:', error)
+                    return {
+                        id: post.id,
+                        ...dbPostData // Fallback to original post data if user document fetch fails
+                    }
                 }
-                )
             })
-        )
-        return unsubscribe
-    }
+            Promise.all(postsWithProfilePictures).then(posts => {
+                setPosts(posts)
+            }).catch(error => {
+                console.error('Error fetching posts with profile pictures:', error);
+            })
+        });
+    };
+
+    // Function to handle scroll event
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        try {
+            fetchPost(); // Your function to fetch posts
+        } catch (error) {
+            console.error('Error refreshing posts:', error);
+        }
+        setRefreshing(false);
+    }, []);
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
             <Header />
-            <ScrollView showsVerticalScrollIndicator={false}>
-                {posts.map((post, index) => (
-                    <Post post={post} key={index} userData={userData} />
-                ))}
-            </ScrollView>
-            <NavigationStack userData={userData} activeButton={activeButton} />
+            <FlatList
+                data={posts}
+                renderItem={({ item, index }) => (
+                    <Post post={item} key={index} isLastPost={index === posts.length - 1} userData={userData} />
+                )}
+                keyExtractor={(item, index) => index.toString()}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
+                ref={scrollViewRef}
+                showsVerticalScrollIndicator={false}
+                removeClippedSubviews={true}
+                initialNumToRender={2}
+                maxToRenderPerBatch={1}
+                updateCellsBatchingPeriod={100}
+                windowSize={7}
+            />
+            {/* <NavigationStack /> */}
         </SafeAreaView>
     )
-}
-const styles = StyleSheet.create({
 
-});
+}
+
 
 export default HomeScreen
