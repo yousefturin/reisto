@@ -30,18 +30,31 @@ const SinginForm = ({ navigation }) => {
     });
     const onSingin = async (email, password, name) => {
         try {
-            const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password)
-            db.collection('users').doc(userCredential.user.email).set({
+            const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+            await db.collection('users').doc(userCredential.user.email).set({
                 owner_uid: userCredential.user.uid,
                 username: name,
+                bio: "",
+                link: "",
+                displayed_name: "",
                 email: userCredential.user.email,
                 profile_picture: "https://firebasestorage.googleapis.com/v0/b/reisto-dev.appspot.com/o/imagePlcaeHolder.png?alt=media&token=d20372e0-a05e-469b-8e74-b6e8bb5ea763"
-            })
-            console.log('Firebase Singin Successful', email, password, name)
-            navigation.navigate("Home")
+            });
+
+            savedPostCreation(userCredential)
         } catch (error) {
-            Alert.alert(error.message)
+            Alert.alert(error.message);
         }
+    };
+    // with no return unsubscribe the collection will never be made
+    const savedPostCreation = (userCredential) => {
+        const unsubscribe = db.collection('users').doc(userCredential.user.email)
+            .collection('saved_post').add({
+                saved_post_id: [],
+                owner_email: userCredential.user.email
+            }).then(() => navigation.navigate("Home"))
+
+        return unsubscribe
     }
     return (
         <Formik
