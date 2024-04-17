@@ -6,6 +6,7 @@ import initializeScalingUtils from '../../utils/NormalizeSize';
 import { Divider } from 'react-native-elements';
 import { useNavigation } from "@react-navigation/native";
 import { blurHash } from '../../../assets/HashBlurData';
+
 const NavigationStack = ({ routeName, userData }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);
 
@@ -80,7 +81,7 @@ const NavigationStack = ({ routeName, userData }) => {
                                 borderRadius: 50,
                                 borderWidth: 1,
                                 borderColor: "#2b2b2b"
-                                
+
                             }} placeholder={blurHash}
                             cachePolicy={"memory-disk"}
 
