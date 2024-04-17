@@ -6,18 +6,18 @@ import SignupScreen from "../screens/SignupScreen";
 import SearchScreen from "../screens/SearchScreen";
 import AddPostScreen from "../screens/AddPostScreen";
 import NotificationScreen from "../screens/NotificationScreen";
-import ProfileScreen from "../screens/ProfileScreen";
+import UserProfileScreen from "../screens/UserProfileScreen";
 import NavigationStack from "../components/Home/Navigation";
 import { useNavigationState } from '@react-navigation/native';
 import { UserContext } from "../context/UserDataProvider";
-import OwnerProfilePostScreen from "../screens/OwnerProfilePostScreen";
+import UserProfilePostScreen from "../screens/UserProfilePostScreen";
 import UserSettingScreen from "../screens/UserSettingScreen";
 import UserActivityScreen from "../screens/UserActivityScreen";
 import UserSavedPostScreen from "../screens/UserSavedPostScreen";
 import UserSavedPostTimeLineScreen from "../screens/UserSavedPostTimeLineScreen";
 import UserEditProfileScreen from "../screens/UserEditProfileScreen";
 import UserEditProfileIndividualDataScreen from "../screens/UserEditProfileIndividualDataScreen";
-import ShareExplorePostTimeLineScreen from "../screens/ShareExplorePostTimeLineScreen";
+import SearchExplorePostTimeLineScreen from "../screens/SearchExplorePostTimeLineScreen";
 import OtherUsersProfileScreen from "../screens/OtherUsersProfileScreen";
 import OthersProfilePostScreen from "../screens/OthersProfilePostScreen";
 
@@ -110,13 +110,13 @@ const AuthAppNavigator = () => {
                     options={{ headerShown: false }}
                 />
                 <Stack.Screen
-                    name={"Profile"}
-                    component={ProfileScreen}
+                    name={"UserProfile"}
+                    component={UserProfileScreen}
                     options={{ headerShown: false }}
                 />
                 <Stack.Screen
-                    name={"OwnerProfilePost"}
-                    component={OwnerProfilePostScreen}
+                    name={"UserProfilePost"}
+                    component={UserProfilePostScreen}
                     options={{ headerShown: false }}
                 />
                 <Stack.Screen
@@ -153,8 +153,8 @@ const AuthAppNavigator = () => {
                     }}
                 />
                 <Stack.Screen
-                    name={"ShareExplorePostTimeLine"}
-                    component={ShareExplorePostTimeLineScreen}
+                    name={"SearchExplorePostTimeLine"}
+                    component={SearchExplorePostTimeLineScreen}
                     options={{
                         headerShown: false,
                     }}
