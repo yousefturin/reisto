@@ -52,9 +52,9 @@ const AuthNavigation = () => {
     return (
         <NavigationContainer theme={DarkThemeNavigator}>
             {currentUser ?
-                <UserProvider>
-                    <AuthAppNavigator />
-                </UserProvider>
+                    <UserProvider>
+                        <AuthAppNavigator />
+                    </UserProvider>
                 : <UnAuthAppNavigator />}
         </NavigationContainer>
     );
