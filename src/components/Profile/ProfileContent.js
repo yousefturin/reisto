@@ -1,13 +1,14 @@
 import { View, Text, TouchableOpacity, Dimensions, Modal } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigation } from "@react-navigation/native";
 import { blurHash } from '../../../assets/HashBlurData';
 import { Image } from 'expo-image';
 import SvgComponent from '../../utils/SvgComponents';
 import initializeScalingUtils from '../../utils/NormalizeSize';
-import { extractDomain } from '../../utils/ExtractDominFromLink';
+import { extractDomain } from '../../utils/ExtractDomainFromLink';
 import { WebView } from 'react-native-webview';
 import { Divider } from 'react-native-elements';
+import { db, firebase } from '../../firebase';
 
 
 
@@ -19,8 +20,39 @@ const ProfileContent = ({ userData, userPosts }) => {
         })
     }
     const [isModalVisible, setIsModalVisible] = useState(false);
-
+    const [followersAndFollowing, setFollowersAndFollowing] = useState({ followers: '', following: '', id: '' })
     const { moderateScale } = initializeScalingUtils(Dimensions);
+
+    useEffect(() => {
+        getFollowersAndFollowingData();
+    }, [])
+
+    const getFollowersAndFollowingData = async () => {
+        const querySnapshot = await db.collection('users')
+            .doc(firebase.auth().currentUser.email)
+            .collection('following_followers')
+            .limit(1) // Limit query to one document
+            .get();
+
+        if (!querySnapshot.empty) {
+            const doc = querySnapshot.docs[0];
+            const docRef = doc.ref;
+
+            docRef.onSnapshot((snapshot) => {
+                const data = snapshot.data();
+                setFollowersAndFollowing({
+                    id: snapshot.id,
+                    followers: data.followers,
+                    following: data.following,
+                });
+            }, (error) => {
+                console.error("Error listening to document:", error);
+            });
+        } else {
+            // No documents found
+            console.log("No document found in the collection.");
+        }
+    };
     return (
         <View style={{ flexDirection: "column", }}>
             <View style={{ flexDirection: "row", }}>
@@ -50,7 +82,7 @@ const ProfileContent = ({ userData, userPosts }) => {
 
                     <View style={{ alignItems: "center", justifyContent: "center" }}>
                         <Text style={{ color: "#fff", fontWeight: "600", fontSize: 18 }}>
-                            {Object.keys(userPosts).length}
+                            {Object.keys(followersAndFollowing?.followers).length}
                         </Text>
                         <Text style={{ color: "#cccccc" }}>
                             followers
@@ -59,7 +91,7 @@ const ProfileContent = ({ userData, userPosts }) => {
 
                     <View style={{ alignItems: "center", justifyContent: "center" }}>
                         <Text style={{ color: "#fff", fontWeight: "600", fontSize: 18 }}>
-                            {Object.keys(userPosts).length}
+                            {Object.keys(followersAndFollowing?.following).length}
                         </Text>
                         <Text style={{ color: "#cccccc" }}>
                             following
