@@ -12,7 +12,7 @@ const AddNewPostHeader = ({ handleSubmit, isValid }) => {
         <>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10 }}>
                 <TouchableOpacity style={{ margin: 10, }} onPress={() => navigation.goBack()}>
-                    <SvgComponent svgKey="CloseSVG" width={moderateScale(30)} height={moderateScale(30)} />
+                    <SvgComponent svgKey="CloseSVG" width={moderateScale(30)} height={moderateScale(30)}  stroke={"#ffffff"}/>
                 </TouchableOpacity>
                 <Text style={{ color: "#fff", fontWeight: "700", fontSize: 20, marginLeft: 15 }}>New Post</Text>
                 <TouchableOpacity style={{ margin: 10 }} onPress={handleSubmit} disabled={!isValid}>
