@@ -1,5 +1,5 @@
 
-import { FlatList, StyleSheet, Dimensions, TouchableOpacity,View } from 'react-native';
+import { FlatList, StyleSheet, Dimensions, TouchableOpacity, View } from 'react-native';
 import React from 'react'
 import { useNavigation } from "@react-navigation/native";
 import { blurHash } from '../../../assets/HashBlurData';
@@ -12,12 +12,18 @@ const gapSize = 1;
 // OwnerProfilePostScreen will be move inside here, and then based on a state it will be displayed and removed over the screen
 // to keep the data re-rendered since passing the data using routs will make the data as cashed data
 
-const ProfilePost = ({ posts, userData }) => {
+const ProfilePost = ({ posts, userData, keyValue, userDataToBeNavigated }) => {
     const navigation = useNavigation();
     const handleNavigationToPost = (postId) => {
-        navigation.navigate('OwnerProfilePost', {
-            userData, scrollToPostId: postId
-        });
+        if (keyValue === "NavigationToMyProfile") {
+            navigation.navigate('OwnerProfilePost', {
+                userData, scrollToPostId: postId,
+            });
+        } else if (keyValue === "NavigationToOtherProfile") {
+            navigation.navigate('OthersProfilePost', {
+                userDataToBeNavigated, scrollToPostId: postId,
+            });
+        }
     }
     const renderItem = ({ item }) => (
         <TouchableOpacity activeOpacity={0.8} onPress={() => handleNavigationToPost(item.id)}>
@@ -37,12 +43,9 @@ const ProfilePost = ({ posts, userData }) => {
         }
         return index.toString();
     };
-    const { moderateScale } = initializeScalingUtils(Dimensions);
     return (
         <>
-            <View style={{ justifyContent: "space-around", alignItems: "center", paddingTop: 20, paddingHorizontal: 20,flexDirection:"row" }}>
-                {/* <SvgComponent svgKey="RectangleBox" width={moderateScale(30)} height={moderateScale(30)} fill={'#ffffff'} />
-                <SvgComponent svgKey="BookmarkNotActiveSVG" width={moderateScale(30)} height={moderateScale(26)} fill={'#ffffff'} /> */}
+            <View style={{ justifyContent: "space-around", alignItems: "center", paddingTop: 20, paddingHorizontal: 20, flexDirection: "row" }}>
             </View>
 
             <FlatList
