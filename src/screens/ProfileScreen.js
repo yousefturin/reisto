@@ -5,13 +5,14 @@ import ProfileHeader from '../components/Profile/ProfileHeader'
 import { UserContext } from '../context/UserDataProvider'
 import ProfileContent from '../components/Profile/ProfileContent'
 import ProfilePost from '../components/Profile/ProfilePost'
+import LoadingPlaceHolder from '../components/Search/LoadingPlaceHolder'
 
 const ProfileScreen = () => {
     const userData = useContext(UserContext);
     const [userPosts, setUserPost] = useState([])
     const [refreshing, setRefreshing] = useState(false);
     const [scrollToPostId, setScrollToPostId] = useState(null)
-    
+
     const handleLogout = async () => {
         try {
             await firebase.auth().signOut()
@@ -68,7 +69,12 @@ const ProfileScreen = () => {
                     }
                 >
                     <ProfileContent userData={userData} userPosts={userPosts} />
-                    <ProfilePost posts={userPosts} userData={userData} onPostPress={handlePostPress} keyValue={"NavigationToMyProfile"} />
+                    {userPosts.length !== 0 ? (
+                        <ProfilePost posts={userPosts} userData={userData} onPostPress={handlePostPress} keyValue={"NavigationToMyProfile"} />
+                    ) : (
+                        <LoadingPlaceHolder condition={userPosts.length === 0} />
+                    )}
+
                 </ScrollView>
             </>
 
