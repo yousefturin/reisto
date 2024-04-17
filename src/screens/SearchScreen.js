@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 const { moderateScale } = initializeScalingUtils(Dimensions);
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SvgComponent from '../utils/SvgComponents';
+import LoadingPlaceHolder from '../components/Search/LoadingPlaceHolder';
 
 const SearchScreen = () => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -24,7 +25,7 @@ const SearchScreen = () => {
     const navigation = useNavigation();
     const [clickedUsers, setClickedUsers] = useState([]);
 
-    
+
     const handleNavigationToProfile = (item) => {
         let userDataToBeNavigated = item
         saveClickedUser(userDataToBeNavigated);
@@ -257,8 +258,12 @@ const SearchScreen = () => {
                     </>
 
                 ) : (
-                    <SavedPostsGrid posts={posts} userData={userData} navigateToScreen={"SearchExplore"} />
-                )}
+                    <>
+                        {posts.length === 0 && <LoadingPlaceHolder condition={posts.length === 0} />}
+                        <SavedPostsGrid posts={posts} userData={userData} navigateToScreen={"SearchExplore"} />
+                    </>
+                )
+                }
             </View>
         </SafeAreaView>
     )
