@@ -210,7 +210,7 @@ const PostHeader = ({ post }) => {
     const handlePostNavigationFromHome = (post) => {
         // if the post that is click is users own post then take them to their profile,else navigate to the user.
         if (post.owner_email === firebase.auth().currentUser.email) {
-            navigation.navigate("Profile");
+            navigation.navigate("UserProfile");
         } else {
             GetPostOwnerData(post);
         }
