@@ -1,25 +1,20 @@
 import { SafeAreaView, RefreshControl, FlatList } from 'react-native'
-import React, { useEffect, useState, useCallback, useRef, useContext } from 'react'
+import React, { useEffect, useState, useCallback, useContext } from 'react'
 import Header from '../components/Home/Header'
 import Post from '../components/Home/Post'
-import { db, firebase } from '../firebase'
+import { db } from '../firebase'
 import { UserContext } from '../context/UserDataProvider'
-import { collection } from 'firebase/firestore'
-
 
 
 const HomeScreen = () => {
     const [refreshing, setRefreshing] = useState(false);
     const [posts, setPosts] = useState([])
-    const scrollViewRef = useRef();
-
     const userData = useContext(UserContext);
 
 
     useEffect(() => {
         fetchPost()
     }, [])
-
     const fetchPost = () => {
         // get the id of each post, and destructure the posts then order them based on createdAt as desc
         db.collectionGroup('posts').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
@@ -76,7 +71,6 @@ const HomeScreen = () => {
                         onRefresh={onRefresh}
                     />
                 }
-                ref={scrollViewRef}
                 showsVerticalScrollIndicator={false}
                 removeClippedSubviews={true}
                 initialNumToRender={2}
@@ -84,7 +78,6 @@ const HomeScreen = () => {
                 updateCellsBatchingPeriod={100}
                 windowSize={7}
             />
-            {/* <NavigationStack /> */}
         </SafeAreaView>
     )
 
