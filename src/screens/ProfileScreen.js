@@ -11,7 +11,7 @@ const ProfileScreen = () => {
     const [userPosts, setUserPost] = useState([])
     const [refreshing, setRefreshing] = useState(false);
     const [scrollToPostId, setScrollToPostId] = useState(null)
-    const [savePosts, setSavedPosts] = useState([])
+    
     const handleLogout = async () => {
         try {
             await firebase.auth().signOut()
@@ -68,7 +68,7 @@ const ProfileScreen = () => {
                     }
                 >
                     <ProfileContent userData={userData} userPosts={userPosts} />
-                    <ProfilePost posts={userPosts} userData={userData} onPostPress={handlePostPress} savePosts={savePosts} />
+                    <ProfilePost posts={userPosts} userData={userData} onPostPress={handlePostPress} keyValue={"NavigationToMyProfile"} />
                 </ScrollView>
             </>
 
