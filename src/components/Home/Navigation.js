@@ -43,7 +43,7 @@ const NavigationStack = ({ routeName, userData }) => {
             inActiveURL: 'NotificationSVGInActive',
         },
         {
-            action: 'Profile',
+            action: 'UserProfile',
             activeURL: `${userData.profile_picture}`,
         },
     ]
@@ -70,7 +70,7 @@ const NavigationStack = ({ routeName, userData }) => {
                         </TouchableOpacity>
                     ))}
                     <TouchableOpacity onPress={() => {
-                        navigation.navigate("Profile");
+                        navigation.navigate("UserProfile");
 
                     }} style={{ padding: 10 }}>
                         {/* ProfileBtn */}
