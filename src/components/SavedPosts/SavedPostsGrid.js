@@ -18,23 +18,12 @@ const SavedPostsGrid = ({ posts, userData, navigateToScreen }) => {
                 userData, scrollToPostId: postId
             });
         } else if (navigateToScreen === "SearchExplore") {
-            navigation.navigate('ShareExplorePostTimeLine', {
+            navigation.navigate('SearchExplorePostTimeLine', {
                 userData, scrollToPostId: postId
             });
         }
     }
-    // const [loaded, setLoaded] = useState(false);
-    // const opacity = useRef(new Animated.Value(0)).current;
-    // // since there is no server to handle each image hash, then an animation is create 
-    // // to remove the flash when loading images and using this it will load all images together.
-    // const onLoad = () => {
-    //     Animated.timing(opacity, {
-    //         toValue: 1,
-    //         duration: 10, // Adjust the duration as needed
-    //         useNativeDriver: true,
-    //     }).start();
-    //     setLoaded(true);
-    // };
+
     const renderItem = ({ item }) => (
         <TouchableOpacity activeOpacity={0.8} onPress={() => handleNavigationToPost(item.id)}>
             <Image
@@ -75,7 +64,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: (screenWidth - (columnCount + 1) * gapSize) / columnCount,
-        height: (screenWidth - (columnCount + 1) * gapSize) / columnCount, // Assuming square images
+        height: (screenWidth - (columnCount + 1) * gapSize) / columnCount,
         margin: gapSize,
     },
 });
