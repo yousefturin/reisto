@@ -11,7 +11,7 @@ import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder';
 const { moderateScale } = initializeScalingUtils(Dimensions);
 const windowHeight = Dimensions.get('window').height;
 
-const OwnerProfilePostScreen = ({ route }) => {
+const UserProfilePostScreen = ({ route }) => {
     const { userData, scrollToPostId } = route.params;
     const [posts, setPost] = useState([])
     const flatListRef = useRef();
@@ -98,7 +98,7 @@ const OwnerProfilePostScreen = ({ route }) => {
                     initialScrollIndex={initialScrollIndex}
                     // this is a trick to allow the user to scroll, it needs more test to see if those values will work on
                     // different devices the same way to remove the drop fame.
-                    getItemLayout={(data, index) => ({ length: windowHeight * 0.756, offset: windowHeight * 0.756 * index, index })}
+                    getItemLayout={(data, index) => ({ length: windowHeight * 0.736, offset: windowHeight * 0.736 * index, index })}
                     onScrollToIndexFailed={handleScrollToIndexFailed}
                 />
             ) : (
@@ -127,4 +127,4 @@ const OwnerProfileHeader = ({ userData }) => {
     )
 }
 
-export default OwnerProfilePostScreen
+export default UserProfilePostScreen
