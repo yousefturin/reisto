@@ -7,7 +7,7 @@ import SavedPostsGrid from '../components/SavedPosts/SavedPostsGrid';
 
 const UserSavedPostScreen = () => {
     const userData = useContext(UserContext);
-    const [posts, setSavedPosts] = useState([])
+    const [savedPosts, setSavedPosts] = useState([])
     const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
@@ -83,7 +83,11 @@ const UserSavedPostScreen = () => {
                         />
                     }
                 >
-                    <SavedPostsGrid posts={posts} userData={userData} onPostPress={handlePostPress} navigateToScreen={"SavedPosts"} />
+                    {savedPosts.length !== 0 || savedPosts.id?.length !== 0 ? (
+                        <SavedPostsGrid posts={savedPosts} userData={userData} onPostPress={handlePostPress} navigateToScreen={"SavedPosts"} />
+                    ) : (
+                        <LoadingPlaceHolder />
+                    )}
                 </ScrollView>
             </>
 
