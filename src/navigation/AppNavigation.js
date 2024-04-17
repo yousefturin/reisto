@@ -17,6 +17,9 @@ import UserSavedPostScreen from "../screens/UserSavedPostScreen";
 import UserSavedPostTimeLineScreen from "../screens/UserSavedPostTimeLineScreen";
 import UserEditProfileScreen from "../screens/UserEditProfileScreen";
 import UserEditProfileIndividualDataScreen from "../screens/UserEditProfileIndividualDataScreen";
+import ShareExplorePostTimeLineScreen from "../screens/ShareExplorePostTimeLineScreen";
+import OtherUsersProfileScreen from "../screens/OtherUsersProfileScreen";
+import OthersProfilePostScreen from "../screens/OthersProfilePostScreen";
 
 const Stack = createStackNavigator();
 
@@ -147,6 +150,27 @@ const AuthAppNavigator = () => {
                     options={{
                         headerShown: false,
                         gestureEnabled: false
+                    }}
+                />
+                <Stack.Screen
+                    name={"ShareExplorePostTimeLine"}
+                    component={ShareExplorePostTimeLineScreen}
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+                <Stack.Screen
+                    name={"OtherUsersProfileScreen"}
+                    component={OtherUsersProfileScreen}
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+                <Stack.Screen
+                    name={"OthersProfilePost"}
+                    component={OthersProfilePostScreen}
+                    options={{
+                        headerShown: false,
                     }}
                 />
             </Stack.Navigator>
