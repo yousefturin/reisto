@@ -1,9 +1,10 @@
-import { SafeAreaView, RefreshControl, FlatList } from 'react-native'
+import { SafeAreaView, RefreshControl, FlatList, View, Text } from 'react-native'
 import React, { useEffect, useState, useCallback, useContext } from 'react'
 import Header from '../components/Home/Header'
 import Post from '../components/Home/Post'
 import { db } from '../firebase'
 import { UserContext } from '../context/UserDataProvider'
+import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder'
 
 
 const HomeScreen = () => {
@@ -59,28 +60,31 @@ const HomeScreen = () => {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
             <Header />
-            <FlatList
-                data={posts}
-                renderItem={({ item, index }) => (
-                    <Post post={item} key={index} isLastPost={index === posts.length - 1} userData={userData} />
-                )}
-                keyExtractor={(item, index) => index.toString()}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                    />
-                }
-                showsVerticalScrollIndicator={false}
-                removeClippedSubviews={true}
-                initialNumToRender={2}
-                maxToRenderPerBatch={1}
-                updateCellsBatchingPeriod={100}
-                windowSize={7}
-            />
+            {posts.length !== 0 ? (
+                <FlatList
+                    data={posts}
+                    renderItem={({ item, index }) => (
+                        <Post post={item} key={index} isLastPost={index === posts.length - 1} userData={userData} />
+                    )}
+                    keyExtractor={(item, index) => index.toString()}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                    showsVerticalScrollIndicator={false}
+                    removeClippedSubviews={true}
+                    initialNumToRender={2}
+                    maxToRenderPerBatch={1}
+                    updateCellsBatchingPeriod={100}
+                    windowSize={7}
+                />
+            ) : (
+                <LoadingPlaceHolder />
+            )}
         </SafeAreaView>
     )
-
 }
 
 
