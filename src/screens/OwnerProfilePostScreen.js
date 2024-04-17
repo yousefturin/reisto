@@ -5,6 +5,7 @@ import SvgComponent from '../utils/SvgComponents'
 import initializeScalingUtils from '../utils/NormalizeSize';
 import { db, firebase } from '../firebase';
 import { useNavigation } from "@react-navigation/native";
+import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder';
 
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
@@ -88,17 +89,21 @@ const OwnerProfilePostScreen = ({ route }) => {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
             <OwnerProfileHeader userData={userData} />
-            <FlatList
-                ref={flatListRef}
-                data={posts}
-                renderItem={renderItem}
-                keyExtractor={item => item.id.toString()}
-                initialScrollIndex={initialScrollIndex}
-                // this is a trick to allow the user to scroll, it needs more test to see if those values will work on
-                // different devices the same way to remove the drop fame.
-                getItemLayout={(data, index) => ({ length: windowHeight * 0.756, offset: windowHeight * 0.756 * index, index })}
-                onScrollToIndexFailed={handleScrollToIndexFailed}
-            />
+            {posts.length !== 0 ? (
+                <FlatList
+                    ref={flatListRef}
+                    data={posts}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id.toString()}
+                    initialScrollIndex={initialScrollIndex}
+                    // this is a trick to allow the user to scroll, it needs more test to see if those values will work on
+                    // different devices the same way to remove the drop fame.
+                    getItemLayout={(data, index) => ({ length: windowHeight * 0.756, offset: windowHeight * 0.756 * index, index })}
+                    onScrollToIndexFailed={handleScrollToIndexFailed}
+                />
+            ) : (
+                <LoadingPlaceHolder />
+            )}
         </SafeAreaView>
     )
 }
