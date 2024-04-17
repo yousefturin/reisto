@@ -15,6 +15,8 @@ import UploadImageToStorage from '../../utils/UploadImageToStorage';
 import { Image } from 'expo-image';
 
 
+
+
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
 const uploadPostSchema = Yup.object().shape({
@@ -84,32 +86,49 @@ const FormikPostUploader = () => {
             .then(() => navigation.goBack())
         return unsubscribe
     }
+    // this must be fixed not every image is selected needs to be stored on the cloud this is shit<<<<<<<<<<-
     const pickImage = async (setFieldValue, setFieldTouched) => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
-            aspect: [4, 3],
+            aspect: [4, 4],
             quality: 1,
         });
 
         if (!result.canceled) {
             setImage(result.assets[0].uri);
-            console.log(result.assets[0].uri)
+
+            const maxWidth = 700; // Maximum width for resizing
+            const originalWidth = result.assets[0].width;
+            const originalHeight = result.assets[0].height;
+            const aspectRatio = originalWidth / originalHeight;
+
+            let width = originalWidth;
+            let height = originalHeight;
+
+            if (originalWidth > maxWidth) {
+                width = maxWidth;
+                // the issue with white border is that the height is for example 700.2314814814815 and that will make a problem 
+                //              showing a artifact white line to fix teh issue rounding the number is applied.
+                height = Math.round(maxWidth / aspectRatio)
+                console.log(width, height)
+            }
+
             const compressedImage = await ImageManipulator.manipulateAsync(
                 result.assets[0].uri,
-                [{ resize: { width: 700 } }],
-                { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
+                [{ resize: { width, height } }],
+                { compress: 0.9, format: ImageManipulator.SaveFormat.JPEG }
             );
-            console.log(compressedImage)
-            const base64Image = await UploadImageToStorage(compressedImage.uri);
-            if (base64Image) {
-                setFieldValue('imageURL', base64Image);
+
+            const dbImage = await UploadImageToStorage(compressedImage.uri);
+
+            if (dbImage) {
+                setFieldValue('imageURL', dbImage);
             }
         } else if (result.canceled) {
             setFieldTouched('imageURL', true);
         }
     };
-
     // a big problem is here, when user select an image it will be uploaded to database but it must be on submit.
 
     return (
@@ -143,11 +162,10 @@ const FormikPostUploader = () => {
                                                     onPress={() => pickImage(setFieldValue, setFieldTouched)}
                                                     value={values.imageURL}>
                                                     <Image source={{ uri: image }} style={{
-                                                        aspectRatio: 4 / 3,
+                                                        aspectRatio: 4 / 4,
                                                         width: "100%",
-                                                        height: undefined,
-                                                    }}
-                                                        contentFit="cover" />
+                                                        height: "auto",
+                                                    }} />
                                                 </TouchableOpacity>
                                             )}
                                         </View>
