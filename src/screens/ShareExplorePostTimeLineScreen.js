@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Post from '../components/Home/Post'
 import { db, firebase } from '../firebase';
 import SavedPostsHeader from '../components/SavedPosts/SavedPostsHeader';
+import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder';
 const windowHeight = Dimensions.get('window').height;
 
 const ShareExplorePostTimeLineScreen = ({ route }) => {
@@ -74,17 +75,21 @@ const ShareExplorePostTimeLineScreen = ({ route }) => {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
             <SavedPostsHeader userData={userData} />
-            <FlatList
-                ref={flatListRef}
-                data={posts}
-                renderItem={renderItem}
-                keyExtractor={item => item.id.toString()}
-                initialScrollIndex={initialScrollIndex}
-                // this is a trick to allow the user to scroll, it needs more test to see if those values will work on
-                // different devices the same way to remove the drop fame.
-                getItemLayout={(data, index) => ({ length: windowHeight * 0.756, offset: windowHeight * 0.756 * index, index })}
-                onScrollToIndexFailed={handleScrollToIndexFailed}
-            />
+            {posts.length !== 0 ? (
+                <FlatList
+                    ref={flatListRef}
+                    data={posts}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id.toString()}
+                    initialScrollIndex={initialScrollIndex}
+                    // this is a trick to allow the user to scroll, it needs more test to see if those values will work on
+                    // different devices the same way to remove the drop fame.
+                    getItemLayout={(data, index) => ({ length: windowHeight * 0.756, offset: windowHeight * 0.756 * index, index })}
+                    onScrollToIndexFailed={handleScrollToIndexFailed}
+                />
+            ) : (
+                <LoadingPlaceHolder />
+            )}
         </SafeAreaView>
     )
 }
