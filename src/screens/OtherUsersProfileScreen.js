@@ -5,6 +5,7 @@ import { RefreshControl } from 'react-native-gesture-handler'
 import { db, firebase } from '../firebase'
 import OthersProfileHeader from '../components/OthersProfile/OthersProfileHeader'
 import OthersProfileContent from '../components/OthersProfile/OthersProfileContent'
+import LoadingPlaceHolder from '../components/Search/LoadingPlaceHolder'
 
 const OtherUsersProfileScreen = ({ route }) => {
     const { userDataToBeNavigated } = route.params
@@ -61,7 +62,11 @@ const OtherUsersProfileScreen = ({ route }) => {
                     }
                 >
                     <OthersProfileContent userDataToBeNavigated={userDataToBeNavigated} userPosts={userPosts} />
-                    <ProfilePost posts={userPosts} userDataToBeNavigated={userDataToBeNavigated} onPostPress={handlePostPress} keyValue={"NavigationToOtherProfile"} />
+                    {userPosts.length !== 0 ? (
+                        <ProfilePost posts={userPosts} userDataToBeNavigated={userDataToBeNavigated} onPostPress={handlePostPress} keyValue={"NavigationToOtherProfile"} />
+                    ) : (
+                        <LoadingPlaceHolder condition={userPosts.length === 0} />
+                    )}
                 </ScrollView>
             </>
 
