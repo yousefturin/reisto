@@ -207,7 +207,7 @@ const SearchScreen = () => {
                         {shouldDisplaySearchedItems ? searchedItems.map((item, index) => (
                             <TouchableOpacity style={{ flexDirection: "row" }} key={index} onPress={() => { handleNavigationToProfile(item) }}>
                                 <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
-                                    <Animated.Image source={{ uri: item.profile_picture, cache: "force-cache", }}
+                                    <Image source={{ uri: item.profile_picture, cache: "force-cache", }}
                                         style={{
                                             width: 50,
                                             height: 50,
@@ -216,7 +216,6 @@ const SearchScreen = () => {
                                             borderWidth: 1.5,
                                             borderColor: "#2b2b2b"
                                         }}
-                                        onLoad={onLoad}
                                         placeholder={blurHash}
                                         contentFit="cover"
                                         cachePolicy={"memory-disk"} />
@@ -259,7 +258,7 @@ const SearchScreen = () => {
 
                 ) : (
                     <>
-                        {posts.length === 0 && <LoadingPlaceHolder condition={posts.length === 0} />}
+                        {posts.length === 0  && <LoadingPlaceHolder condition={posts.length} /> }
                         <SavedPostsGrid posts={posts} userData={userData} navigateToScreen={"SearchExplore"} />
                     </>
                 )
