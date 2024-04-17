@@ -62,7 +62,8 @@ const OtherUsersProfileScreen = ({ route }) => {
                     }
                 >
                     <OthersProfileContent userDataToBeNavigated={userDataToBeNavigated} userPosts={userPosts} />
-                    {userPosts.length !== 0 ? (
+                    {/* i don't understand how this is working it must be userPosts.id?.length === 0 then it must show the profile without rendering the Loader */} 
+                    {userPosts.length !== 0 || userPosts.id?.length !== 0 ? (
                         <ProfilePost posts={userPosts} userDataToBeNavigated={userDataToBeNavigated} onPostPress={handlePostPress} keyValue={"NavigationToOtherProfile"} />
                     ) : (
                         <LoadingPlaceHolder condition={userPosts.length === 0} />
