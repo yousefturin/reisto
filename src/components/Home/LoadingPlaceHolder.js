@@ -70,7 +70,7 @@ const LoaderPostHeader = () => (
 const LoaderPostImage = () => (
     <Skeleton
         show
-        height={350}
+        height={450}
         radius={'square'}
         width={"100%"}
         {...SkeletonCommonProps}
