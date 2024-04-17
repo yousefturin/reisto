@@ -3,11 +3,12 @@ import React, { useEffect, useRef, useState } from 'react'
 import Post from '../components/Home/Post'
 import { db, firebase } from '../firebase';
 import SavedPostsHeader from '../components/SavedPosts/SavedPostsHeader';
+import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder';
 const windowHeight = Dimensions.get('window').height;
 
 const UserSavedPostTimeLineScreen = ({ route }) => {
     const { userData, scrollToPostId } = route.params;
-    const [posts, setSavedPosts] = useState([])
+    const [savedPosts, setSavedPosts] = useState([])
     const flatListRef = useRef();
     const [initialScrollIndex, setInitialScrollIndex] = useState(null);
 
@@ -21,8 +22,8 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
 
     useEffect(() => {
         // Calculate initialScrollIndex only when posts are fetched
-        if (scrollToPostId && posts.length > 0) {
-            const index = posts.findIndex(post => post.id === scrollToPostId);
+        if (scrollToPostId && savedPosts.length > 0) {
+            const index = savedPosts.findIndex(post => post.id === scrollToPostId);
             if (index !== -1) {
                 setInitialScrollIndex(index);
                 if (flatListRef.current) {
@@ -31,7 +32,7 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
                 }
             }
         }
-    }, [posts, scrollToPostId]);
+    }, [savedPosts, scrollToPostId]);
 
     useEffect(() => {
         fetchUserSavedPosts();
@@ -62,7 +63,7 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
                         if (postIds && Array.isArray(postIds)) {
                             // filter from the posts array the once that has the same stored id 
                             const savedPostsData = allPosts.filter(post => postIds.includes(post.id));
-                        
+
                             // Fetch profile pictures for the saved posts
                             const postsWithProfilePictures = savedPostsData.map(async post => {
                                 const dbPostData = post;
@@ -80,7 +81,7 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
                                     return dbPostData;
                                 }
                             });
-    
+
                             Promise.all(postsWithProfilePictures).then(posts => {
                                 setSavedPosts(posts);
                             }).catch(error => {
@@ -100,7 +101,7 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
             console.error("No authenticated user found.");
         }
     };
-    
+
 
 
     const renderItem = ({ item }) => (
@@ -111,17 +112,21 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
             <SavedPostsHeader userData={userData} />
-            <FlatList
-                ref={flatListRef}
-                data={posts}
-                renderItem={renderItem}
-                keyExtractor={item => item.id.toString()}
-                initialScrollIndex={initialScrollIndex}
-                // this is a trick to allow the user to scroll, it needs more test to see if those values will work on
-                // different devices the same way to remove the drop fame.
-                getItemLayout={(data, index) => ({ length: windowHeight * 0.756, offset: windowHeight * 0.756 * index, index })}
-                onScrollToIndexFailed={handleScrollToIndexFailed}
-            />
+            {savedPosts.length !== 0 ? (
+                <FlatList
+                    ref={flatListRef}
+                    data={savedPosts}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id.toString()}
+                    initialScrollIndex={initialScrollIndex}
+                    // this is a trick to allow the user to scroll, it needs more test to see if those values will work on
+                    // different devices the same way to remove the drop fame.
+                    getItemLayout={(data, index) => ({ length: windowHeight * 0.73, offset: windowHeight * 0.736 * index, index })}
+                    onScrollToIndexFailed={handleScrollToIndexFailed}
+                />
+            ) : (
+                <LoadingPlaceHolder />
+            )}
         </SafeAreaView>
     )
 }
