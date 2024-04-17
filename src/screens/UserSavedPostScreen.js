@@ -15,6 +15,7 @@ const UserSavedPostScreen = () => {
     }, [])
 
     // fetching here is different from UserSavedPostTimeLineScreen because it does not need the profile image to be displayed.
+    // the fetching might be change for better and faster process<<<<<<<<<<<-.
     const fetchUserSavedPosts = () => {
         const user = firebase.auth().currentUser;
         if (user) {
@@ -82,7 +83,7 @@ const UserSavedPostScreen = () => {
                         />
                     }
                 >
-                    <SavedPostsGrid posts={posts} userData={userData} onPostPress={handlePostPress} />
+                    <SavedPostsGrid posts={posts} userData={userData} onPostPress={handlePostPress} navigateToScreen={"SavedPosts"} />
                 </ScrollView>
             </>
 
