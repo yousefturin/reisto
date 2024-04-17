@@ -16,7 +16,7 @@ const ProfilePost = ({ posts, userData, keyValue, userDataToBeNavigated }) => {
     const navigation = useNavigation();
     const handleNavigationToPost = (postId) => {
         if (keyValue === "NavigationToMyProfile") {
-            navigation.navigate('OwnerProfilePost', {
+            navigation.navigate('UserProfilePost', {
                 userData, scrollToPostId: postId,
             });
         } else if (keyValue === "NavigationToOtherProfile") {
