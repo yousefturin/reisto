@@ -6,7 +6,7 @@ import SavedPostsHeader from '../components/SavedPosts/SavedPostsHeader';
 import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder';
 const windowHeight = Dimensions.get('window').height;
 
-const ShareExplorePostTimeLineScreen = ({ route }) => {
+const SearchExplorePostTimeLineScreen = ({ route }) => {
     const { userData, scrollToPostId } = route.params;
     const [posts, setPosts] = useState([])
     const flatListRef = useRef();
@@ -84,7 +84,7 @@ const ShareExplorePostTimeLineScreen = ({ route }) => {
                     initialScrollIndex={initialScrollIndex}
                     // this is a trick to allow the user to scroll, it needs more test to see if those values will work on
                     // different devices the same way to remove the drop fame.
-                    getItemLayout={(data, index) => ({ length: windowHeight * 0.756, offset: windowHeight * 0.756 * index, index })}
+                    getItemLayout={(data, index) => ({ length: windowHeight * 0.736, offset: windowHeight * 0.736 * index, index })}
                     onScrollToIndexFailed={handleScrollToIndexFailed}
                 />
             ) : (
@@ -94,4 +94,7 @@ const ShareExplorePostTimeLineScreen = ({ route }) => {
     )
 }
 
-export default ShareExplorePostTimeLineScreen
+export default SearchExplorePostTimeLineScreen
+
+
+
