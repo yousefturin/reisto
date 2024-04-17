@@ -38,10 +38,11 @@ const SinginForm = ({ navigation }) => {
                 link: "",
                 displayed_name: "",
                 email: userCredential.user.email,
-                profile_picture: "https://firebasestorage.googleapis.com/v0/b/reisto-dev.appspot.com/o/imagePlcaeHolder.png?alt=media&token=d20372e0-a05e-469b-8e74-b6e8bb5ea763"
+                profile_picture: "https://firebasestorage.googleapis.com/v0/b/reisto-dev.appspot.com/o/imagePlcaeHolder%20(Custom).png?alt=media&token=b8bfe053-e9e7-452e-9223-6967309ac5b0"
             });
 
-            savedPostCreation(userCredential)
+            savedPostCreation(userCredential);
+            followersAndFollowingUserCreation(userCredential);
         } catch (error) {
             Alert.alert(error.message);
         }
@@ -54,6 +55,15 @@ const SinginForm = ({ navigation }) => {
                 owner_email: userCredential.user.email
             }).then(() => navigation.navigate("Home"))
 
+        return unsubscribe
+    }
+    const followersAndFollowingUserCreation = (userCredential) => {
+        const unsubscribe = db.collection('users').doc(userCredential.user.email)
+            .collection('following_followers').add({
+                following: [],
+                followers: [],
+                owner_email: userCredential.user.email
+            }).then(() => navigation.navigate("Home"))
         return unsubscribe
     }
     return (
