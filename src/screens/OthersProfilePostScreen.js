@@ -96,7 +96,7 @@ const OthersProfilePostScreen = ({ route }) => {
                     initialScrollIndex={initialScrollIndex}
                     // this is a trick to allow the user to scroll, it needs more test to see if those values will work on
                     // different devices the same way to remove the drop fame.
-                    getItemLayout={(data, index) => ({ length: windowHeight * 0.756, offset: windowHeight * 0.756 * index, index })}
+                    getItemLayout={(data, index) => ({ length: windowHeight * 0.736, offset: windowHeight * 0.736 * index, index })}
                     onScrollToIndexFailed={handleScrollToIndexFailed}
                 />
             ) : (
