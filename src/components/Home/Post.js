@@ -19,6 +19,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { firebase, db } from '../../firebase'
 import { blurHash } from '../../../assets/HashBlurData';
 import { Image } from 'expo-image';
+import { useNavigation } from '@react-navigation/native';
 
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
@@ -184,6 +185,36 @@ const TimeStamp = ({ post }) => (
 
 //#region Post Header
 const PostHeader = ({ post }) => {
+    const navigation = useNavigation();
+
+    const GetPostOwnerData = (post) => {
+        return new Promise((resolve, reject) => {
+            const unsubscribe = db.collection('users').where('owner_uid', '==', post.owner_uid).limit(1).onSnapshot(snapshot => {
+                const data = snapshot.docs.map(doc => doc.data())[0];
+                const userDataToBeNavigated = {
+                    username: data.username,
+                    profile_picture: data.profile_picture,
+                    displayed_name: data.displayed_name,
+                    bio: data.bio,
+                    link: data.link,
+                    id: data.email
+                };
+                // this was the only way to do it otherwise the useStat wil not be updated when it pass the Params to navigation
+                navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated });
+            });
+            // Return the unsubscribe function
+            return () => unsubscribe();
+        });
+    };
+    // this does not work currently it has issue with userData and other types of passing the data<<<<<<-(Solved)
+    const handlePostNavigationFromHome = (post) => {
+        // if the post that is click is users own post then take them to their profile,else navigate to the user.
+        if (post.owner_email === firebase.auth().currentUser.email) {
+            navigation.navigate("Profile");
+        } else {
+            GetPostOwnerData(post);
+        }
+    };
     return (
         <View style={{
             flexDirection: "row",
@@ -192,7 +223,7 @@ const PostHeader = ({ post }) => {
             alignItems: "center",
         }}>
 
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <TouchableOpacity style={{ flexDirection: "row", alignItems: "center" }} activeOpacity={0.7} onPress={() => handlePostNavigationFromHome(post)}>
                 <Image
                     source={{ uri: post.profile_picture, cache: "force-cache" }}
                     style={styles.userImage}
@@ -200,7 +231,7 @@ const PostHeader = ({ post }) => {
                     contentFit="cover"
                 />
                 <Text style={{ color: "#fff", marginLeft: 6, fontWeight: "700" }}>{post.user}</Text>
-            </View>
+            </TouchableOpacity>
             <TouchableOpacity>
                 <Text style={{ color: "#fff", fontWeight: "900", marginBottom: 15, marginRight: 10 }}>...</Text>
             </TouchableOpacity>
@@ -215,7 +246,9 @@ const PostImage = ({ post }) => {
         <View style={{ width: "100%", height: 450, }}>
             <Image
                 source={{ uri: post.imageURL, cache: "force-cache" }}
-                style={{ height: "100%"}}
+                style={{
+                    height: "100%",
+                }}
                 placeholder={blurHash}
                 contentFit="cover"
                 cachePolicy={"memory-disk"}
@@ -470,7 +503,7 @@ const CommentsContent = ({ post }) => {
                                 style={styles.userImage}
                                 placeholder={blurHash}
                                 contentFit="cover"
-                                cachePolicy={"memory-disk"}/>
+                                cachePolicy={"memory-disk"} />
 
                             <View style={{ flexDirection: "column", width: "80%", flexGrow: 1 }}>
                                 <Text style={{ color: "#fff", marginLeft: 6, fontWeight: "700" }}>{comment.username}</Text>
