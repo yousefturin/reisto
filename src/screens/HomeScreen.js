@@ -62,6 +62,8 @@ const HomeScreen = () => {
             <Header />
             {posts.length !== 0 ? (
                 <FlatList
+                    keyboardDismissMode="on-drag"
+                    keyboardShouldPersistTaps='handled' 
                     data={posts}
                     renderItem={({ item, index }) => (
                         <Post post={item} key={index} isLastPost={index === posts.length - 1} userData={userData} />
