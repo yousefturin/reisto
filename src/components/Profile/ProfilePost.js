@@ -34,6 +34,7 @@ const ProfilePost = ({ posts, userData, keyValue, userDataToBeNavigated }) => {
                 contentFit="cover"
                 cachePolicy={"memory-disk"}
                 recyclingKey={item.imageURL}
+                transition={50}
             />
         </TouchableOpacity>
     );
