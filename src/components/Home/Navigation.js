@@ -84,6 +84,7 @@ const NavigationStack = ({ routeName, userData }) => {
 
                             }} placeholder={blurHash}
                             cachePolicy={"memory-disk"}
+                            transition={50}
 
                         />
                     </TouchableOpacity>
