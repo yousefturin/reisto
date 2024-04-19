@@ -42,6 +42,15 @@ const svgData = {
   <svg  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path fill="#ffffff" d="M5 22V3C5 2.44772 5.44772 2 6 2H18C18.5523 2 19 2.44772 19 3V22L12 15.8889L5 22Z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
 `,
+  BookMarkSavedSVG: `
+  <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+	<line fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"  x1="5" y1="22" x2="5" y2="8.1"/>
+	<line fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"  x1="18.9" y1="2.5" x2="5.5" y2="2.5"/>
+	<line fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"  x1="19" y1="18" x2="18.9" y2="2.5"/>
+	<line fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"  x1="3.6" y1="1.4" x2="21.8" y2="22"/>
+	<line fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"  x1="5" y1="22" x2="11.5" y2="16.3"/>
+</svg>
+`,
   SubmitCommentSVG: `
   <svg  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M12 21V3M12 3L5 10M12 3L19 10"  stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"
@@ -178,6 +187,62 @@ const svgData = {
     <path
         d="M10.4986 7.49586L12.7507 5.24378C14.4091 3.58541 17.0978 3.5854 18.7562 5.24378C20.4146 6.90216 20.4146 9.59093 18.7562 11.2493L16.5041 13.5014M6.5 11.5L5.24378 12.7507C3.58541 14.4091 3.5854 17.0978 5.24378 18.7562C6.90216 20.4146 9.59093 20.4146 11.2493 18.7562L12.5 17.5M9.5 14.5L14.5 9.5"
         stroke="#d8e0fa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>`,
+  DeleteSVG: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path
+    d="M3 6H21M5 6V20C5 21.1046 5.89543 22 7 22H17C18.1046 22 19 21.1046 19 20V6M8 6V4C8 2.89543 8.89543 2 10 2H14C15.1046 2 16 2.89543 16 4V6"
+    stroke="#ed4535"  fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>`,
+  EditSVG: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M11 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V13"
+stroke="#ffffff" stroke-width="1.5"  fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+<path
+    d="M9.5 11.5L17.5 3.5C18.3284 2.67157 19.6716 2.67157 20.5 3.5C21.3284 4.32843 21.3284 5.67157 20.5 6.5L12.5 14.5L8 16L9.5 11.5Z"
+    stroke="#ffffff" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>`,
+  ReportIssueSVG: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 8V12" stroke="#ed4535" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+</path>
+<path d="M12 16.0195V16" stroke="#ed4535" fill="none" stroke-width="1.5" stroke-linecap="round"
+  stroke-linejoin="round"></path>
+<circle cx="12" cy="12" r="10" stroke="#ed4535"  fill="none" stroke-width="1.5" stroke-linecap="round"
+  stroke-linejoin="round"></circle>
+</svg>`,
+  UserIllustrationSVG: `
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<path
+		d="M5.75988 19.8248C6.9173 17.5547 9.27709 16 12 16C14.7019 16 17.0462 17.5308 18.2131 19.7723M14.3333 10.4444C14.3333 11.7945 13.2389 12.8889 11.8889 12.8889C10.5389 12.8889 9.44444 11.7945 9.44444 10.4444C9.44444 9.09442 10.5389 8 11.8889 8C13.2389 8 14.3333 9.09442 14.3333 10.4444ZM12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22Z"
+		stroke="#ffffff" fill="none"  stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>`,
+  EyePasswordSVG: `
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<path d="M2 2L22 22" fill="none"  stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+	</path>
+	<path
+		d="M6.71277 6.7226C3.66479 8.79527 2 12 2 12C2 12 5.63636 19 12 19C14.0503 19 15.8174 18.2734 17.2711 17.2884M11 5.05822C11.3254 5.02013 11.6588 5 12 5C18.3636 5 22 12 22 12C22 12 21.3082 13.3317 20 14.8335"
+		stroke="#ffffff"  fill="none"  stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+	<path
+		d="M14 14.2362C13.4692 14.7112 12.7684 15.0001 12 15.0001C10.3431 15.0001 9 13.657 9 12.0001C9 11.1764 9.33193 10.4303 9.86932 9.88818"
+		stroke="#ffffff"  fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>`,
+  CalenderSVG: `
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<path
+		d="M3 6C3 4.89543 3.89543 4 5 4H19C20.1046 4 21 4.89543 21 6V20C21 21.1046 20.1046 22 19 22H5C3.89543 22 3 21.1046 3 20V6Z"
+		stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+	<path d="M3 10H21" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+	</path>
+	<path d="M16 2V6" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+	</path>
+	<path d="M8 2V6" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>`,
+LocationSVG:`
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<path
+		d="M6.0325 15.2873L12.0001 22L17.9677 15.2873C22.5447 10.1388 18.8894 2 12.0001 2C5.11079 2 1.45549 10.1388 6.0325 15.2873Z"
+		stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+	<circle cx="12" cy="10" r="1" stroke="#ffffff" fill="#ffffff" stroke-width="1.5" stroke-linecap="round"
+		stroke-linejoin="round"></circle>
 </svg>`,
 
 
