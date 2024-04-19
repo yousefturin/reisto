@@ -19,6 +19,8 @@ const UserProviderComponent = ({ children }) => {
                     displayed_name: data.displayed_name,
                     bio: data.bio,
                     link: data.link,
+                    owner_uid: data.owner_uid,
+                    email: data.email
                 });
             });
             return () => unsubscribe(); // Unsubscribe on unmount
