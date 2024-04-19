@@ -111,7 +111,7 @@ const FormikPostUploader = () => {
                 // the issue with white border is that the height is for example 700.2314814814815 and that will make a problem 
                 //              showing a artifact white line to fix teh issue rounding the number is applied.
                 height = Math.round(maxWidth / aspectRatio)
-                console.log(width, height)
+                // console.log(width, height)
             }
 
             const compressedImage = await ImageManipulator.manipulateAsync(
