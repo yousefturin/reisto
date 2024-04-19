@@ -111,7 +111,7 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
-            <SavedPostsHeader userData={userData} />
+            <SavedPostsHeader header={"All Posts"} />
             {savedPosts.length !== 0 ? (
                 <FlatList
                     ref={flatListRef}
