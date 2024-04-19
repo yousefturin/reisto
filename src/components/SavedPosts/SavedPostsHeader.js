@@ -5,7 +5,7 @@ import SvgComponent from '../../utils/SvgComponents';
 import initializeScalingUtils from '../../utils/NormalizeSize';
 
 
-const SavedPostsHeader = () => {
+const SavedPostsHeader = ({header}) => {
     const navigation = useNavigation();
     const handlePressBack = () => {
         navigation.goBack()
@@ -17,7 +17,7 @@ const SavedPostsHeader = () => {
                 <SvgComponent svgKey="ArrowBackSVG" width={moderateScale(30)} height={moderateScale(30)} />
             </TouchableOpacity>
             <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", flex: 1 }}>
-                <Text style={{ color: "#fff", fontWeight: "600", fontSize: 20, }}>All Posts</Text>
+                <Text style={{ color: "#fff", fontWeight: "600", fontSize: 20, }}>{header}</Text>
             </View>
             <View style={{ margin: 10, width: moderateScale(30) }}>
             </View>
