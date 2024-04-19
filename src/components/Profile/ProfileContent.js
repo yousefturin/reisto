@@ -68,7 +68,8 @@ const ProfileContent = ({ userData, userPosts }) => {
                         }}
                         placeholder={blurHash}
                         contentFit="cover"
-                        cachePolicy={"memory-disk"} />
+                        cachePolicy={"memory-disk"}
+                        transition={50} />
                 </View>
                 <View style={{ flexDirection: "row", justifyContent: "space-evenly", flex: 1, }}>
                     <View style={{ alignItems: "center", justifyContent: "center" }}>
