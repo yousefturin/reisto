@@ -33,6 +33,7 @@ const SavedPostsGrid = ({ posts, userData, navigateToScreen }) => {
                 contentFit="cover"
                 cachePolicy={"memory-disk"}
                 recyclingKey={item.imageURL}
+                transition={50}
                 // onLoad={onLoad}
             />
         </TouchableOpacity>
