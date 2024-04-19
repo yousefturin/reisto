@@ -20,6 +20,9 @@ import UserEditProfileIndividualDataScreen from "../screens/UserEditProfileIndiv
 import SearchExplorePostTimeLineScreen from "../screens/SearchExplorePostTimeLineScreen";
 import OtherUsersProfileScreen from "../screens/OtherUsersProfileScreen";
 import OthersProfilePostScreen from "../screens/OthersProfilePostScreen";
+import MessagingMainScreen from "../screens/MessagingMainScreen";
+import AboutThisUserScreen from "../screens/AboutThisUserScreen";
+import MessagingIndividualScreen from "../screens/MessagingIndividualScreen";
 
 const Stack = createStackNavigator();
 
@@ -77,7 +80,10 @@ const AuthAppNavigator = () => {
     const userData = useContext(UserContext);
     const shouldShowNavigationStack = currentRouteName !== 'AddPost'
         && currentRouteName !== 'UserEditProfile'
-        && currentRouteName !== 'UserEditProfileIndividualData';
+        && currentRouteName !== 'UserEditProfileIndividualData'
+        && currentRouteName !== 'MessagingMain'
+        && currentRouteName !== 'AboutThisUser'
+        && currentRouteName !== 'MessageIndividual';
     return (
         <>
             <Stack.Navigator
@@ -169,6 +175,27 @@ const AuthAppNavigator = () => {
                 <Stack.Screen
                     name={"OthersProfilePost"}
                     component={OthersProfilePostScreen}
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+                <Stack.Screen
+                    name={"MessagingMain"}
+                    component={MessagingMainScreen}
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+                <Stack.Screen
+                    name={"AboutThisUser"}
+                    component={AboutThisUserScreen}
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+                <Stack.Screen
+                    name={"MessageIndividual"}
+                    component={MessagingIndividualScreen}
                     options={{
                         headerShown: false,
                     }}
