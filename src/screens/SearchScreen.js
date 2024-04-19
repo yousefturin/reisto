@@ -174,6 +174,7 @@ const SearchScreen = () => {
     };
 
     return (
+        // this must be on a scrollView-<<<<<<<<<<<<<<<<
         <SafeAreaView style={{ flex: 1, backgroundColor: "#050505", justifyContent: "flex-start" }}>
             <SearchBar
                 placeholder={"Search..."}
@@ -218,6 +219,7 @@ const SearchScreen = () => {
                                         }}
                                         placeholder={blurHash}
                                         contentFit="cover"
+                                        transition={50}
                                         cachePolicy={"memory-disk"} />
                                 </View>
 
@@ -241,6 +243,7 @@ const SearchScreen = () => {
                                             }}
                                             placeholder={blurHash}
                                             contentFit="cover"
+                                            transition={50}
                                             cachePolicy={"memory-disk"} />
                                     </View>
 
