@@ -74,7 +74,7 @@ const ProfileMenu = ({ isContainerVisible, setContainerVisible, handleLogout, mo
         >
             <View style={{
                 backgroundColor: "#262626",
-                height: screenHeight * 0.5,
+                height: screenHeight * 0.35,
                 borderTopRightRadius: 20,
                 borderTopLeftRadius: 20
             }}>
@@ -127,12 +127,11 @@ const ProfileMenu = ({ isContainerVisible, setContainerVisible, handleLogout, mo
 }
 
 
-const ProfileMenuHeader = ({ }) => (
+const ProfileMenuHeader = () => (
     <>
         <View style={{
             height: 5,
             width: 40,
-            backgroundColor: "#1C1C1E",
             borderRadius: 10,
             marginTop: 10,
             shadowColor: "black",
@@ -142,7 +141,7 @@ const ProfileMenuHeader = ({ }) => (
             },
             shadowOpacity: 0.1,
             shadowRadius: 1,
-            backgroundColor: "#2b2b2b",
+            backgroundColor: "#727272",
             alignSelf: "center"
         }} />
     </>
