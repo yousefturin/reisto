@@ -38,13 +38,16 @@ const SinginForm = ({ navigation }) => {
                 link: "",
                 displayed_name: "",
                 email: userCredential.user.email,
-                profile_picture: "https://firebasestorage.googleapis.com/v0/b/reisto-dev.appspot.com/o/imagePlcaeHolder%20(Custom).png?alt=media&token=b8bfe053-e9e7-452e-9223-6967309ac5b0"
+                profile_picture: "https://firebasestorage.googleapis.com/v0/b/reisto-dev.appspot.com/o/imagePlcaeHolder%20(Custom).png?alt=media&token=b8bfe053-e9e7-452e-9223-6967309ac5b0",
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             });
 
             savedPostCreation(userCredential);
             followersAndFollowingUserCreation(userCredential);
         } catch (error) {
-            Alert.alert(error.message);
+            let msg = error.message
+            if (msg.includes('(auth/email-already-in-use)')) msg='This email already has an account'
+                Alert.alert(msg)
         }
     };
     // with no return unsubscribe the collection will never be made
