@@ -33,7 +33,9 @@ const LoginForm = ({ navigation }) => {
             console.log('Firebase Login Successful', email, password)
             navigation.navigate("Home")
         } catch (error) {
-            Alert.alert(error.message)
+            let msg = error.message
+            if (msg.includes('(auth/invalid-credential)')) msg='Invalid email or password'
+                Alert.alert(msg)
         }
     }
 
