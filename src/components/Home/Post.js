@@ -9,8 +9,9 @@ import {
     TextInput,
     KeyboardAvoidingView,
     Platform,
+    Animated,
 } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import SvgComponent from "../../utils/SvgComponents";
 import initializeScalingUtils from "../../utils/NormalizeSize"
 import { Divider } from 'react-native-elements';
@@ -20,8 +21,10 @@ import { firebase, db } from '../../firebase'
 import { blurHash } from '../../../assets/HashBlurData';
 import { Image } from 'expo-image';
 import { useNavigation } from '@react-navigation/native';
+import ReactNativeModal from 'react-native-modal';
+import { ModalContentForUserWithDifferentSameId, ModalContentForUserWithSameId, ModalHeader } from './Modals';
 
-
+const screenHeight = Dimensions.get('window').height;
 const { moderateScale } = initializeScalingUtils(Dimensions);
 const Icons = [
     {
@@ -43,6 +46,8 @@ const Icons = [
 const Post = ({ post, userData, isLastPost }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [isContainerVisible, setContainerVisible] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isAlertModaVisible, setIsAlertModaVisible] = useState(false);
     const [commentText, setCommentText] = useState("");
     const [savedPosts, setSavedPosts] = useState([])
     const toggleCaption = () => {
@@ -150,8 +155,11 @@ const Post = ({ post, userData, isLastPost }) => {
     return (
         <View style={{ paddingBottom: isLastPost ? 55 : 30 }}>
             {/* <Divider width={1} orientation='horizontal' color="#222222" /> */}
-            <PostHeader post={post} />
-            <PostImage post={post} />
+            <PostHeader post={post} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}
+                userData={userData} handleSavedPost={handleSavedPost}
+                savedPosts={savedPosts}
+                isAlertModaVisible={isAlertModaVisible} setIsAlertModaVisible={setIsAlertModaVisible} />
+            <PostImage post={post} handleLike={handleLike} />
             <View style={{ marginHorizontal: 15, marginTop: 10, }}>
                 <PostFooter toggleContainer={toggleContainer} post={post} handleLike={handleLike} handleSavedPost={handleSavedPost} savedPosts={savedPosts} />
                 <Likes post={post} />
@@ -163,14 +171,51 @@ const Post = ({ post, userData, isLastPost }) => {
                     </TouchableOpacity> : null
                 }
 
-                <Comments post={post} setContainerVisible={setContainerVisible} handleComment={handleComment} setCommentText={setCommentText} commentText={commentText} isContainerVisible={isContainerVisible} userData={userData} />
+                <Comments post={post} setContainerVisible={setContainerVisible} handleComment={handleComment}
+                    setCommentText={setCommentText} commentText={commentText}
+                    isContainerVisible={isContainerVisible} userData={userData} />
                 <TimeStamp post={post} />
+                {/* Default name is Modal but since i have another Modal imported i used the parent name  */}
+                <ReactNativeModal
+                    isVisible={isModalVisible}
+                    onSwipeComplete={() => setIsModalVisible(false)}
+                    onBackdropPress={() => setIsModalVisible(false)}
+                    swipeDirection="down"
+                    swipeThreshold={170}
+                    style={{
+                        justifyContent: 'flex-end',
+                        margin: 0,
+                        // there is no other way to create double nested Modals and hide 
+                        // one then display the other so the only bad solution is to make the opacity removed--<<<<<<<<<<<<<<<- (needs more study for a better solution)
+                        opacity: isAlertModaVisible ? 0 : 1
+                    }}>
+                    <View style={{
+                        backgroundColor: "#262626",
+                        height: userData.owner_uid === post.owner_uid ? screenHeight * 0.4 : screenHeight * 0.33,
+                        borderTopRightRadius: 20,
+                        borderTopLeftRadius: 20
+                    }}>
+                        <ModalHeader />
+                        {/* this component is only allowed for the users that own the post  else will have different data to be shown.*/}
+                        {userData.owner_uid === post.owner_uid ? (
+                            <ModalContentForUserWithSameId handleSavedPost={handleSavedPost}
+                                savedPosts={savedPosts} post={post} setIsModalVisible={setIsModalVisible}
+                                isAlertModaVisible={isAlertModaVisible} setIsAlertModaVisible={setIsAlertModaVisible} />
+                        ) : (
+                            <ModalContentForUserWithDifferentSameId handleSavedPost={handleSavedPost} savedPosts={savedPosts}
+                                post={post} setIsModalVisible={setIsModalVisible} />
+                        )
+                        }
+
+                    </View>
+                </ReactNativeModal>
             </View>
         </View>
     )
 }
 //#endregion
 
+//#region  Time display
 const TimeStamp = ({ post }) => (
     post.createdAt && (
         <View style={{ marginTop: 5 }}>
@@ -181,10 +226,10 @@ const TimeStamp = ({ post }) => (
         </View>
     )
 )
-
+//#endregion
 
 //#region Post Header
-const PostHeader = ({ post }) => {
+const PostHeader = ({ post, isModalVisible, setIsModalVisible, userData, }) => {
     const navigation = useNavigation();
 
     const GetPostOwnerData = (post) => {
@@ -197,7 +242,8 @@ const PostHeader = ({ post }) => {
                     displayed_name: data.displayed_name,
                     bio: data.bio,
                     link: data.link,
-                    id: data.email
+                    id: data.email,
+                    owner_uid: post.owner_uid
                 };
                 // this was the only way to do it otherwise the useStat wil not be updated when it pass the Params to navigation
                 navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated });
@@ -229,10 +275,11 @@ const PostHeader = ({ post }) => {
                     style={styles.userImage}
                     placeholder={blurHash}
                     contentFit="cover"
+                    transition={50}
                 />
                 <Text style={{ color: "#fff", marginLeft: 6, fontWeight: "700" }}>{post.user}</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => setIsModalVisible(!isModalVisible)}>
                 <Text style={{ color: "#fff", fontWeight: "900", marginBottom: 15, marginRight: 10 }}>...</Text>
             </TouchableOpacity>
         </View>
@@ -240,22 +287,70 @@ const PostHeader = ({ post }) => {
 }
 //#endregion
 
+
+
+
 //#region Post Image
-const PostImage = ({ post }) => {
+const PostImage = ({ post, handleLike }) => {
+    // when pressed twice then pass post to handleLike(post)
+    const [pressCount, setPressCount] = useState(0);
+    const [heartPosition, setHeartPosition] = useState({ x: 0, y: 0 });
+    const [fadeAnimation] = useState(new Animated.Value(1));
+    const [showHeart, setShowHeart] = useState(false);
+
+    const handleDoubleTapImage = (post, event) => {
+        const { locationX, locationY } = event.nativeEvent;
+        setHeartPosition({ x: locationX, y: locationY });
+        setPressCount(pressCount + 1);
+
+        if (pressCount === 1) {
+            handleLike(post);
+            setShowHeart(true);
+            fadeOutHeart();
+        }
+        setTimeout(() => {
+            setPressCount(0);
+        }, 300);
+    };
+
+    const fadeOutHeart = () => {
+        Animated.timing(fadeAnimation, {
+            toValue: 0,
+            duration: 2000,
+            useNativeDriver: true,
+        }).start(() => {
+            setShowHeart(false);
+            fadeAnimation.setValue(1);
+        });
+    };
+
     return (
-        <View style={{ width: "100%", height: 450, }}>
+        <TouchableOpacity
+            activeOpacity={1}
+            style={{ width: '100%', height: 450 }}
+            onPress={(event) => handleDoubleTapImage(post, event)}>
             <Image
-                source={{ uri: post.imageURL, cache: "force-cache" }}
-                style={{
-                    height: "100%",
-                }}
+                source={{ uri: post.imageURL, cache: 'force-cache' }}
+                style={{ height: '100%' }}
                 placeholder={blurHash}
                 contentFit="cover"
-                cachePolicy={"memory-disk"}
+                cachePolicy={'memory-disk'}
+                transition={50}
             />
-        </View>
-    )
-}
+            {showHeart && (
+                <Animated.View
+                    style={{
+                        top: heartPosition.y - 12,
+                        left: heartPosition.x - 12,
+                        opacity: fadeAnimation,
+                        position: "absolute"
+                    }}>
+                    <SvgComponent svgKey="LikeActiveSVG" width={moderateScale(60)} height={moderateScale(60)} fill={'#ffffff'} />
+                </Animated.View>
+            )}
+        </TouchableOpacity>
+    );
+};
 
 
 //#endregion
@@ -442,11 +537,11 @@ const Comments = ({ post, isContainerVisible, setContainerVisible, userData, han
                             placeholder={blurHash}
                             contentFit="cover"
                             cachePolicy={"memory-disk"}
+                            transition={50}
                         />
-
-                        <ScrollView
-                            keyboardShouldPersistTaps="always"
-                            contentContainerStyle={styles.inputControl}>
+                        {/* why on earth this was as ScrollView!!!!!!!!!!! 2 weeks of trying to solve this issue and it was only because there was an extra scrollView */}
+                        <View
+                            style={styles.inputControl}>
                             <TextInput
                                 autoCapitalize='none'
                                 autoCorrect={true}
@@ -478,7 +573,7 @@ const Comments = ({ post, isContainerVisible, setContainerVisible, userData, han
                                 </LinearGradient>
 
                             </TouchableOpacity>
-                        </ScrollView>
+                        </View>
                     </View>
                 </KeyboardAvoidingView>
             </View>
@@ -492,7 +587,8 @@ const Comments = ({ post, isContainerVisible, setContainerVisible, userData, han
 const CommentsContent = ({ post }) => {
     return (
         <ScrollView
-            keyboardShouldPersistTaps="always"
+            keyboardDismissMode="on-drag"
+            keyboardShouldPersistTaps={'always'}
             contentContainerStyle={styles.commentsContainer}>
             {post.comments.map((comment, index) => (
                 <View key={index} style={{ marginVertical: 15, }} >
@@ -503,7 +599,9 @@ const CommentsContent = ({ post }) => {
                                 style={styles.userImage}
                                 placeholder={blurHash}
                                 contentFit="cover"
-                                cachePolicy={"memory-disk"} />
+                                cachePolicy={"memory-disk"}
+                                transition={50}
+                            />
 
                             <View style={{ flexDirection: "column", width: "80%", flexGrow: 1 }}>
                                 <Text style={{ color: "#fff", marginLeft: 6, fontWeight: "700" }}>{comment.username}</Text>
@@ -557,13 +655,10 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         padding: 20,
         paddingTop: 20,
-        // justifyContent: "flex-start",
-        // alignItems: "flex-start",
     },
     ModalTopNotch: {
         height: 5,
         width: 40,
-        backgroundColor: "#1C1C1E",
         borderRadius: 10,
         marginTop: 10,
         shadowColor: "black",
@@ -573,7 +668,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.1,
         shadowRadius: 1,
-        backgroundColor: "#2b2b2b",
+        backgroundColor: "#727272",
         alignSelf: "center"
     },
     inputControl: {
