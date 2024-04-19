@@ -2,10 +2,13 @@ import { View, Dimensions, StyleSheet, TouchableOpacity,Text } from 'react-nativ
 import React from 'react'
 import SvgComponent from '../../utils/SvgComponents'
 import initializeScalingUtils from '../../utils/NormalizeSize';
+import { useNavigation } from '@react-navigation/native';
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
 const Header = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
           <TouchableOpacity>
@@ -13,7 +16,7 @@ const Header = () => {
           </TouchableOpacity>
 
         <View style={styles.iconsContainer}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.navigate('MessagingMain')}>
         <View style={styles.unreadBadge}>
           <Text style={styles.unreadBadgeText}>11</Text>
         </View>
