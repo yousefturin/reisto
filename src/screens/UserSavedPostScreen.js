@@ -73,7 +73,7 @@ const UserSavedPostScreen = () => {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
             <>
-                <SavedPostsHeader />
+                <SavedPostsHeader header={"Saved Posts"}/>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     refreshControl={
