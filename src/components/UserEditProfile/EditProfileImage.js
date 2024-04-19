@@ -8,7 +8,7 @@ import { db, firebase } from '../../firebase';
 import { Image } from 'expo-image';
 const EditProfileImage = ({ userData }) => {
     const [image, setImage] = useState(null);
-    console.log(userData)
+    // console.log(userData)
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -54,6 +54,7 @@ const EditProfileImage = ({ userData }) => {
                         }}
                         placeholder={blurHash}
                         contentFit="cover"
+                        transition={50}
                     />
                 ) : (
                     <Image source={{ uri: userData.profile_picture, cache: "force-cache" }}
@@ -67,6 +68,7 @@ const EditProfileImage = ({ userData }) => {
                         }}
                         placeholder={blurHash}
                         contentFit="cover"
+                        transition={50}
                     />
                 )}
 
