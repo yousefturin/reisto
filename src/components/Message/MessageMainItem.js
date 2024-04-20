@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, TouchableOpacity, Alert, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Image } from 'expo-image';
 import { blurHash } from '../../../assets/HashBlurData';
@@ -8,11 +8,14 @@ import { collection, doc, onSnapshot, orderBy, query } from 'firebase/firestore'
 import { db } from '../../firebase';
 import { Skeleton } from 'moti/skeleton';
 import calculateTimeDifference from '../../utils/TimeDifferenceCalculator';
+import SvgComponent from '../../utils/SvgComponents';
+import initializeScalingUtils from '../../utils/NormalizeSize';
 
 const MessageMainItem = ({ item, userData, onUpdateLastMessage }) => {
     const navigation = useNavigation();
     const [lastMessage, setLastMessage] = useState(null);
     const [loading, setLoading] = useState(true);
+    const { moderateScale } = initializeScalingUtils(Dimensions);
 
     const SkeletonCommonProps = {
         colorMode: 'dark',
@@ -59,9 +62,14 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage }) => {
     const renderLastMessage = () => {
         // if i am who sent then show the you 
         // not need to use the ? here since the condition is already will be passed only if it exist
-        if (userData?.owner_uid == lastMessage.owner_id) return "You: " + lastMessage?.text
+        if (userData?.owner_uid == lastMessage.owner_id) return <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>{"You: " + lastMessage?.text}</Text>
         // if not me the just show it normally
-        return lastMessage?.text
+        return <View style={{ flexDirection: "row", gap: 5, }}>
+            <Text style={{ color: "#fff", fontSize: 13, fontWeight: "500" }} >{lastMessage?.text}</Text>
+            <View style={{alignSelf:"center"}}>
+                <SvgComponent svgKey="DotSVG" width={moderateScale(7)} height={moderateScale(7)} fill={'#ffffff'} />
+            </View>
+        </View>
     }
     const renderTime = () => {
         if (lastMessage && lastMessage.createdAt) {
@@ -101,7 +109,9 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage }) => {
                         {...SkeletonCommonProps}
                     />
                 ) : (
-                    <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>{lastMessage ? renderLastMessage() : 'Say Hi 👋'}</Text>
+                    <>
+                        {lastMessage ? renderLastMessage() : <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>Say Hi 👋</Text>}
+                    </>
                 )}
             </View>
             <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
