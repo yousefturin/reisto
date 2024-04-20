@@ -236,13 +236,16 @@ stroke="#ffffff" stroke-width="1.5"  fill="none" stroke-linecap="round" stroke-l
 	</path>
 	<path d="M8 2V6" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
 </svg>`,
-LocationSVG:`
+  LocationSVG: `
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 	<path
 		d="M6.0325 15.2873L12.0001 22L17.9677 15.2873C22.5447 10.1388 18.8894 2 12.0001 2C5.11079 2 1.45549 10.1388 6.0325 15.2873Z"
 		stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
 	<circle cx="12" cy="10" r="1" stroke="#ffffff" fill="#ffffff" stroke-width="1.5" stroke-linecap="round"
 		stroke-linejoin="round"></circle>
+</svg>`,
+  DotSVG: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+<circle cx="10.25" cy="10.25" r="9.5" fill="#0E7AFE" stroke="#0E7AFE" stroke-linecap="round" stroke-width="1.5" />
 </svg>`,
 
 
