@@ -27,8 +27,8 @@ const MessagingMainScreen = () => {
                 // Initialize an array to store batched fetch promises
                 const fetchPromises = [];
 
-                // Push fetch promises for each follower
-                for (const follower of data.followers) {
+                // Push fetch promises for each follower-<<<<<<<< need to fix the issue where i have no idea what to show for users is it followers or following or both
+                for (const follower of data.following) {
                     const fetchPromise = db.collection('users').doc(follower).get();
                     fetchPromises.push(fetchPromise);
                 }
