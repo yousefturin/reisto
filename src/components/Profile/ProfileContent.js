@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Dimensions, Modal } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useNavigation } from "@react-navigation/native";
 import { blurHash } from '../../../assets/HashBlurData';
 import { Image } from 'expo-image';
@@ -9,6 +9,7 @@ import { extractDomain } from '../../utils/ExtractDomainFromLink';
 import { WebView } from 'react-native-webview';
 import { Divider } from 'react-native-elements';
 import { db, firebase } from '../../firebase';
+
 
 
 
@@ -22,7 +23,8 @@ const ProfileContent = ({ userData, userPosts }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [followersAndFollowing, setFollowersAndFollowing] = useState({ followers: '', following: '', id: '' })
     const { moderateScale } = initializeScalingUtils(Dimensions);
-
+    const [followersData, setFollowersData] = useState([]);
+    const [followingData, setFollowingData] = useState([]);
     useEffect(() => {
         getFollowersAndFollowingData();
     }, [])
@@ -53,6 +55,64 @@ const ProfileContent = ({ userData, userPosts }) => {
             console.log("No document found in the collection.");
         }
     };
+    useLayoutEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            const querySnapshot = await db.collection('users').doc(userData.email).collection('following_followers').limit(1).get();
+            if (!querySnapshot.empty) {
+                const doc = querySnapshot.docs[0];
+                const data = doc.data();
+
+                // Initialize an array to store batched fetch promises
+                const fetchPromises = [];
+                const fetchPromisesSecond = [];
+
+                // Push fetch promises for each follower-<<<<<<<< need to fix the issue where i have no idea what to show for users is it followers or following or both
+                for (const following of data.following) {
+                    const fetchPromise = db.collection('users').doc(following).get();
+                    fetchPromises.push(fetchPromise);
+                }
+                for (const followers of data.followers) {
+                    const fetchPromise = db.collection('users').doc(followers).get();
+                    fetchPromisesSecond.push(fetchPromise);
+                }
+
+                // Execute batched reads
+                const [followerDocs, followingDocs] = await Promise.all([Promise.all(fetchPromises), Promise.all(fetchPromisesSecond)]);
+
+                // Extract data from follower documents
+                const followersData = followerDocs
+                    .filter(doc => doc.exists)
+                    .map(doc => doc.data());
+                const followingData = followingDocs
+                    .filter(doc => doc.exists)
+                    .map(doc => doc.data());
+
+                setFollowersData(followersData);
+                setFollowingData(followingData);
+            } else {
+                console.log("No document found in the collection.");
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
+    const handleUserFollowingAndFollowerDisplay = (flag) => {
+        let data
+        if (flag === "followers") {
+            data = followersData
+        }
+        if (flag === "following") {
+            data = followingData
+        }
+        navigation.navigate("UserFollowingAndFollowersList", {
+            userData: userData, data: data, flag: flag
+        })
+    }
+
     return (
         <View style={{ flexDirection: "column", }}>
             <View style={{ flexDirection: "row", }}>
@@ -81,25 +141,26 @@ const ProfileContent = ({ userData, userPosts }) => {
                         </Text>
                     </View>
 
-                    <View style={{ alignItems: "center", justifyContent: "center" }}>
+                    <TouchableOpacity onPress={() => handleUserFollowingAndFollowerDisplay("followers")} style={{ alignItems: "center", justifyContent: "center" }}>
                         <Text style={{ color: "#fff", fontWeight: "600", fontSize: 18 }}>
                             {Object.keys(followersAndFollowing?.followers).length}
                         </Text>
                         <Text style={{ color: "#cccccc" }}>
                             followers
                         </Text>
-                    </View>
+                    </TouchableOpacity>
 
-                    <View style={{ alignItems: "center", justifyContent: "center" }}>
+                    <TouchableOpacity onPress={() => handleUserFollowingAndFollowerDisplay("following")} style={{ alignItems: "center", justifyContent: "center" }}>
                         <Text style={{ color: "#fff", fontWeight: "600", fontSize: 18 }}>
                             {Object.keys(followersAndFollowing?.following).length}
                         </Text>
                         <Text style={{ color: "#cccccc" }}>
                             following
                         </Text>
-                    </View>
+                    </TouchableOpacity>
                 </View>
             </View>
+
             {/* Will be connected to DB soon */}
             {userData.displayed_name &&
                 <View style={{ marginHorizontal: 20, maxHeight: 50, }} >
