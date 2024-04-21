@@ -79,8 +79,8 @@ const NavigationStack = ({ routeName, userData }) => {
                                 width: moderateScale(25),
                                 height: moderateScale(25),
                                 borderRadius: 50,
-                                borderWidth: 1,
-                                borderColor: "#2b2b2b"
+                                borderWidth: icons[4].action === routeName ? 1.5 : 1,
+                                borderColor: icons[4].action === routeName ? "#ffff" : "#2b2b2b"
 
                             }} placeholder={blurHash}
                             cachePolicy={"memory-disk"}
