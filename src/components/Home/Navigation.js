@@ -43,12 +43,18 @@ const NavigationStack = ({ routeName, userData }) => {
             inActiveURL: 'NotificationSVGInActive',
         },
         {
-            action: 'UserProfile',
+            action: [
+                'UserProfile',
+                'UserFollowingAndFollowersList',
+                'UserSavedPostTimeLine',
+                'UserSavedPost',
+                'UserActivity',
+                'UserSetting',
+                'UserProfilePost'],
             activeURL: `${userData.profile_picture}`,
         },
     ]
     //#region Post Footer
-
     const NavigationButtons = ({ routeName }) => {
         return (
             <>
@@ -58,6 +64,9 @@ const NavigationStack = ({ routeName, userData }) => {
                         <TouchableOpacity
                             key={index}
                             onPress={() => {
+                                // this is the navigation to the screen needs to be fixed so 
+                                // that the navigation will be done to the screen that is needed 
+                                //since the actions for the icons will be changes to include more screens sub-from home screen.
                                 navigation.navigate(icon.action);
                             }}
                             style={{ padding: 10 }}
@@ -74,18 +83,18 @@ const NavigationStack = ({ routeName, userData }) => {
 
                     }} style={{ padding: 10 }}>
                         {/* ProfileBtn */}
-                        <Image source={{ uri: icons[4].activeURL, cache: "force-cache" }}
+                        <Image
+                            source={{ uri: icons[4].activeURL, cache: "force-cache" }}
                             style={{
                                 width: moderateScale(25),
                                 height: moderateScale(25),
                                 borderRadius: 50,
-                                borderWidth: icons[4].action === routeName ? 1.5 : 1,
-                                borderColor: icons[4].action === routeName ? "#ffff" : "#2b2b2b"
-
-                            }} placeholder={blurHash}
+                                borderWidth: icons[4].action.includes(routeName) ? 1.5 : 1,
+                                borderColor: icons[4].action.includes(routeName) ? "#ffff" : "#2b2b2b"
+                            }}
+                            placeholder={blurHash}
                             cachePolicy={"memory-disk"}
                             transition={50}
-
                         />
                     </TouchableOpacity>
                 </View>
