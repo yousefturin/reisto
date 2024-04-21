@@ -4,7 +4,7 @@ import { firebase } from '../firebase'
 import { NavigationContainer } from "@react-navigation/native";
 import { UserProvider } from '../context/UserDataProvider';
 import LottieView from 'lottie-react-native';
-import { Dimensions, Text, View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import SvgComponent from '../utils/SvgComponents';
 import initializeScalingUtils from '../utils/NormalizeSize';
 
