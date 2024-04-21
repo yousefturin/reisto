@@ -8,7 +8,7 @@ import MessageList from '../components/MessagesIndividual/MessageList';
 import initializeScalingUtils from '../utils/NormalizeSize';
 import SvgComponent from '../utils/SvgComponents';
 import { LinearGradient } from 'expo-linear-gradient';
-import { addDoc, collection, doc, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { addDoc, collection, doc, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
 
 
 
@@ -22,17 +22,23 @@ const MessagingIndividualScreen = ({ route }) => {
     const inputRef = useRef(null);
     const scrollViewRef = useRef(null);
     useEffect(() => {
-        handleCreateChat();
+        // room creation is not needed here and will be only created on send message and then it will be checked if the room exists or not
+        // handleCreateChat();
         try {
-            let roomId = GenerateRoomId(userData?.owner_uid, userDataUid.owner_uid);
-            console.log(roomId)
+            let roomId = GenerateRoomId(userData.owner_uid, userDataUid.owner_uid);
             const DocRef = doc(db, 'messages', roomId)
             const messagesRef = collection(DocRef, "private_messages");
             const qu = query(messagesRef, orderBy('createdAt', 'asc'));
 
             let unsubscribe = onSnapshot(qu, (snapshot) => {
                 let allMessages = snapshot.docs.map(doc => {
-                    return doc.data();
+                    let messageData = doc.data();
+                    // Check if the current user is the recipient of the message
+                    if (messageData.owner_id === userDataUid.owner_uid) {
+                        // Mark the message as seen by the recipient
+                        updateMessageSeenStatus(roomId, doc.id);
+                    }
+                    return messageData;
                 })
                 setMessages([...allMessages]);
             });
@@ -47,17 +53,30 @@ const MessagingIndividualScreen = ({ route }) => {
             Alert.alert(error.message);
         }
     }, [])
+
     useEffect(() => {
         updateScrollView();
     }, [messages])
+
     const updateScrollView = () => {
         setTimeout(() => {
             scrollViewRef?.current?.scrollToEnd({ animated: true })
         }, 100)
     }
-
+    // Function to update the seen status of a message
+    const updateMessageSeenStatus = async (roomId, messageId) => {
+    
+        try {
+            const messageRef = doc(db, 'messages', roomId, 'private_messages', messageId);
+            await updateDoc(messageRef, {
+                seenBy: firebase.firestore.FieldValue.arrayUnion(userData.owner_uid)
+            });
+        } catch (error) {
+            console.error("Error updating message seen status:", error);
+        }
+    }
     const handleCreateChat = async () => {
-        let roomId = GenerateRoomId(userData?.owner_uid, userDataUid.owner_uid);
+        let roomId = GenerateRoomId(userData.owner_uid, userDataUid.owner_uid);
         try {
             const roomRef = db.collection('messages').doc(roomId);
             const roomSnap = await roomRef.get();
@@ -66,6 +85,9 @@ const MessagingIndividualScreen = ({ route }) => {
                 await roomRef.set({
                     roomId,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    // first owner1 will always be the current user this is used in the main screen for messages to show the user who sent the message
+                    owner1: userData.email,
+                    owner2: userDataUid.email,
                 });
             }
         } catch (error) {
@@ -74,9 +96,10 @@ const MessagingIndividualScreen = ({ route }) => {
     }
     const handleSendMessage = async () => {
         let message = textRef.current.trim();
+        handleCreateChat()
         if (!message) return;
         try {
-            let roomId = GenerateRoomId(userData?.owner_uid, userDataUid.owner_uid);
+            let roomId = GenerateRoomId(userData.owner_uid, userDataUid.owner_uid);
             const DocRef = db.collection('messages').doc(roomId)
             const messagesRef = collection(DocRef, "private_messages");
             //clear the message after it send
@@ -88,6 +111,7 @@ const MessagingIndividualScreen = ({ route }) => {
                 profile_picture: userData?.profile_picture,
                 sender_name: userData?.username,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                seenBy: [userData?.owner_uid]
             })
         } catch (error) {
             Alert.alert(error.message);
