@@ -23,6 +23,8 @@ import OthersProfilePostScreen from "../screens/OthersProfilePostScreen";
 import MessagingMainScreen from "../screens/MessagingMainScreen";
 import AboutThisUserScreen from "../screens/AboutThisUserScreen";
 import MessagingIndividualScreen from "../screens/MessagingIndividualScreen";
+import UserFollowingAndFollowersListScreen from "../screens/UserFollowingAndFollowersListScreen";
+import MessagingNewForFollowersAndFollowingScreen from "../screens/MessagingNewForFollowersAndFollowingScreen";
 
 const Stack = createStackNavigator();
 
@@ -83,7 +85,8 @@ const AuthAppNavigator = () => {
         && currentRouteName !== 'UserEditProfileIndividualData'
         && currentRouteName !== 'MessagingMain'
         && currentRouteName !== 'AboutThisUser'
-        && currentRouteName !== 'MessageIndividual';
+        && currentRouteName !== 'MessageIndividual'
+        && currentRouteName !== 'MessagingNewMessageForFollowerAndFollowings';
     return (
         <>
             <Stack.Navigator
@@ -196,6 +199,20 @@ const AuthAppNavigator = () => {
                 <Stack.Screen
                     name={"MessageIndividual"}
                     component={MessagingIndividualScreen}
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+                <Stack.Screen
+                    name={"UserFollowingAndFollowersList"}
+                    component={UserFollowingAndFollowersListScreen}
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+                <Stack.Screen
+                    name={"MessagingNewMessageForFollowerAndFollowings"}
+                    component={MessagingNewForFollowersAndFollowingScreen}
                     options={{
                         headerShown: false,
                     }}
