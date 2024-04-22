@@ -81,7 +81,7 @@ const ProfileContent = ({ userData, userPosts }) => {
                 }
 
                 // Execute batched reads
-                const [followerDocs, followingDocs] = await Promise.all([Promise.all(fetchPromises), Promise.all(fetchPromisesSecond)]);
+                const [followingDocs, followerDocs] = await Promise.all([Promise.all(fetchPromises), Promise.all(fetchPromisesSecond)]);
 
                 // Extract data from follower documents
                 const followersData = followerDocs
