@@ -9,7 +9,7 @@ const { moderateScale } = initializeScalingUtils(Dimensions);
 
 const Header = () => {
   const navigation = useNavigation();
-  // const { messagesNum } = useContext(MessagesNumContext);
+  const { messagesNum, loadingMessagesNum } = useContext(MessagesNumContext);
 
   return (
     <View style={styles.container}>
@@ -19,13 +19,13 @@ const Header = () => {
 
       <View style={styles.iconsContainer}>
         <TouchableOpacity onPress={() => navigation.navigate('MessagingMain')}>
-          <View style={styles.unreadBadge}>
-            <Text style={styles.unreadBadgeText}>0</Text>
+          <View style={[styles.unreadBadge, { backgroundColor: loadingMessagesNum ? ("transparent") : messagesNum !== 0 ? "tomato" : "transparent" }]}>
+
+            <Text style={styles.unreadBadgeText}>{messagesNum !== 0 ? messagesNum : null}</Text>
           </View>
           <SvgComponent svgKey="ChatSVG" width={moderateScale(22)} height={moderateScale(22)} fill={'#ffffff'} />
         </TouchableOpacity>
       </View>
-
     </View>
   )
 }
@@ -40,7 +40,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   unreadBadge: {
-    backgroundColor: "tomato",
     position: "absolute",
     left: 12,
     bottom: 16,
