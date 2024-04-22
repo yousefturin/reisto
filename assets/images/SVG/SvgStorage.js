@@ -247,6 +247,19 @@ stroke="#ffffff" stroke-width="1.5"  fill="none" stroke-linecap="round" stroke-l
   DotSVG: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
 <circle cx="10.25" cy="10.25" r="9.5" fill="#0E7AFE" stroke="#0E7AFE" stroke-linecap="round" stroke-width="1.5" />
 </svg>`,
+  CheckSVG: `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+	<path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+		d="M4.2,14.4L7.8,18l12-12" />
+</svg>`,
+doubleCheckSVG: `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+	<path fill="none"  stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+		d="M1.4,14L5,17.6l12-12" />
+	<path fill="none"  stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+		d="M9.5,17.3l1.1,1l12-12" />
+
+</svg>`,
 
 
 }
