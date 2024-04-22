@@ -149,8 +149,8 @@ const MessagingIndividualScreen = ({ route }) => {
                                     style={{ justifyContent: "center" }}>
                                     <LinearGradient
                                         // Button Linear Gradient
-                                        colors={['#7e9bdf', '#6581B7', '#445379']}
-                                        style={{ marginRight: 7, padding: 7, borderRadius: 50, justifyContent: "center", alignItems: "center" }}>
+                                        colors={['#007AFF', '#007AFF', '#007AFF']}
+                                        style={{ marginRight: 9, padding: 7, borderRadius: 50, justifyContent: "center", alignItems: "center" }}>
                                         <SvgComponent svgKey="SubmitCommentSVG" width={moderateScale(18)} height={moderateScale(18)} fill={'#ffffff'} />
                                     </LinearGradient>
                                 </TouchableOpacity>
