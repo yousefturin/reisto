@@ -10,7 +10,7 @@ import { Skeleton } from 'moti/skeleton';
 import calculateTimeDifference from '../../utils/TimeDifferenceCalculator';
 import SvgComponent from '../../utils/SvgComponents';
 import initializeScalingUtils from '../../utils/NormalizeSize';
-import { MessagesNumContext } from '../../context/MessagesNumProvider';
+
 
 const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
     const navigation = useNavigation();
@@ -46,12 +46,12 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
             setLoading(false);
         }
         // this was by help of GPT my lastMessage was only flashing and i could not solve the issue
-        const timer = setTimeout(() => {
-            setLoading(false);
-        }, 2000); // Display "No messages yet" for 2 seconds
+        // const timer = setTimeout(() => {
+        //     setLoading(false);
+        // }, 1000); // Display "No messages yet" for 2 seconds
 
         return () => {
-            clearTimeout(timer);
+            // clearTimeout(timer);
             unsubscribe && unsubscribe();
         };
     }, []);
@@ -62,14 +62,30 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
     const renderLastMessage = () => {
         // if i am who sent then show the you 
         // not need to use the ? here since the condition is already will be passed only if it exist
-        if (userData?.owner_uid == lastMessage.owner_id) return <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>{"You: " + lastMessage?.text}</Text>
+        if (userData?.owner_uid == lastMessage.owner_id)
+            return (
+                <>
+                    {
+                        lastMessage?.seenBy.includes(userData.owner_uid) ? (
+                            <View style={{ flexDirection: "row-reverse", gap: 2, }}>
+                                <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>{lastMessage?.text}</Text>
+                                <View style={{ alignSelf: "center" }}>
+                                    <SvgComponent svgKey="CheckSVG" width={moderateScale(13)} height={moderateScale(13)} stroke={'#8E8E93'} />
+                                </View>
+                            </View>
+                        ) : (
+                            null
+                        )
+                    }
+                </>
+            )
         // if not me the just show it normally
-        return <View style={{ flexDirection: "row", gap: 5, }}>
+        return <View style={{ flexDirection: "row-reverse", gap: 2, }}>
             <Text style={{ color: !lastMessage.seenBy.includes(userData.owner_uid) ? "#fff" : "#8E8E93", fontSize: 13, fontWeight: "500" }} >{lastMessage?.text}</Text>
             {/* // if the user did not fetch the last message then show the dot as it indicate that the message is not seen yet by the user */}
             <View style={{ alignSelf: "center" }}>
-                {!lastMessage.seenBy.includes(userData.owner_uid) ? (
-                    <SvgComponent svgKey="DotSVG" width={moderateScale(7)} height={moderateScale(7)} fill={'#ffffff'} />
+                {lastMessage?.seenBy.includes(userData.owner_uid) ? (
+                    <SvgComponent svgKey="doubleCheckSVG" width={moderateScale(13)} height={moderateScale(13)} stroke={'#8E8E93'} />
                 ) : (
                     null
                 )}
@@ -82,13 +98,13 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
             const dataFormatted = calculateTimeDifference(date);
             return dataFormatted + " ago";
         } else {
-            return ''; // or any default message or placeholder
+            return '';
         }
     }
     if (flag === "FromMain") {
         return (
             <TouchableOpacity style={{ flexDirection: "row", marginHorizontal: 10 }} onPress={() => handleNavigationToChat(item)}>
-                <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
+                <View style={{ flex: 0.2, justifyContent: "center", alignItems: "center" }}>
                     <Image
                         source={{ uri: item.profile_picture, cache: "force-cache" }}
                         style={{
@@ -105,7 +121,7 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
                         cachePolicy={"memory-disk"}
                     />
                 </View>
-                <View style={{ flexDirection: "column", width: "60%", justifyContent: "center", alignItems: "flex-start" }}>
+                <View style={{ flexDirection: "column", flex: 0.55, justifyContent: "center", alignItems: "flex-start" }}>
                     <Text style={{ color: "#fff", fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
                     {loading ? (
                         <Skeleton
@@ -120,10 +136,24 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
                         </>
                     )}
                 </View>
-                <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
+                <View style={{ alignSelf: "center", flex: 0.05 }}>
+                    {loading ? (
+                        null
+                    ) : (
+                        <>
+                            {lastMessage && lastMessage.seenBy?.includes(userData.owner_uid) ? (
+                                null
+                            ) : (
+                                <SvgComponent svgKey="DotSVG" width={moderateScale(8)} height={moderateScale(8)} fill={'#ffffff'} />
+                            )}
+                        </>
+                    )}
+
+                </View>
+                <View style={{ flex: 0.2, justifyContent: "center", alignItems: "center" }}>
                     <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>{lastMessage ? renderTime() : ''}</Text>
                 </View>
-            </TouchableOpacity>
+            </TouchableOpacity >
         );
     }
     if (flag === "FromNewMessage") {
