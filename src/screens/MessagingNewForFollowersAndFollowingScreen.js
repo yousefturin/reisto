@@ -3,7 +3,7 @@ import { View, Text, SafeAreaView } from 'react-native';
 import EditProfileHeader from '../components/UserEditProfile/EditProfileHeader';
 import { useNavigation } from '@react-navigation/native';
 import { db } from '../firebase';
-import MainMessageList from '../components/Message/MainMessageList';
+import MessageMainList from '../components/Message/MessageMainList';
 
 
 
@@ -66,7 +66,7 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
     return (
         <SafeAreaView>
             <EditProfileHeader headerTitle={"New message"} navigation={navigation} />
-            <MainMessageList usersForMessaging={usersForMessaging} userData={userData} flag={"FromNewMessage"} />
+            <MessageMainList usersForMessaging={usersForMessaging} userData={userData} flag={"FromNewMessage"} />
         </SafeAreaView>
     );
 };
