@@ -7,6 +7,7 @@ import LottieView from 'lottie-react-native';
 import { Dimensions, View } from 'react-native';
 import SvgComponent from '../utils/SvgComponents';
 import initializeScalingUtils from '../utils/NormalizeSize';
+import { MessagesNumProvider } from '../context/MessagesNumProvider';
 
 const AuthNavigation = () => {
     const [currentUser, setCurrentUser] = useState(null)
@@ -52,9 +53,11 @@ const AuthNavigation = () => {
     return (
         <NavigationContainer theme={DarkThemeNavigator}>
             {currentUser ?
-                    <UserProvider>
+                <UserProvider>
+                    <MessagesNumProvider>
                         <AuthAppNavigator />
-                    </UserProvider>
+                    </MessagesNumProvider>
+                </UserProvider>
                 : <UnAuthAppNavigator />}
         </NavigationContainer>
     );
