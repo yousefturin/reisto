@@ -4,7 +4,7 @@ import MessageMainHeader from '../components/Message/MessageMainHeader'
 import { UserContext } from '../context/UserDataProvider'
 import { db } from '../firebase'
 import MessageLoadingPlaceHolder from '../components/Message/MessageLoadingPlaceHolder'
-import MainMessageList from '../components/Message/MainMessageList'
+import MessageMainList from '../components/Message/MessageMainList'
 import MessageMainSearchBar from '../components/Message/MessageMainSearchBar'
 
 // all of the fetching will be moved to a provider and everything will be fetched on an auth stage so the app works fast as fuck.-<<<<<(fixed with batch fetching)
@@ -18,6 +18,7 @@ const MessagingMainScreen = () => {
     useLayoutEffect(() => {
         fetchData();
     }, []);
+
     // This code was previously fetching all messages based on following and followers users, but now it will only show the messages that the user has sent.
     // The performance of fetching has improved significantly by optimizing the query and using batch fetching.
     const fetchData = async () => {
@@ -146,7 +147,7 @@ const MessagingMainScreen = () => {
             <MessageMainSearchBar RightIconContainerStyle={RightIconContainerStyle} />
             {usersForMessaging.length !== 0 ? (
                 <>
-                    <MainMessageList usersForMessaging={usersForMessaging}
+                    <MessageMainList usersForMessaging={usersForMessaging}
                         userData={userData} sortedData={sortedData}
                         updateLastMessage={updateLastMessage} flag={"FromMain"} />
                 </>
