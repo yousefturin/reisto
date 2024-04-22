@@ -3,7 +3,7 @@ import React from 'react'
 import MessageMainItem from './MessageMainItem'
 import MessageLoadingPlaceHolder from './MessageLoadingPlaceHolder'
 
-const MainMessageList = ({ updateLastMessage, userData, sortedData, usersForMessaging, flag }) => {
+const MessageMainList = ({ updateLastMessage, userData, sortedData, usersForMessaging, flag }) => {
     // this is the main list of messages that the user has
     if (flag === "FromMain") {
         return (
@@ -47,4 +47,4 @@ const MainMessageList = ({ updateLastMessage, userData, sortedData, usersForMess
     }
 }
 
-export default MainMessageList
+export default MessageMainList
