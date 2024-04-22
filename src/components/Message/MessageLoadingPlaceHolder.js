@@ -11,7 +11,7 @@ const MessageLoadingPlaceHolder = () => {
             duration: 2000,
         }
     }
-    const skeletonArray = new Array(20).fill();
+    const skeletonArray = new Array(10).fill();
 
     return (
         <>
@@ -25,17 +25,25 @@ const MessageLoadingPlaceHolder = () => {
                             radius={'round'}
                             {...SkeletonCommonProps} />
                     </View>
-                    <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", gap:5}}>
+                    <View style={{ flexDirection: "row", width: "80%", justifyContent: "flex-start", alignItems: "center", gap: 5 }}>
+                        <View style={{ width: "80%", gap: 5 }}>
+                            <Skeleton
+                                show
+                                height={15}
+                                width={200}
+                                {...SkeletonCommonProps}
+                            />
+                            <Skeleton
+                                show
+                                height={15}
+                                width={120}
+                                {...SkeletonCommonProps}
+                            />
+                        </View>
                         <Skeleton
                             show
                             height={15}
-                            width={200}
-                            {...SkeletonCommonProps}
-                        />
-                        <Skeleton
-                            show
-                            height={15}
-                            width={120}
+                            width={40}
                             {...SkeletonCommonProps}
                         />
                     </View>
