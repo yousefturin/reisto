@@ -41,8 +41,8 @@ const styles = StyleSheet.create({
   },
   unreadBadge: {
     position: "absolute",
-    left: 12,
-    bottom: 16,
+    left: 10,
+    bottom: 14,
     width: 20,
     height: 15,
     borderRadius: 25,
