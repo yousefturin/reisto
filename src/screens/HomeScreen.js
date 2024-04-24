@@ -12,13 +12,21 @@ const HomeScreen = () => {
     const [posts, setPosts] = useState([])
     const userData = useContext(UserContext);
 
-
     useEffect(() => {
-        fetchPost()
-    }, [])
+        const unsubscribe = fetchPost();
+    
+        // Return cleanup function to unsubscribe when component unmounts
+        return () => {
+            unsubscribe();
+        };
+    }, []);
+    
     const fetchPost = () => {
-        // get the id of each post, and destructure the posts then order them based on createdAt as desc
-        db.collectionGroup('posts').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+        // Initialize variable to store reference to the listener
+        let unsubscribe = null;
+    
+        // Assign the listener and store the reference
+        unsubscribe = db.collectionGroup('posts').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
             const postsWithProfilePictures = snapshot.docs.map(async post => {
                 const dbPostData = post.data();
                 try {
@@ -44,6 +52,9 @@ const HomeScreen = () => {
                 console.error('Error fetching posts with profile pictures:', error);
             })
         });
+    
+        // Return a function to unsubscribe when component unmounts or user logs out
+        return unsubscribe;
     };
 
     // Function to handle scroll event
