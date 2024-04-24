@@ -18,7 +18,7 @@ const UserProfileScreen = () => {
             await firebase.auth().signOut()
             console.log("Singed out successfully!")
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
     useEffect(() => {
