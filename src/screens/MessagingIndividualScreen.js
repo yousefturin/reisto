@@ -9,8 +9,10 @@ import initializeScalingUtils from '../utils/NormalizeSize';
 import SvgComponent from '../utils/SvgComponents';
 import { LinearGradient } from 'expo-linear-gradient';
 import { addDoc, collection, doc, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
-
-
+import * as ImagePicker from 'expo-image-picker';
+import * as ImageManipulator from 'expo-image-manipulator';
+import { blurHash } from '../../assets/HashBlurData';
+import UploadImageToStorage from '../../src/utils/UploadImageToStorage';
 
 // two hours of debugging and then it apparently was userDataUid.owner_id and not userDataUid.owner_uid-<<<<<<<<(fixed)
 const MessagingIndividualScreen = ({ route }) => {
@@ -21,6 +23,9 @@ const MessagingIndividualScreen = ({ route }) => {
     const textRef = useRef('');
     const inputRef = useRef(null);
     const scrollViewRef = useRef(null);
+    const [dummyState, setDummyState] = useState({});
+    const [image, setImage] = useState(null);
+
     useEffect(() => {
         // room creation is not needed here and will be only created on send message and then it will be checked if the room exists or not
         // handleCreateChat();
@@ -40,7 +45,9 @@ const MessagingIndividualScreen = ({ route }) => {
                     }
                     return messageData;
                 })
-                setMessages([...allMessages]);
+                setMessages([
+                    ...allMessages]);
+                    console.log([...allMessages])
             });
             const keyboardDidShowListener = Keyboard.addListener(
                 'keyboardDidShow', updateScrollView
@@ -65,7 +72,7 @@ const MessagingIndividualScreen = ({ route }) => {
     }
     // Function to update the seen status of a message
     const updateMessageSeenStatus = async (roomId, messageId) => {
-    
+
         try {
             const messageRef = doc(db, 'messages', roomId, 'private_messages', messageId);
             await updateDoc(messageRef, {
@@ -94,10 +101,16 @@ const MessagingIndividualScreen = ({ route }) => {
             Alert.alert(error.message);
         }
     }
-    const handleSendMessage = async () => {
+    const handleSendMessage = async (flag, base64Image) => {
+        let imageToBeSent = null
         let message = textRef.current.trim();
+        if (flag === blurHash) {
+            imageToBeSent = base64Image;
+            message = "Image"
+        }
         handleCreateChat()
         if (!message) return;
+        if (flag === blurHash) message = null;
         try {
             let roomId = GenerateRoomId(userData.owner_uid, userDataUid.owner_uid);
             const DocRef = db.collection('messages').doc(roomId)
@@ -108,6 +121,7 @@ const MessagingIndividualScreen = ({ route }) => {
             const newDoc = await addDoc(messagesRef, {
                 owner_id: userData?.owner_uid,
                 text: message,
+                image: imageToBeSent,
                 profile_picture: userData?.profile_picture,
                 sender_name: userData?.username,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -117,6 +131,52 @@ const MessagingIndividualScreen = ({ route }) => {
             Alert.alert(error.message);
         }
     }
+
+    const handleChangeText = (value) => {
+        textRef.current = value;
+        forceUpdate();
+    };
+
+    const forceUpdate = () => {
+        // Update the dummy state to trigger a re-render
+        setDummyState({});
+    };
+
+    const handleSelectImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            // setImage(result.assets[0].uri);
+            const maxWidth = 700; // Maximum width for resizing
+            const originalWidth = result.assets[0].width;
+            const originalHeight = result.assets[0].height;
+            const aspectRatio = originalWidth / originalHeight;
+
+            let width = originalWidth;
+            let height = originalHeight;
+
+            if (originalWidth > maxWidth) {
+                width = maxWidth;
+                // the issue with white border is that the height is for example 700.2314814814815 and that will make a problem 
+                //              showing a artifact white line to fix teh issue rounding the number is applied.
+                height = Math.round(maxWidth / aspectRatio)
+            }
+            const compressedImage = await ImageManipulator.manipulateAsync(
+                result.assets[0].uri,
+                [{ resize: { width: width } }],
+                { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
+            );
+            const base64Image = await UploadImageToStorage(compressedImage.uri);
+            if (base64Image) {
+                handleSendMessage(blurHash, base64Image);
+            }
+        }
+    };
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
             <MessagesIndividualHeader header={userDataUid} />
@@ -140,20 +200,33 @@ const MessagingIndividualScreen = ({ route }) => {
                             <View style={{ flexDirection: "row", marginHorizontal: 10, justifyContent: "space-between", backgroundColor: "#050505", borderRadius: 50, borderWidth: 0.5, borderColor: "#2b2b2b" }}>
                                 <TextInput
                                     ref={inputRef}
-                                    onChangeText={value => textRef.current = value}
+                                    onChangeText={handleChangeText}
                                     placeholder={`Type message for ${userDataUid.username}...`}
                                     placeholderTextColor={"#383838"}
                                     style={{ flex: 1, margin: 17, color: "#ffff" }}
                                 />
-                                <TouchableOpacity onPress={handleSendMessage}
-                                    style={{ justifyContent: "center" }}>
-                                    <LinearGradient
-                                        // Button Linear Gradient
-                                        colors={['#007AFF', '#007AFF', '#007AFF']}
-                                        style={{ marginRight: 9, padding: 7, borderRadius: 50, justifyContent: "center", alignItems: "center" }}>
-                                        <SvgComponent svgKey="SubmitCommentSVG" width={moderateScale(18)} height={moderateScale(18)} fill={'#ffffff'} />
-                                    </LinearGradient>
-                                </TouchableOpacity>
+                                {textRef.current !== "" ? (
+                                    <TouchableOpacity onPress={handleSendMessage}
+                                        style={{ justifyContent: "center" }}>
+                                        <LinearGradient
+                                            // Button Linear Gradient
+                                            colors={['#007AFF', '#007AFF', '#007AFF']}
+                                            style={{ marginRight: 9, padding: 7, borderRadius: 50, justifyContent: "center", alignItems: "center" }}>
+                                            <SvgComponent svgKey="SubmitCommentSVG" width={moderateScale(18)} height={moderateScale(18)} fill={'#ffffff'} />
+                                        </LinearGradient>
+                                    </TouchableOpacity>
+                                ) : (
+                                    <TouchableOpacity onPress={() => handleSelectImage()}
+                                        style={{ justifyContent: "center" }}>
+                                        <LinearGradient
+                                            // Button Linear Gradient
+                                            colors={['#2b2b2b', '#2b2b2b', '#2b2b2b']}
+                                            style={{ marginRight: 9, padding: 7, borderRadius: 50, justifyContent: "center", alignItems: "center" }}>
+                                            <SvgComponent svgKey="ImageSVG" width={moderateScale(18)} height={moderateScale(18)} />
+                                        </LinearGradient>
+                                    </TouchableOpacity>
+                                )}
+
                             </View>
                         </View>
                     </View>
