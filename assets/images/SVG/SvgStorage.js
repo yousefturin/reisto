@@ -260,6 +260,15 @@ doubleCheckSVG: `
 		d="M9.5,17.3l1.1,1l12-12" />
 
 </svg>`,
+ImageSVG:`
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<path  fill="none" d="M5 21L16 10L21 15" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"
+		stroke-linejoin="round"></path>
+	<rect fill="none" x="3" y="3" width="18" height="18" rx="2" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"
+		stroke-linejoin="round"></rect>
+	<circle fill="none" cx="8.5" cy="8.5" r="1.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"
+		stroke-linejoin="round"></circle>
+</svg>`,
 
 
 }
