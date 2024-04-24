@@ -107,6 +107,7 @@ const ProfileContent = ({ userData, userPosts }) => {
             console.error("Error fetching data:", error);
         }
     };
+    
     const handleUserFollowingAndFollowerDisplay = (flag) => {
         let data
         if (flag === "followers") {
