@@ -7,18 +7,26 @@ const MessageMainList = ({ updateLastMessage, userData, sortedData, usersForMess
     // this is the main list of messages that the user has
     if (flag === "FromMain") {
         return (
-            <FlatList
-                data={sortedData}
-                keyboardDismissMode="on-drag"
-                keyboardShouldPersistTaps={'always'}
-                renderItem={({ item, index }) => <MessageMainItem
-                    item={item} index={index}
-                    userData={userData}
-                    onUpdateLastMessage={updateLastMessage}
-                    flag={"FromMain"}
-                />}
-                keyExtractor={item => item.owner_uid.toString()}
-            />
+            <>
+                {
+                    sortedData.length !== 0 ? (
+                        <FlatList
+                            data={sortedData}
+                            keyboardDismissMode="on-drag"
+                            keyboardShouldPersistTaps={'always'}
+                            renderItem={({ item, index }) => <MessageMainItem
+                                item={item} index={index}
+                                userData={userData}
+                                onUpdateLastMessage={updateLastMessage}
+                                flag={"FromMain"}
+                            />}
+                            keyExtractor={item => item.owner_uid.toString()}
+                        />
+                    ) : (
+                        <MessageLoadingPlaceHolder />
+                    )
+                }
+            </>
         )
         // this is the list of users that the user can start a chat with
     } if (flag === "FromNewMessage") {
