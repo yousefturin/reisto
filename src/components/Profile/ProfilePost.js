@@ -50,6 +50,8 @@ const ProfilePost = ({ posts, userData, keyValue, userDataToBeNavigated }) => {
             </View>
 
             <FlatList
+                keyboardDismissMode="on-drag"
+                keyboardShouldPersistTaps={'always'}
                 data={posts}
                 nestedScrollEnabled={true}
                 scrollEnabled={false}
