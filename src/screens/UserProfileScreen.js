@@ -22,13 +22,19 @@ const UserProfileScreen = () => {
         }
     }
     useEffect(() => {
-        fetchUserPosts();
-    }, [])
+        const unsubscribe = fetchUserPosts();
+        // Return cleanup function to unsubscribe when component unmounts
+        return () => {
+            unsubscribe();
+        };
+    }, []);
+
 
     const fetchUserPosts = () => {
         const user = firebase.auth().currentUser;
         if (user) {
-            db.collection('users').doc(user.email).collection('posts').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+            const query = db.collection('users').doc(user.email).collection('posts').orderBy('createdAt', 'desc');
+            return query.onSnapshot(snapshot => {
                 setUserPost(snapshot.docs.map(post => ({
                     id: post.id,
                     ...post.data()
@@ -39,6 +45,7 @@ const UserProfileScreen = () => {
         }
         else {
             console.error("No authenticated user found.");
+            return () => { };
         }
     };
     // Function to handle scroll event
@@ -60,6 +67,8 @@ const UserProfileScreen = () => {
             <>
                 <ProfileHeader handleLogout={handleLogout} userData={userData} />
                 <ScrollView
+                    keyboardDismissMode="on-drag"
+                    keyboardShouldPersistTaps={'always'}
                     showsVerticalScrollIndicator={false}
                     refreshControl={
                         <RefreshControl
@@ -69,7 +78,7 @@ const UserProfileScreen = () => {
                     }
                 >
                     <ProfileContent userData={userData} userPosts={userPosts} />
-                    {userPosts.length !== 0 || userPosts.id?.length !== 0? (
+                    {userPosts.length !== 0 || userPosts.id?.length !== 0 ? (
                         <ProfilePost posts={userPosts} userData={userData} onPostPress={handlePostPress} keyValue={"NavigationToMyProfile"} />
                     ) : (
                         <LoadingPlaceHolder condition={userPosts.length === 0} />
