@@ -34,7 +34,7 @@ const SavedPostsGrid = ({ posts, userData, navigateToScreen }) => {
                 cachePolicy={"memory-disk"}
                 recyclingKey={item.imageURL}
                 transition={50}
-                // onLoad={onLoad}
+            // onLoad={onLoad}
             />
         </TouchableOpacity>
     );
@@ -46,6 +46,8 @@ const SavedPostsGrid = ({ posts, userData, navigateToScreen }) => {
     };
     return (
         <FlatList
+            keyboardDismissMode="on-drag"
+            keyboardShouldPersistTaps={'always'}
             data={posts}
             nestedScrollEnabled={true}
             scrollEnabled={false}
