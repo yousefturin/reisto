@@ -35,15 +35,22 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
     }, [savedPosts, scrollToPostId]);
 
     useEffect(() => {
-        fetchUserSavedPosts();
-    }, [])
+        const unsubscribe = fetchUserSavedPosts();
+
+        // Return cleanup function to unsubscribe when component unmounts
+        return () => {
+            unsubscribe();
+        };
+    }, []);
 
 
     const fetchUserSavedPosts = () => {
         const user = firebase.auth().currentUser;
         if (user) {
+            const queryPost = db.collectionGroup('posts')
+            const querySavedPost = db.collection('users').doc(user.email).collection('saved_post')
             // bring all posts from across users
-            db.collectionGroup('posts').onSnapshot(querySnapshot => {
+            return queryPost.onSnapshot(querySnapshot => {
                 // create an array and push all the post inside of it that will be used later for matching saved posts with posts that are fetched 
                 const allPosts = [];
                 querySnapshot.forEach(doc => {
@@ -53,7 +60,7 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
                     });
                 });
                 // fetch user saved posts collection and bring the data 
-                db.collection('users').doc(user.email).collection('saved_post').get().then(snapshot => {
+                querySavedPost.get().then(snapshot => {
                     const savedPostDoc = snapshot.docs[0];
                     // if the data exist 
                     if (savedPostDoc) {
@@ -99,6 +106,7 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
             })
         } else {
             console.error("No authenticated user found.");
+            return () => { };
         }
     };
 
@@ -114,6 +122,8 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
             <SavedPostsHeader header={"All Posts"} />
             {savedPosts.length !== 0 ? (
                 <FlatList
+                    keyboardDismissMode="on-drag"
+                    keyboardShouldPersistTaps={'always'}
                     ref={flatListRef}
                     data={savedPosts}
                     renderItem={renderItem}
