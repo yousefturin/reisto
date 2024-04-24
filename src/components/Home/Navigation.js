@@ -21,24 +21,37 @@ const NavigationStack = ({ routeName, userData }) => {
         return null; // Or any loading indicator
     }
     const navigation = useNavigation();
+    
+    // still needs fixing this issue where there are 
+    // common screens that are used in the navigation stack and based on that 
+    // the icon show change to active or inactive.
     const icons = [
         {
             action: 'Home',
+            inhered: [
+                'Home',
+                'OtherUsersProfileScreen',
+                'OthersProfilePost',],
             activeURL: 'HomeSVG',
             inActiveURL: 'HomeSVGInActive',
         },
         {
             action: 'Search',
+            inhered: [
+                'Search',
+                'SearchExplorePostTimeLine',],
             activeURL: 'SearchSVG',
             inActiveURL: 'SearchSVGInActive',
         },
         {
             action: 'AddPost',
+            inhered: ['AddPost'],
             activeURL: 'AddPostSVG',
             inActiveURL: 'AddPostSVGInActive',
         },
         {
             action: 'Notification',
+            inhered: ['Notification'],
             activeURL: 'NotificationSVG',
             inActiveURL: 'NotificationSVGInActive',
         },
@@ -72,7 +85,7 @@ const NavigationStack = ({ routeName, userData }) => {
                             style={{ padding: 10 }}
                         >
                             <SvgComponent
-                                svgKey={icon.action === routeName ? icon.activeURL : icon.inActiveURL}
+                                svgKey={icon.inhered.includes(routeName) ? icon.activeURL : icon.inActiveURL}
                                 width={moderateScale(25)}
                                 height={moderateScale(25)}
                             />
