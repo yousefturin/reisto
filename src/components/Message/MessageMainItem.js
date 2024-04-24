@@ -10,10 +10,12 @@ import { Skeleton } from 'moti/skeleton';
 import calculateTimeDifference from '../../utils/TimeDifferenceCalculator';
 import SvgComponent from '../../utils/SvgComponents';
 import initializeScalingUtils from '../../utils/NormalizeSize';
+import { MessagesNumContext } from '../../context/MessagesNumProvider';
 
 
 const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
     const navigation = useNavigation();
+    const { setMessagesNum } = useContext(MessagesNumContext);
     const [lastMessage, setLastMessage] = useState(null);
     const [loading, setLoading] = useState(true);
     const { moderateScale } = initializeScalingUtils(Dimensions);
@@ -35,8 +37,12 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
         let unsubscribe;
         try {
             unsubscribe = onSnapshot(qu, (snapshot) => {
+                let unseenMessages = 0;
                 let allMessages = snapshot.docs.map(doc => doc.data());
                 const latestMessage = allMessages[0] || null;
+                //this code need more observation for behavior
+                unseenMessages = allMessages.filter(message => !message.seenBy.includes(userData.owner_uid));
+                setMessagesNum(unseenMessages.length);
                 setLastMessage(latestMessage);
                 if (flag === "FromMain") onUpdateLastMessage(item.owner_uid, latestMessage);
                 setLoading(false);
@@ -45,10 +51,6 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
             Alert.alert(error.message);
             setLoading(false);
         }
-        // this was by help of GPT my lastMessage was only flashing and i could not solve the issue
-        // const timer = setTimeout(() => {
-        //     setLoading(false);
-        // }, 1000); // Display "No messages yet" for 2 seconds
 
         return () => {
             // clearTimeout(timer);
@@ -68,7 +70,7 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
                     {
                         lastMessage?.seenBy.includes(userData.owner_uid) ? (
                             <View style={{ flexDirection: "row-reverse", gap: 2, }}>
-                                <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>{lastMessage?.text}</Text>
+                                <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500", }} numberOfLines={1} ellipsizeMode="tail">{lastMessage?.text}</Text>
                                 <View style={{ alignSelf: "center" }}>
                                     <SvgComponent svgKey="CheckSVG" width={moderateScale(13)} height={moderateScale(13)} stroke={'#8E8E93'} />
                                 </View>
@@ -81,7 +83,7 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
             )
         // if not me the just show it normally
         return <View style={{ flexDirection: "row-reverse", gap: 2, }}>
-            <Text style={{ color: !lastMessage.seenBy.includes(userData.owner_uid) ? "#fff" : "#8E8E93", fontSize: 13, fontWeight: "500" }} >{lastMessage?.text}</Text>
+            <Text style={{ color: !lastMessage.seenBy.includes(userData.owner_uid) ? "#fff" : "#8E8E93", fontSize: 13, fontWeight: "500", }} numberOfLines={1} ellipsizeMode="tail" F >{lastMessage?.text}</Text>
             {/* // if the user did not fetch the last message then show the dot as it indicate that the message is not seen yet by the user */}
             <View style={{ alignSelf: "center" }}>
                 {lastMessage?.seenBy.includes(userData.owner_uid) ? (
@@ -136,7 +138,7 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
                         </>
                     )}
                 </View>
-                <View style={{ alignSelf: "center", flex: 0.05 }}>
+                <View style={{ flex: 0.05, justifyContent: "center", alignItems: "center" }}>
                     {loading ? (
                         null
                     ) : (
