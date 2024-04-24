@@ -47,6 +47,8 @@ const LoadingPlaceHolder = ({ condition }) => {
     };
     return (
         <FlatList
+            keyboardDismissMode="on-drag"
+            keyboardShouldPersistTaps={'always'}
             data={skeletonArray}
             renderItem={renderItem}
             scrollEnabled={false}
