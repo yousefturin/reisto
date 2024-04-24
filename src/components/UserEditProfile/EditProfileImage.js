@@ -8,7 +8,6 @@ import { db, firebase } from '../../firebase';
 import { Image } from 'expo-image';
 const EditProfileImage = ({ userData }) => {
     const [image, setImage] = useState(null);
-    // console.log(userData)
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
