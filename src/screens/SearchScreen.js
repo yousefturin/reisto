@@ -24,7 +24,8 @@ const SearchScreen = () => {
     const [posts, setPosts] = useState([])
     const navigation = useNavigation();
     const [clickedUsers, setClickedUsers] = useState([]);
-
+    // Determine whether to display searchedItems based on searchQuery and clearedManually flag
+    const shouldDisplaySearchedItems = searchQuery !== "" || !clearedManually;
 
     const handleNavigationToProfile = (item) => {
         let userDataToBeNavigated = item
@@ -101,6 +102,9 @@ const SearchScreen = () => {
                 });
                 setItems(allPosts);
             });
+        }else{
+            console.error("No authenticated user found.");
+            return () => { };
         }
     }
 
@@ -136,16 +140,23 @@ const SearchScreen = () => {
         setSearchMode(true);
     };
 
-    // Determine whether to display searchedItems based on searchQuery and clearedManually flag
-    const shouldDisplaySearchedItems = searchQuery !== "" || !clearedManually;
+
 
     useEffect(() => {
-        fetchPost()
-    }, [])
+        const unsubscribe = fetchPost();
+    
+        // Return cleanup function to unsubscribe when component unmounts
+        return () => {
+            unsubscribe();
+        };
+    }, []);
+    
+
     // this is only for testing the UI,UX and it will be changed for random posts to be displayedF
     const fetchPost = () => {
+        const query = db.collectionGroup('posts').orderBy('createdAt', 'desc');
         // get the id of each post, and destructure the posts then order them based on createdAt as desc
-        db.collectionGroup('posts').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+        return query.onSnapshot(snapshot => {
             const postsWithProfilePictures = snapshot.docs.map(async post => {
                 const dbPostData = post.data();
                 try {
@@ -261,7 +272,7 @@ const SearchScreen = () => {
 
                 ) : (
                     <>
-                        {posts.length === 0  && <LoadingPlaceHolder condition={posts.length} /> }
+                        {posts.length === 0 && <LoadingPlaceHolder condition={posts.length} />}
                         <SavedPostsGrid posts={posts} userData={userData} navigateToScreen={"SearchExplore"} />
                     </>
                 )
@@ -296,7 +307,7 @@ const SearchScreenStyles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 2,
         height: 40,
-
+        borderRadius: 10
     },
     searchBarInputContainerTop: {
         justifyContent: "flex-start",
