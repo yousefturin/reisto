@@ -24,6 +24,9 @@ const UserProviderComponent = ({ children }) => {
                 });
             });
             return () => unsubscribe(); // Unsubscribe on unmount
+        }else{
+            console.error("No authenticated user found.");
+            return () => { };
         }
     }, []);
 
