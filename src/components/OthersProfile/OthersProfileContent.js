@@ -18,69 +18,86 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
     const isUserFollowed = followersAndFollowing?.following?.includes(userDataToBeNavigated.id)
 
     useEffect(() => {
-        getFollowersAndFollowingDataForCurrentUser();
-    }, [])
+        let unsubscribe;
 
-    const getFollowersAndFollowingDataForCurrentUser = async () => {
-        const querySnapshot = await db.collection('users')
-            .doc(firebase.auth().currentUser.email)
-            .collection('following_followers')
-            .limit(1) // Limit query to one document
-            .get();
+        const getFollowersAndFollowingDataForCurrentUser = async () => {
+            console.log("i am here fetching followers and following data for current user.")
+            const querySnapshot = await db.collection('users')
+                .doc(firebase.auth().currentUser.email)
+                .collection('following_followers')
+                .limit(1) // Limit query to one document
+                .get();
 
-        if (!querySnapshot.empty) {
-            const doc = querySnapshot.docs[0];
-            const docRef = doc.ref;
+            if (!querySnapshot.empty) {
+                const doc = querySnapshot.docs[0];
+                const docRef = doc.ref;
 
-            docRef.onSnapshot((snapshot) => {
-                const data = snapshot.data();
-                setFollowersAndFollowing({
-                    id: snapshot.id,
-                    followers: data.followers,
-                    following: data.following,
+                unsubscribe = docRef.onSnapshot((snapshot) => {
+                    const data = snapshot.data();
+                    setFollowersAndFollowing({
+                        id: snapshot.id,
+                        followers: data.followers,
+                        following: data.following,
+                    });
+                }, (error) => {
+                    console.error("Error listening to document:", error);
                 });
-            }, (error) => {
-                console.error("Error listening to document:", error);
-            });
-        } else {
-            // No documents found
-            console.log("No document found in the collection.");
-        }
-    };
+
+            } else {
+                // No documents found
+                console.log("No document found in the collection.");
+            }
+        };
+        getFollowersAndFollowingDataForCurrentUser();
+        return () => {
+            // Unsubscribe when component unmounts
+            unsubscribe && unsubscribe();
+        };
+    }, []);
+
 
     useEffect(() => {
-        getFollowersAndFollowingDataForPassedUser();
-    }, [])
+        let unsubscribe;
+        const getFollowersAndFollowingDataForPassedUser = async () => {
+            const querySnapshot = await db.collection('users')
+                .doc(userDataToBeNavigated.id)
+                .collection('following_followers')
+                .limit(1) // Limit query to one document
+                .get();
 
-    const getFollowersAndFollowingDataForPassedUser = async () => {
-        const querySnapshot = await db.collection('users')
-            .doc(userDataToBeNavigated.id)
-            .collection('following_followers')
-            .limit(1) // Limit query to one document
-            .get();
+            if (!querySnapshot.empty) {
+                const doc = querySnapshot.docs[0];
+                const docRef = doc.ref;
 
-        if (!querySnapshot.empty) {
-            const doc = querySnapshot.docs[0];
-            const docRef = doc.ref;
-
-            docRef.onSnapshot((snapshot) => {
-                const data = snapshot.data();
-                setFollowersAndFollowingForPassedUser({
-                    id: snapshot.id,
-                    followers: data.followers,
-                    following: data.following,
+                unsubscribe = docRef.onSnapshot((snapshot) => {
+                    const data = snapshot.data();
+                    setFollowersAndFollowingForPassedUser({
+                        id: snapshot.id,
+                        followers: data.followers,
+                        following: data.following,
+                    });
+                }, (error) => {
+                    console.error("Error listening to document:", error);
                 });
-            }, (error) => {
-                console.error("Error listening to document:", error);
-            });
-        } else {
-            // No documents found
-            console.log("No document found in the collection.");
-        }
-    };
+            } else {
+                // No documents found
+                console.log("No document found in the collection.");
+            }
+        };
+        getFollowersAndFollowingDataForPassedUser();
+        return () => {
+            // Unsubscribe when component unmounts
+            unsubscribe && unsubscribe();
+        };
+    }, []);
+
+    // there is issue in this part of code when making the user follow another user for first time.
     const handleFollowing = () => {
-        const currentFollowingStatus = !followersAndFollowing.following.includes(
-            userDataToBeNavigated.id
+        console.log(followersAndFollowing)
+        console.log(followersAndFollowingForPassedUser)
+
+        const currentFollowingStatus = !followersAndFollowing?.following?.includes(
+            userDataToBeNavigated?.id
         )
         const currentFollowingStatusForPassedUser = !followersAndFollowingForPassedUser.followers.includes(
             firebase.auth().currentUser.email
