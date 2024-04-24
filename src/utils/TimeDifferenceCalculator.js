@@ -1,5 +1,4 @@
 function calculateTimeDifference(timestampObj) {
-    // console.log(timestampObj)
     // Convert Firestore timestamp to JavaScript Date object
     const targetTime = new Date((timestampObj.seconds * 1000) + (timestampObj.nanoseconds / 1000000));
 
