@@ -29,6 +29,8 @@ const FoodCategories = ({ setFieldValue, values, handleBlur }) => {
         <>
             <Text style={{ color: "#fff", margin: 10, fontSize: 20, fontWeight: "700" }}>Category</Text>
             <ScrollView
+                keyboardDismissMode="on-drag"
+                keyboardShouldPersistTaps={'always'}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={{
