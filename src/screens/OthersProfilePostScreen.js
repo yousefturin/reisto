@@ -41,12 +41,22 @@ const OthersProfilePostScreen = ({ route }) => {
     }, [posts, scrollToPostId]);
 
     useEffect(() => {
-        fetchUserPosts();
-    }, [])
+        const unsubscribe = fetchUserPosts();
+
+        // Return cleanup function to unsubscribe when component unmounts
+        return () => {
+            unsubscribe();
+        };
+    }, []);
+
     const fetchUserPosts = () => {
         const user = firebase.auth().currentUser;
         if (user) {
-            db.collection('users').doc(userDataToBeNavigated.id).collection('posts').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+            const query = db.collection('users').doc(userDataToBeNavigated.id)
+                .collection('posts')
+                .orderBy('createdAt', 'desc');
+
+            return query.onSnapshot(snapshot => {
                 const userPostsWithProfilePicture = snapshot.docs.map(async post => {
                     const dbUserPostData = post.data();
                     try {
@@ -75,8 +85,9 @@ const OthersProfilePostScreen = ({ route }) => {
                 console.error("Error fetching posts:", error);
             });
         }
-        else {
+        else{
             console.error("No authenticated user found.");
+            return () => { };
         }
     };
     const renderItem = ({ item }) => (
@@ -89,6 +100,8 @@ const OthersProfilePostScreen = ({ route }) => {
             <OwnerProfileHeader userDataToBeNavigated={userDataToBeNavigated} />
             {posts.length !== 0 ? (
                 <FlatList
+                    keyboardDismissMode="on-drag"
+                    keyboardShouldPersistTaps={'always'}
                     ref={flatListRef}
                     data={posts}
                     renderItem={renderItem}
