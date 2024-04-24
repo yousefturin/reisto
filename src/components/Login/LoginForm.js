@@ -30,7 +30,6 @@ const LoginForm = ({ navigation }) => {
     const onLogin = async (email, password) => {
         try {
             await firebase.auth().signInWithEmailAndPassword(email, password)
-            console.log('Firebase Login Successful', email, password)
             navigation.navigate("Home")
         } catch (error) {
             let msg = error.message
