@@ -147,7 +147,10 @@ const FormikPostUploader = () => {
                         <>
                             {/* there was no other way to pass the value */}
                             <AddNewPostHeader handleSubmit={handleSubmit} isValid={isValid} />
-                            <ScrollView showsVerticalScrollIndicator={false}  >
+                            <ScrollView
+                                keyboardDismissMode="on-drag"
+                                keyboardShouldPersistTaps={'always'} 
+                                showsVerticalScrollIndicator={false}  >
                                 <>
                                     <View style={{ marginBottom: 20 }}>
                                         <View style={{ alignItems: "center", justifyContent: "center" }}>
