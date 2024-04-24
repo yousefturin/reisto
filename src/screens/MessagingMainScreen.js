@@ -1,4 +1,4 @@
-import { SafeAreaView, } from 'react-native'
+import { Dimensions, SafeAreaView, StyleSheet, Text, Keyboard } from 'react-native'
 import React, { useCallback, useContext, useEffect, useLayoutEffect, useState } from 'react'
 import MessageMainHeader from '../components/Message/MessageMainHeader'
 import { UserContext } from '../context/UserDataProvider'
@@ -6,25 +6,78 @@ import { db } from '../firebase'
 import MessageLoadingPlaceHolder from '../components/Message/MessageLoadingPlaceHolder'
 import MessageMainList from '../components/Message/MessageMainList'
 import MessageMainSearchBar from '../components/Message/MessageMainSearchBar'
-
-// all of the fetching will be moved to a provider and everything will be fetched on an auth stage so the app works fast as fuck.-<<<<<(fixed with batch fetching)
+import { View } from 'moti'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import { Image } from 'expo-image'
+import { blurHash } from '../../assets/HashBlurData'
+import { SearchBar } from 'react-native-elements'
+import initializeScalingUtils from '../utils/NormalizeSize'
+import { useNavigation } from '@react-navigation/native'
+const { moderateScale } = initializeScalingUtils(Dimensions);
 
 const MessagingMainScreen = () => {
     const userData = useContext(UserContext);
     const [usersForMessaging, setUsersForMessaging] = useState([]);
-    const [RightIconContainerStyle, setRightIconContainerStyle] = useState(1);
     const [excludedUsers, setExcludedUsers] = useState([])
     const [sortedData, setSortedData] = useState([]);
+    const navigation = useNavigation();
+
+    //#region search 
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchMode, setSearchMode] = useState(false);
+    const [searchedItems, setSearchedItems] = useState([]);
+    const [RightIconContainerStyle, setRightIconContainerStyle] = useState(1);
+    const [clearedManually, setClearedManually] = useState(true);
+    const shouldDisplaySearchedItems = searchQuery !== "" || !clearedManually;
+
+    const handleNavigationToMessages = (user) => {
+        let userDataUid = user
+        navigation.navigate('MessageIndividual', { userDataUid: userDataUid })
+    }
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+        setRightIconContainerStyle(1);
+        const normalizedQuery = query.toLowerCase().replace(/[أإِ]/g, "ا");
+
+        // Filter items based on the normalized search query and normalized item names
+        const filtered = usersForMessaging.filter((item) => {
+            const normalizedItemName = item.username.toLowerCase().replace(/[أإِ]/g, "ا");
+            return normalizedItemName.includes(normalizedQuery);
+        });
+
+        setSearchedItems(filtered);
+    };
+    const handleSearchBarClick = () => {
+        setSearchMode(true);
+    };
+    const handleCancel = () => {
+        setRightIconContainerStyle(0);
+        Keyboard.dismiss();
+        setSearchQuery("");
+        setSearchedItems([]);
+        setSearchMode(false);
+    };
+
+    const handleClear = () => {
+        setSearchQuery("");
+        setSearchedItems([]);
+        setClearedManually(true);
+    }
+    //#endregion
+
     useLayoutEffect(() => {
         fetchData();
     }, []);
 
-    // This code was previously fetching all messages based on following and followers users, but now it will only show the messages that the user has sent.
-    // The performance of fetching has improved significantly by optimizing the query and using batch fetching.
+    useEffect(() => {
+        // Initialize sorted data
+        setSortedData([...usersForMessaging]);
+    }, [usersForMessaging]);
+
+    //#region Fetch data of users for messaging
     const fetchData = async () => {
         try {
             // search the messages based on the current user id and fetch those messages
-            // roomId fetching was a problem to manage so now it will be only using the subIds
             const messagesQuery1 = db.collection('messages')
                 .where('owner1', '==', userData.email);
             const messagesQuery2 = db.collection('messages')
@@ -76,7 +129,6 @@ const MessagingMainScreen = () => {
 
                             // set the excluded users to the matchingPrivateMessages array
                             setExcludedUsers(matchingPrivateMessages);
-
                             // set the users data to the state
                             setUsersForMessaging(userDataDb);
                         })
@@ -92,11 +144,12 @@ const MessagingMainScreen = () => {
             console.error("Error fetching data:", error);
         }
     }
-    // this was moved from the MainMessageList.js to here to make the code more readable and to make the code more optimized
+    //#endregion
+
     //#region Update last message
-    // Update last message for a specific user
     const updateLastMessage = useCallback((userId, message) => {
-        // console.log("updateLastMessage", message.seenBy);
+        // this was moved from the MainMessageList.js to here to make the 
+        //code more readable and to make the code more optimized
         setSortedData(prevData => {
             const newData = prevData.map(item => {
                 if (item.owner_uid === userId) {
@@ -123,7 +176,6 @@ const MessagingMainScreen = () => {
                 }
 
                 // Convert Firestore Timestamps to milliseconds
-                // hour of debugging 
                 const createdAtMillisA = createdAtA.toMillis();
                 const createdAtMillisB = createdAtB.toMillis();
 
@@ -136,26 +188,104 @@ const MessagingMainScreen = () => {
     }, []);
     //#endregion
 
-    useEffect(() => {
-        // Initialize sorted data
-        setSortedData([...usersForMessaging]);
-    }, [usersForMessaging]);
-
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
             <MessageMainHeader excludedUsers={excludedUsers} userData={userData} />
-            <MessageMainSearchBar RightIconContainerStyle={RightIconContainerStyle} />
-            {usersForMessaging.length !== 0 ? (
-                <>
+            <SearchBar
+                placeholder={"Search..."}
+                onChangeText={handleSearch}
+                onPressIn={handleSearchBarClick}
+                value={searchQuery}
+                platform="ios"
+                containerStyle={SearchScreenStyles.searchBarContainer}
+                inputContainerStyle={[
+                    SearchScreenStyles.searchBarInputContainer,
+                    searchMode && SearchScreenStyles.searchBarInputContainerTop,
+                ]}
+                rightIconContainerStyle={{ opacity: RightIconContainerStyle }}
+                inputStyle={[
+                    SearchScreenStyles.searchBarInput,
+                    { textAlign: "left" },
+                ]}
+                clearIcon={{ type: "ionicon", name: "close-circle" }}
+                onClear={handleClear}
+                cancelButtonProps={{
+                    style: { paddingRight: 10 },
+                    onPress: handleCancel,
+                }}
+                keyboardAppearance={"default"}
+                searchIcon={{ type: "ionicon", name: "search" }}
+                cancelButtonTitle={"Cancel"}
+            />
+            <View>
+                {searchMode ? (
+                    <>
+                        {shouldDisplaySearchedItems ? searchedItems.map((item, index) => (
+                            <TouchableOpacity style={{ flexDirection: "row" }} key={index} onPress={() => { handleNavigationToMessages(item) }}>
+                                <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
+                                    <Image source={{ uri: item.profile_picture, cache: "force-cache", }}
+                                        style={{
+                                            width: 50,
+                                            height: 50,
+                                            borderRadius: 50,
+                                            margin: 7,
+                                            borderWidth: 1.5,
+                                            borderColor: "#2b2b2b"
+                                        }}
+                                        placeholder={blurHash}
+                                        contentFit="cover"
+                                        transition={50}
+                                        cachePolicy={"memory-disk"} />
+                                </View>
+
+                                <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
+                                    <Text style={{ color: "#fff", fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
+                                    <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        )) : null}
+                    </>
+                ) : (
                     <MessageMainList usersForMessaging={usersForMessaging}
                         userData={userData} sortedData={sortedData}
                         updateLastMessage={updateLastMessage} flag={"FromMain"} />
-                </>
-            ) : (
-                <MessageLoadingPlaceHolder />
-            )}
+                )}
+            </View>
         </SafeAreaView>
     )
 }
 
+export const SearchScreenStyles = StyleSheet.create({
+    searchBarContainer: {
+        paddingHorizontal: moderateScale(10),
+        backgroundColor: "#050505",
+        borderBottomColor: "transparent",
+        borderTopColor: "transparent",
+    },
+    searchBarInputContainer: {
+        backgroundColor: "#1C1C1E",
+        shadowColor: "black",
+        shadowOffset: {
+            width: 0,
+            height: 2.2,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        height: 40,
+        borderRadius: 10
+    },
+    searchBarInputContainerTop: {
+        justifyContent: "flex-start",
+        alignContent: "flex-start",
+        zIndex: 1,
+    },
+    searchBarInput: {
+        backgroundColor: "#1C1C1E",
+        color: "#dddddd",
+        borderLeftColor: "transparent",
+        borderRightColor: "transparent",
+        borderWidth: 0.5,
+        borderColor: "#1C1C1E",
+    },
+})
 export default MessagingMainScreen
