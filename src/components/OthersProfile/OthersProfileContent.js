@@ -21,7 +21,6 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
         let unsubscribe;
 
         const getFollowersAndFollowingDataForCurrentUser = async () => {
-            console.log("i am here fetching followers and following data for current user.")
             const querySnapshot = await db.collection('users')
                 .doc(firebase.auth().currentUser.email)
                 .collection('following_followers')
@@ -93,9 +92,6 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
 
     // there is issue in this part of code when making the user follow another user for first time.
     const handleFollowing = () => {
-        console.log(followersAndFollowing)
-        console.log(followersAndFollowingForPassedUser)
-
         const currentFollowingStatus = !followersAndFollowing?.following?.includes(
             userDataToBeNavigated?.id
         )
