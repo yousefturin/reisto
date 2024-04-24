@@ -1,9 +1,13 @@
 import React, { useLayoutEffect, useState } from 'react';
-import { View, Text, SafeAreaView } from 'react-native';
+import { View, Text, SafeAreaView, Keyboard, TouchableOpacity } from 'react-native';
 import EditProfileHeader from '../components/UserEditProfile/EditProfileHeader';
 import { useNavigation } from '@react-navigation/native';
 import { db } from '../firebase';
 import MessageMainList from '../components/Message/MessageMainList';
+import { SearchBar } from 'react-native-elements';
+import { SearchScreenStyles } from './MessagingMainScreen';
+import { Image } from 'expo-image';
+import { blurHash } from '../../assets/HashBlurData';
 
 
 
@@ -11,7 +15,7 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
     // the users that the current user did start a chat will be excluded from the list of users that the user can start a chat with.
     const { userData, excludedUsers } = route.params;
     const [usersForMessaging, setUsersForMessaging] = useState([]);
-
+    const navigation = useNavigation();
     useLayoutEffect(() => {
         fetchData();
     }, []);
@@ -62,11 +66,112 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
         }
     };
 
-    const navigation = useNavigation();
+    //#region search 
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchMode, setSearchMode] = useState(false);
+    const [searchedItems, setSearchedItems] = useState([]);
+    const [RightIconContainerStyle, setRightIconContainerStyle] = useState(1);
+    const [clearedManually, setClearedManually] = useState(true);
+    const shouldDisplaySearchedItems = searchQuery !== "" || !clearedManually;
+
+    const handleNavigationToMessages = (user) => {
+        let userDataUid = user
+        navigation.navigate('MessageIndividual', { userDataUid: userDataUid })
+    }
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+        setRightIconContainerStyle(1);
+        const normalizedQuery = query.toLowerCase().replace(/[أإِ]/g, "ا");
+
+        // Filter items based on the normalized search query and normalized item names
+        const filtered = usersForMessaging.filter((item) => {
+            const normalizedItemName = item.username.toLowerCase().replace(/[أإِ]/g, "ا");
+            return normalizedItemName.includes(normalizedQuery);
+        });
+
+        setSearchedItems(filtered);
+    };
+    const handleSearchBarClick = () => {
+        setSearchMode(true);
+    };
+    const handleCancel = () => {
+        setRightIconContainerStyle(0);
+        Keyboard.dismiss();
+        setSearchQuery("");
+        setSearchedItems([]);
+        setSearchMode(false);
+    };
+
+    const handleClear = () => {
+        setSearchQuery("");
+        setSearchedItems([]);
+        setClearedManually(true); // Set clearedManually flag to true when clearing manually
+    }
+    //#endregion
+
     return (
         <SafeAreaView>
             <EditProfileHeader headerTitle={"New message"} navigation={navigation} />
-            <MessageMainList usersForMessaging={usersForMessaging} userData={userData} flag={"FromNewMessage"} />
+            <SearchBar
+                placeholder={"Search..."}
+                onChangeText={handleSearch}
+                onPressIn={handleSearchBarClick}
+                value={searchQuery}
+                platform="ios"
+                containerStyle={SearchScreenStyles.searchBarContainer}
+                inputContainerStyle={[
+                    SearchScreenStyles.searchBarInputContainer,
+                    searchMode && SearchScreenStyles.searchBarInputContainerTop, // when searchMode is true
+                ]}
+                rightIconContainerStyle={{ opacity: RightIconContainerStyle }}
+                inputStyle={[
+                    SearchScreenStyles.searchBarInput,
+                    { textAlign: "left" },
+                ]}
+                clearIcon={{ type: "ionicon", name: "close-circle" }}
+                onClear={handleClear}
+                cancelButtonProps={{
+                    style: { paddingRight: 10 },
+                    onPress: handleCancel,
+                }}
+                keyboardAppearance={"default"}
+                searchIcon={{ type: "ionicon", name: "search" }}
+                cancelButtonTitle={"Cancel"}
+            />
+            <View>
+                {searchMode ? (
+                    <>
+                        {shouldDisplaySearchedItems ? (
+                            searchedItems.map((item, index) => (
+                                <TouchableOpacity style={{ flexDirection: "row" }} key={index} onPress={() => { handleNavigationToMessages(item) }}>
+                                    <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
+                                        <Image source={{ uri: item.profile_picture, cache: "force-cache", }}
+                                            style={{
+                                                width: 50,
+                                                height: 50,
+                                                borderRadius: 50,
+                                                margin: 7,
+                                                borderWidth: 1.5,
+                                                borderColor: "#2b2b2b"
+                                            }}
+                                            placeholder={blurHash}
+                                            contentFit="cover"
+                                            transition={50}
+                                            cachePolicy={"memory-disk"} />
+                                    </View>
+
+                                    <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
+                                        <Text style={{ color: "#fff", fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
+                                        <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            ))
+                        ) : null}
+                    </>
+                ) : (
+                    <MessageMainList usersForMessaging={usersForMessaging} userData={userData} flag={"FromNewMessage"} />
+                )}
+            </View>
         </SafeAreaView>
     );
 };
