@@ -25,36 +25,43 @@ const ProfileContent = ({ userData, userPosts }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);
     const [followersData, setFollowersData] = useState([]);
     const [followingData, setFollowingData] = useState([]);
+    // this took my 4 hours to remove the error of unsubscribe is not a function and i am still not sure if this is the correct way to do it
     useEffect(() => {
-        getFollowersAndFollowingData();
-    }, [])
-
-    const getFollowersAndFollowingData = async () => {
-        const querySnapshot = await db.collection('users')
-            .doc(firebase.auth().currentUser.email)
-            .collection('following_followers')
-            .limit(1) // Limit query to one document
-            .get();
-
-        if (!querySnapshot.empty) {
-            const doc = querySnapshot.docs[0];
-            const docRef = doc.ref;
-
-            docRef.onSnapshot((snapshot) => {
-                const data = snapshot.data();
-                setFollowersAndFollowing({
-                    id: snapshot.id,
-                    followers: data.followers,
-                    following: data.following,
+        let unsubscribe;
+        const fetchData = async () => {
+            const querySnapshot = await db.collection('users')
+                .doc(firebase.auth().currentUser.email)
+                .collection('following_followers')
+                .limit(1)
+                .get();
+    
+            if (!querySnapshot.empty) {
+                const doc = querySnapshot.docs[0];
+                const docRef = doc.ref;
+                // Define snapshot listener function
+                unsubscribe = docRef.onSnapshot((snapshot) => {
+                    const data = snapshot.data();
+                    setFollowersAndFollowing({
+                        id: snapshot.id,
+                        followers: data.followers,
+                        following: data.following,
+                    });
+                }, (error) => {
+                    console.error("Error listening to document:", error);
                 });
-            }, (error) => {
-                console.error("Error listening to document:", error);
-            });
-        } else {
-            // No documents found
-            console.log("No document found in the collection.");
-        }
-    };
+            } else {
+                console.log("No document found in the collection.");
+            }
+        };
+    
+        fetchData();
+    
+        return () => {
+            // Unsubscribe when component unmounts
+            unsubscribe && unsubscribe();
+        };
+    }, []);
+
     useLayoutEffect(() => {
         fetchData();
     }, []);
@@ -109,7 +116,11 @@ const ProfileContent = ({ userData, userPosts }) => {
             data = followingData
         }
         navigation.navigate("UserFollowingAndFollowersList", {
-            userData: userData, data: data, flag: flag
+            userData: userData,
+            data: data,
+            paramFollowing: followingData,
+            paramFollower: followersData,
+            flag: flag
         })
     }
 
