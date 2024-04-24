@@ -35,7 +35,7 @@ const MessagingIndividualScreen = ({ route }) => {
             const messagesRef = collection(DocRef, "private_messages");
             const qu = query(messagesRef, orderBy('createdAt', 'asc'));
 
-            let unsubscribe = onSnapshot(qu, (snapshot) => {
+            const unsubscribe = onSnapshot(qu, (snapshot) => {
                 let allMessages = snapshot.docs.map(doc => {
                     let messageData = doc.data();
                     // Check if the current user is the recipient of the message
@@ -45,9 +45,7 @@ const MessagingIndividualScreen = ({ route }) => {
                     }
                     return messageData;
                 })
-                setMessages([
-                    ...allMessages]);
-                    console.log([...allMessages])
+                setMessages([...allMessages]);
             });
             const keyboardDidShowListener = Keyboard.addListener(
                 'keyboardDidShow', updateScrollView
