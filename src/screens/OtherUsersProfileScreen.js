@@ -14,15 +14,23 @@ const OtherUsersProfileScreen = ({ route }) => {
     const [scrollToPostId, setScrollToPostId] = useState(null)
 
     useEffect(() => {
-        fetchUserPosts();
-    }, [])
+        const unsubscribe = fetchUserPosts();
+
+        // Return cleanup function to unsubscribe when component unmounts
+        return () => {
+            unsubscribe();
+        };
+    }, []);
 
     const fetchUserPosts = () => {
         const user = firebase.auth().currentUser;
         if (user) {
+            const query = db.collection('users').doc(userDataToBeNavigated.id)
+                .collection('posts')
+                .orderBy('createdAt', 'desc');
             // this is a multi used component so now when from search it is id and from userData it is email and when now from post explore it is owner_email
             // this need ot be generalized to one variable.
-            db.collection('users').doc(userDataToBeNavigated.id).collection('posts').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+            return query.onSnapshot(snapshot => {
                 setUserPost(snapshot.docs.map(post => ({
                     id: post.id,
                     ...post.data()
@@ -33,6 +41,7 @@ const OtherUsersProfileScreen = ({ route }) => {
         }
         else {
             console.error("No authenticated user found.");
+            return () => { };
         }
     };
     // Function to handle scroll event
@@ -53,6 +62,8 @@ const OtherUsersProfileScreen = ({ route }) => {
             <>
                 <OthersProfileHeader userDataToBeNavigated={userDataToBeNavigated} />
                 <ScrollView
+                    keyboardDismissMode="on-drag"
+                    keyboardShouldPersistTaps={'always'}
                     showsVerticalScrollIndicator={false}
                     refreshControl={
                         <RefreshControl
@@ -62,7 +73,7 @@ const OtherUsersProfileScreen = ({ route }) => {
                     }
                 >
                     <OthersProfileContent userDataToBeNavigated={userDataToBeNavigated} userPosts={userPosts} />
-                    {/* i don't understand how this is working it must be userPosts.id?.length === 0 then it must show the profile without rendering the Loader */} 
+                    {/* i don't understand how this is working it must be userPosts.id?.length === 0 then it must show the profile without rendering the Loader */}
                     {userPosts.length !== 0 || userPosts.id?.length !== 0 ? (
                         <ProfilePost posts={userPosts} userDataToBeNavigated={userDataToBeNavigated} onPostPress={handlePostPress} keyValue={"NavigationToOtherProfile"} />
                     ) : (
