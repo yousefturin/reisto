@@ -32,13 +32,20 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
     }, [posts, scrollToPostId]);
 
     useEffect(() => {
-        fetchPost()
-    }, [])
+        const unsubscribe = fetchPost();
+
+        // Return cleanup function to unsubscribe when component unmounts
+        return () => {
+            unsubscribe();
+        };
+    }, []);
 
     // this is only for testing the UI,UX and it will be changed for random posts to be displayedF
     const fetchPost = () => {
+        const query = db.collectionGroup('posts').orderBy('createdAt', 'desc');
+
         // get the id of each post, and destructure the posts then order them based on createdAt as desc
-        db.collectionGroup('posts').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+        return query.onSnapshot(snapshot => {
             const postsWithProfilePictures = snapshot.docs.map(async post => {
                 const dbPostData = post.data();
                 try {
@@ -77,6 +84,8 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
             <SavedPostsHeader header={"All Posts"} />
             {posts.length !== 0 ? (
                 <FlatList
+                    keyboardDismissMode="on-drag"
+                    keyboardShouldPersistTaps={'always'}
                     ref={flatListRef}
                     data={posts}
                     renderItem={renderItem}
