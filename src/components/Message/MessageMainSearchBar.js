@@ -1,22 +1,60 @@
-import { View, Text, Dimensions } from 'react-native'
-import React from 'react'
+import { Dimensions, Keyboard } from 'react-native'
+import React, { useState } from 'react'
 import { SearchBar } from 'react-native-elements'
 import { StyleSheet } from 'react-native'
 import initializeScalingUtils from '../../utils/NormalizeSize'
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
-const MessageMainSearchBar = ({RightIconContainerStyle}) => {
+const MessageMainSearchBar = ({ RightIconContainerStyle,
+    setRightIconContainerStyle,
+    usersForMessaging,
+    setSearchedItems,
+    setSearchMode,
+    searchMode,
+    setClearedManually,
+    searchQuery,
+    setSearchQuery
+}) => {
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+        setRightIconContainerStyle(1);
+        const normalizedQuery = query.toLowerCase().replace(/[أإِ]/g, "ا");
+
+        // Filter items based on the normalized search query and normalized item names
+        const filtered = usersForMessaging.filter((item) => {
+            const normalizedItemName = item.username.toLowerCase().replace(/[أإِ]/g, "ا");
+            return normalizedItemName.includes(normalizedQuery);
+        });
+
+        setSearchedItems(filtered);
+    };
+    const handleSearchBarClick = () => {
+        setSearchMode(true);
+    };
+    const handleCancel = () => {
+        setRightIconContainerStyle(0);
+        Keyboard.dismiss();
+        setSearchQuery("");
+        setSearchedItems([]);
+        setSearchMode(false);
+    };
+
+    const handleClear = () => {
+        setSearchQuery("");
+        setSearchedItems([]);
+        setClearedManually(true); // Set clearedManually flag to true when clearing manually
+    }
     return (
         <SearchBar
             placeholder={"Search..."}
-            // onChangeText={handleSearch}
-            // onPressIn={handleSearchBarClick}
-            // value={searchQuery}
+            onChangeText={handleSearch}
+            onPressIn={handleSearchBarClick}
+            value={searchQuery}
             platform="ios"
             containerStyle={SearchScreenStyles.searchBarContainer}
             inputContainerStyle={[
                 SearchScreenStyles.searchBarInputContainer,
-                // searchMode && SearchScreenStyles.searchBarInputContainerTop, // when searchMode is true
+                searchMode && SearchScreenStyles.searchBarInputContainerTop, // when searchMode is true
             ]}
             rightIconContainerStyle={{ opacity: RightIconContainerStyle }}
             inputStyle={[
@@ -24,10 +62,10 @@ const MessageMainSearchBar = ({RightIconContainerStyle}) => {
                 { textAlign: "left" },
             ]}
             clearIcon={{ type: "ionicon", name: "close-circle" }}
-            // onClear={handleClear}
+            onClear={handleClear}
             cancelButtonProps={{
                 style: { paddingRight: 10 },
-                // onPress: handleCancel,
+                onPress: handleCancel,
             }}
             keyboardAppearance={"default"}
             searchIcon={{ type: "ionicon", name: "search" }}
