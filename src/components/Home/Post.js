@@ -221,7 +221,6 @@ const TimeStamp = ({ post }) => (
         <View style={{ marginTop: 5 }}>
             <Text style={{ color: "#8E8E93" }}>
                 {calculateTimeDifference(post.createdAt)} ago
-                {/* {console.log(post.createdAt)} */}
             </Text>
         </View>
     )
@@ -248,7 +247,6 @@ const PostHeader = ({ post, isModalVisible, setIsModalVisible, userData, }) => {
                 // this was the only way to do it otherwise the useStat wil not be updated when it pass the Params to navigation
                 navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated });
             });
-            // Return the unsubscribe function
             return () => unsubscribe();
         });
     };
