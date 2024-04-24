@@ -52,7 +52,6 @@ const MessagesNumProvider = ({ children }) => {
                     }
                 });
             });
-            console.log(uniquePrivateMessages.size)
             // Update the number of messages
             setMessagesNum(uniquePrivateMessages.size);
             setLoading(false);
@@ -62,12 +61,13 @@ const MessagesNumProvider = ({ children }) => {
         return () => {
             unsubscribe1();
         };
-    }, []);
+    }, [messagesNum]);
 
     // Value object to be passed to consumers
     const value = {
         messagesNum,
-        loadingMessagesNum: loading
+        loadingMessagesNum: loading,
+        setMessagesNum
     };
 
     return (
