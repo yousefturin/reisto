@@ -73,7 +73,7 @@ const EditProfileImage = ({ userData }) => {
                 )}
 
             </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.9}>
+            <TouchableOpacity onPress={() => pickImage()} activeOpacity={0.9}>
                 <Text style={{ color: "#0E7AFE", fontWeight: "600", fontSize: 16, textAlign: "center", marginBottom: 18 }}>Edit or remove picture</Text>
             </TouchableOpacity>
         </View>
