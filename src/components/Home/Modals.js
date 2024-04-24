@@ -30,7 +30,6 @@ export const ModalContentForUserWithSameId = ({ handleSavedPost, savedPosts, pos
         setIsAlertModaVisible(!isAlertModaVisible)
     }
     const handlePostDeleteConfirmed = () => {
-        // console.log(postToBeDeleted)
         db.collection('users').doc(firebase.auth().currentUser.email)
             .collection('posts')
             .doc(post.id).delete().then(() => {
