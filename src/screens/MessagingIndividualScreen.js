@@ -101,14 +101,22 @@ const MessagingIndividualScreen = ({ route }) => {
     }
     const handleSendMessage = async (flag, base64Image) => {
         let imageToBeSent = null
+        let Post_Shared_id = null
+        let messagePurpose = null
         let message = textRef.current.trim();
-        if (flag === blurHash) {
+
+        // if send message is an image then
+        if (flag === "image") {
             imageToBeSent = base64Image;
-            message = "Image"
+            message = null;
+            messagePurpose = "image"
+            // if message is text make sure it is not empty
+        } else {
+            if (!message) return;
+            messagePurpose = "text"
         }
         handleCreateChat()
-        if (!message) return;
-        if (flag === blurHash) message = null;
+
         try {
             let roomId = GenerateRoomId(userData.owner_uid, userDataUid.owner_uid);
             const DocRef = db.collection('messages').doc(roomId)
@@ -119,7 +127,9 @@ const MessagingIndividualScreen = ({ route }) => {
             const newDoc = await addDoc(messagesRef, {
                 owner_id: userData?.owner_uid,
                 text: message,
+                type_of_message: messagePurpose,
                 image: imageToBeSent,
+                shared_data: Post_Shared_id,
                 profile_picture: userData?.profile_picture,
                 sender_name: userData?.username,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -171,7 +181,7 @@ const MessagingIndividualScreen = ({ route }) => {
             );
             const base64Image = await UploadImageToStorage(compressedImage.uri);
             if (base64Image) {
-                handleSendMessage(blurHash, base64Image);
+                handleSendMessage("image", base64Image);
             }
         }
     };
