@@ -10,6 +10,7 @@ const screenWidth = Dimensions.get('window').width;
 
 const UserFollowingAndFollowersListScreen = ({ route }) => {
     const { userData, flag, paramFollowing, paramFollower } = route.params;
+
     const handleNavigationToOtherUserProfile = (item) => {
         const userDataToBeNavigated = {
             ...item, // Copy all properties from item
