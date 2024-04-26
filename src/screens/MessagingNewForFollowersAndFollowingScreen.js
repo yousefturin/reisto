@@ -162,7 +162,7 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
 
                                     <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
                                         <Text style={{ color: "#fff", fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
-                                        <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
+                                        {item.displayed_name ? <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text> : <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>Say Hi 👋</Text>}
                                     </View>
                                 </TouchableOpacity>
                             ))
