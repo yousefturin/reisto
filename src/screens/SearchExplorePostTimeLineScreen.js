@@ -1,5 +1,5 @@
 import { Dimensions, FlatList, SafeAreaView } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import Post from '../components/Home/Post'
 import { db, firebase } from '../firebase';
 import SavedPostsHeader from '../components/SavedPosts/SavedPostsHeader';
@@ -11,6 +11,8 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
     const [posts, setPosts] = useState([])
     const flatListRef = useRef();
     const [initialScrollIndex, setInitialScrollIndex] = useState(null);
+    const [usersForSharePosts, setUsersForSharePosts] = useState([]);
+
     const handleScrollToIndexFailed = info => {
         const wait = new Promise(resolve => setTimeout(resolve, 500));
         wait.then(() => {
@@ -32,49 +34,98 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
     }, [posts, scrollToPostId]);
 
     useEffect(() => {
-        const unsubscribe = fetchPost();
+        let unsubscribe
+        const fetchPost = () => {
+            const query = db.collectionGroup('posts').orderBy('createdAt', 'desc');
 
-        // Return cleanup function to unsubscribe when component unmounts
+            // get the id of each post, and destructure the posts then order them based on createdAt as desc
+            unsubscribe = query.onSnapshot(snapshot => {
+                const postsWithProfilePictures = snapshot.docs.map(async post => {
+                    const dbPostData = post.data();
+                    try {
+                        const userDoc = await db.collection('users').doc(dbPostData.owner_email).get()
+                        const dbUserData = userDoc.data()
+                        const dbProfilePicture = dbUserData.profile_picture
+                        return {
+                            id: post.id,
+                            profile_picture: dbProfilePicture, // this is work the picture is from the current logged in user not the one that is mapped to the post!
+                            ...dbPostData
+                        }
+                    } catch (error) {
+                        console.error('Error fetching user document:', error)
+                        return {
+                            id: post.id,
+                            ...dbPostData // Fallback to original post data if user document fetch fails
+                        }
+                    }
+                })
+                Promise.all(postsWithProfilePictures).then(posts => {
+                    setPosts(posts)
+                }).catch(error => {
+                    console.error('Error fetching posts with profile pictures:', error);
+                })
+            });
+        };
+        fetchPost();
         return () => {
-            unsubscribe();
+            unsubscribe && unsubscribe();
         };
     }, []);
+    useLayoutEffect(() => {
+        fetchData();
+    }, []);
 
-    // this is only for testing the UI,UX and it will be changed for random posts to be displayedF
-    const fetchPost = () => {
-        const query = db.collectionGroup('posts').orderBy('createdAt', 'desc');
+    const fetchData = async () => {
+        try {
+            
+            const querySnapshot = await db.collection('users').doc(firebase.auth().currentUser.email).collection('following_followers').limit(1).get();
+            console.log(querySnapshot)
+            if (!querySnapshot.empty) {
+                const doc = querySnapshot.docs[0];
+                const data = doc.data();
 
-        // get the id of each post, and destructure the posts then order them based on createdAt as desc
-        return query.onSnapshot(snapshot => {
-            const postsWithProfilePictures = snapshot.docs.map(async post => {
-                const dbPostData = post.data();
-                try {
-                    const userDoc = await db.collection('users').doc(dbPostData.owner_email).get()
-                    const dbUserData = userDoc.data()
-                    const dbProfilePicture = dbUserData.profile_picture
-                    return {
-                        id: post.id,
-                        profile_picture: dbProfilePicture, // this is work the picture is from the current logged in user not the one that is mapped to the post!
-                        ...dbPostData
-                    }
-                } catch (error) {
-                    console.error('Error fetching user document:', error)
-                    return {
-                        id: post.id,
-                        ...dbPostData // Fallback to original post data if user document fetch fails
-                    }
+                const fetchPromises = [];
+                const fetchPromisesSecond = [];
+
+                for (const follower of data.followers) {
+                    const fetchPromise = db.collection('users').doc(follower).get();
+                    fetchPromises.push(fetchPromise);
                 }
-            })
-            Promise.all(postsWithProfilePictures).then(posts => {
-                setPosts(posts)
-            }).catch(error => {
-                console.error('Error fetching posts with profile pictures:', error);
-            })
-        });
+
+                for (const following of data.following) {
+                    const fetchPromise = db.collection('users').doc(following).get();
+                    fetchPromisesSecond.push(fetchPromise);
+                }
+
+                const [followerDocs, followingDocs] = await Promise.all([Promise.all(fetchPromises), Promise.all(fetchPromisesSecond)]);
+
+                const followersData = followerDocs.filter(doc => doc.exists).map(doc => doc.data());
+                const followingData = followingDocs.filter(doc => doc.exists).map(doc => doc.data());
+
+                const allUsersData = [...followersData, ...followingData];
+                const uniqueUserIds = new Set();
+                const filteredUsersData = allUsersData.filter(user => {
+                    if (uniqueUserIds.has(user.owner_uid)) {
+                        return false;
+                    } else {
+                        uniqueUserIds.add(user.owner_uid);
+                        return true;
+                    }
+                });
+
+                setUsersForSharePosts(filteredUsersData);
+            } else {
+                console.log("No document found in the collection.");
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
     };
+    // this is only for testing the UI,UX and it will be changed for random posts to be displayedF
+
 
     const renderItem = ({ item }) => (
-        <Post post={item} userData={userData} />
+        <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} />
     )
 
 
