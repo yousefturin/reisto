@@ -64,13 +64,21 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
     const renderLastMessage = () => {
         // if i am who sent then show the you 
         // not need to use the ? here since the condition is already will be passed only if it exist
-        if (userData?.owner_uid == lastMessage.owner_id)
+        if (userData?.owner_uid == lastMessage.owner_id) {
             return (
                 <>
                     {
                         lastMessage?.seenBy.includes(userData.owner_uid) ? (
                             <View style={{ flexDirection: "row-reverse", gap: 2, }}>
-                                <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500", }} numberOfLines={1} ellipsizeMode="tail">{lastMessage?.text}</Text>
+                                <>
+                                    {lastMessage.text === null ? (
+                                        <Text style={{ color: "#8E8E93", fontSize: 15, fontWeight: "500", }} numberOfLines={1} ellipsizeMode="tail">Sent</Text>
+
+                                    ) : (
+                                        <Text style={{ color: "#8E8E93", fontSize: 15, fontWeight: "500", }} numberOfLines={1} ellipsizeMode="tail">{lastMessage?.text}</Text>
+
+                                    )}
+                                </>
                                 <View style={{ alignSelf: "center" }}>
                                     <SvgComponent svgKey="CheckSVG" width={moderateScale(13)} height={moderateScale(13)} stroke={'#8E8E93'} />
                                 </View>
@@ -81,9 +89,28 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
                     }
                 </>
             )
+        }
+        else if (lastMessage.text === null) {
+            // if not me the just show it normally
+            return <View style={{ flexDirection: "row-reverse", gap: 2, }}>
+                {!lastMessage.seenBy.includes(userData.owner_uid) ? (
+                    <Text style={{ color: !lastMessage.seenBy.includes(userData.owner_uid) ? "#fff" : "#8E8E93", fontSize: 15, fontWeight: !lastMessage.seenBy.includes(userData.owner_uid) ? "700" : "500", }} numberOfLines={1} ellipsizeMode="tail"  >1 new Message</Text>
+                ) : (
+                    <Text style={{ color: !lastMessage.seenBy.includes(userData.owner_uid) ? "#fff" : "#8E8E93", fontSize: 15, fontWeight: !lastMessage.seenBy.includes(userData.owner_uid) ? "700" : "500", }} numberOfLines={1} ellipsizeMode="tail"  >Seen</Text>
+                )}
+                {/* // if the user did not fetch the last message then show the dot as it indicate that the message is not seen yet by the user */}
+                <View style={{ alignSelf: "center" }}>
+                    {lastMessage?.seenBy.includes(userData.owner_uid) ? (
+                        <SvgComponent svgKey="doubleCheckSVG" width={moderateScale(13)} height={moderateScale(13)} stroke={'#8E8E93'} />
+                    ) : (
+                        null
+                    )}
+                </View>
+            </View>
+        }
         // if not me the just show it normally
         return <View style={{ flexDirection: "row-reverse", gap: 2, }}>
-            <Text style={{ color: !lastMessage.seenBy.includes(userData.owner_uid) ? "#fff" : "#8E8E93", fontSize: 13, fontWeight: "500", }} numberOfLines={1} ellipsizeMode="tail" F >{lastMessage?.text}</Text>
+            <Text style={{ color: !lastMessage.seenBy.includes(userData.owner_uid) ? "#fff" : "#8E8E93", fontSize: 15, fontWeight: !lastMessage.seenBy.includes(userData.owner_uid) ? "700" : "500", }} numberOfLines={1} ellipsizeMode="tail"  >{lastMessage?.text}</Text>
             {/* // if the user did not fetch the last message then show the dot as it indicate that the message is not seen yet by the user */}
             <View style={{ alignSelf: "center" }}>
                 {lastMessage?.seenBy.includes(userData.owner_uid) ? (
@@ -124,7 +151,8 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
                     />
                 </View>
                 <View style={{ flexDirection: "column", flex: 0.55, justifyContent: "center", alignItems: "flex-start" }}>
-                    <Text style={{ color: "#fff", fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
+
+                    <Text style={{ color: "#fff", fontWeight: lastMessage && lastMessage.seenBy?.includes(userData.owner_uid) ? "700" : "900", fontSize: 16 }}>{item.username}</Text>
                     {loading ? (
                         <Skeleton
                             show
@@ -158,6 +186,7 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
             </TouchableOpacity >
         );
     }
+
     if (flag === "FromNewMessage") {
         return (
             <TouchableOpacity style={{ flexDirection: "row", marginHorizontal: 10 }} onPress={() => handleNavigationToChat(item)}>
@@ -181,7 +210,7 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
                 <View style={{ flexDirection: "column", width: "60%", justifyContent: "center", alignItems: "flex-start" }}>
                     <Text style={{ color: "#fff", fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
                     {/* just to style the username in the center if there is no display_name to be shown */}
-                    {item.displayed_name ? <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text> : null}
+                    {item.displayed_name ? <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text> : <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>Say Hi 👋</Text>}
                 </View>
             </TouchableOpacity>
         )
