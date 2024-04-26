@@ -10,6 +10,7 @@ import {
     KeyboardAvoidingView,
     Platform,
     Animated,
+    Alert,
 } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import SvgComponent from "../../utils/SvgComponents";
@@ -23,6 +24,8 @@ import { Image } from 'expo-image';
 import { useNavigation } from '@react-navigation/native';
 import ReactNativeModal from 'react-native-modal';
 import { ModalContentForUserWithDifferentSameId, ModalContentForUserWithSameId, ModalHeader } from './Modals';
+import { GenerateRoomId } from '../../utils/GenerateChatId';
+import { addDoc, collection } from 'firebase/firestore';
 
 const screenHeight = Dimensions.get('window').height;
 const { moderateScale } = initializeScalingUtils(Dimensions);
@@ -43,13 +46,15 @@ const Icons = [
     },
 ]
 //#region Post
-const Post = ({ post, userData, isLastPost }) => {
+const Post = ({ post, userData, isLastPost, usersForSharePosts }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [isContainerVisible, setContainerVisible] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isAlertModaVisible, setIsAlertModaVisible] = useState(false);
     const [commentText, setCommentText] = useState("");
     const [savedPosts, setSavedPosts] = useState([])
+    const [sharePostModal, setSharePostModal] = useState(false);
+
     const toggleCaption = () => {
         setIsExpanded(!isExpanded);
     };
@@ -152,6 +157,79 @@ const Post = ({ post, userData, isLastPost }) => {
             console.error('Error updating document: ', error);
         }
     };
+    const [selectedPostToShare, setSelectedPostToShare] = useState({});
+    const [isButtonSharePressed, setIsButtonSharePressed] = useState(false);
+    const [userToBeSharedPostWith, setUserToBeSharedPostWith] = useState({});
+    const [userIndex, setUserIndex] = useState(null);
+    const handleSharePostToggle = (post) => {
+        // open modal, since the useState of setSharePostModal is considered bad code.So it is made from the Post component.
+        setSharePostModal(true);
+        const { category, captionIngredients,
+            captionInstructions,comments,
+            createdAt,likes_by_users,
+            timeOfMake, ...postToShare } = post;
+
+        setSelectedPostToShare(postToShare);
+    }
+    const handleSharingPost = (user, index) => {
+        setUserToBeSharedPostWith(user);
+        setUserIndex(index)
+    }
+    const handleCreateChat = async () => {
+        let roomId = GenerateRoomId(userData.owner_uid, userToBeSharedPostWith.owner_uid);
+        try {
+            const roomRef = db.collection('messages').doc(roomId);
+            const roomSnap = await roomRef.get();
+
+            if (!roomSnap.exists) { // Check if the document exists
+                await roomRef.set({
+                    roomId,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    // first owner1 will always be the current user this is used in the main screen for messages to show the user who sent the message
+                    owner1: userData.email,
+                    owner2: userToBeSharedPostWith.email,
+                });
+            }
+        } catch (error) {
+            Alert.alert(error.message);
+        }
+    }
+    const handleShareMessage = async () => {
+        // this is the function that will be used to share the post to the user
+        // the post that is selected to be shared is selectedPostToShare
+        // the user that is selected to be shared with is userToBeSharedPostWith
+
+        let imageToBeSent = null
+        let Post_Shared_id = selectedPostToShare
+        let messagePurpose = "share_post"
+        let message = null
+
+        handleCreateChat()
+
+        try {
+            let roomId = GenerateRoomId(userData.owner_uid, userToBeSharedPostWith.owner_uid);
+            const DocRef = db.collection('messages').doc(roomId)
+            const messagesRef = collection(DocRef, "private_messages");
+            //clear the message after it send
+            const newDoc = await addDoc(messagesRef, {
+                owner_id: userData?.owner_uid,
+                text: message,
+                type_of_message: messagePurpose,
+                image: imageToBeSent,
+                shared_data: Post_Shared_id,
+                profile_picture: userData?.profile_picture,
+                sender_name: userData?.username,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                seenBy: [userData?.owner_uid]
+            })
+        } catch (error) {
+            Alert.alert(error.message);
+        }finally{
+            setSharePostModal(false);
+        }
+    }
+
+
     return (
         <View style={{ paddingBottom: isLastPost ? 55 : 30 }}>
             {/* <Divider width={1} orientation='horizontal' color="#222222" /> */}
@@ -161,7 +239,9 @@ const Post = ({ post, userData, isLastPost }) => {
                 isAlertModaVisible={isAlertModaVisible} setIsAlertModaVisible={setIsAlertModaVisible} />
             <PostImage post={post} handleLike={handleLike} />
             <View style={{ marginHorizontal: 15, marginTop: 10, }}>
-                <PostFooter toggleContainer={toggleContainer} post={post} handleLike={handleLike} handleSavedPost={handleSavedPost} savedPosts={savedPosts} />
+                <PostFooter toggleContainer={toggleContainer} post={post} handleLike={handleLike} handleSavedPost={handleSavedPost}
+                    savedPosts={savedPosts} handleSharePostToggle={handleSharePostToggle}
+                    setSharePostModal={setSharePostModal} sharePostModal={sharePostModal} />
                 <Likes post={post} />
                 <CategoryAndTime post={post} />
                 <Caption post={post} isExpanded={isExpanded} toggleCaption={toggleCaption} />
@@ -206,7 +286,76 @@ const Post = ({ post, userData, isLastPost }) => {
                                 post={post} setIsModalVisible={setIsModalVisible} />
                         )
                         }
-
+                    </View>
+                </ReactNativeModal>
+                <ReactNativeModal
+                    isVisible={sharePostModal}
+                    onSwipeComplete={() => setSharePostModal(false)}
+                    onBackdropPress={() => setSharePostModal(false)}
+                    swipeDirection="down"
+                    swipeThreshold={170}
+                    style={{
+                        justifyContent: 'flex-end',
+                        margin: 0,
+                    }}>
+                    <View style={{
+                        backgroundColor: "#262626",
+                        height: screenHeight * 0.4,
+                        borderTopRightRadius: 20,
+                        borderTopLeftRadius: 20
+                    }}>
+                        <ModalHeader />
+                        <View style={{ justifyContent: "space-between" }}>
+                            <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 30, marginHorizontal: 20, height: "65%", }}>
+                                {/* needs better implementation for the UI */}
+                                {usersForSharePosts.map((user, index) => (
+                                    <TouchableOpacity activeOpacity={0.7} onPress={() => {
+                                        setIsButtonSharePressed(userIndex === index ? false : true);
+                                        handleSharingPost(user, index);
+                                    }}
+                                        key={index} style={{ width: '33.33%', paddingHorizontal: 20, }}>
+                                        <Image
+                                            source={{ uri: user.profile_picture }}
+                                            style={{
+                                                width: '100%', aspectRatio: 1, borderRadius: 50, borderWidth: 1,
+                                                borderColor: userIndex === index && isButtonSharePressed ? "#add1f7" : "#2b2b2b", position: "relative",
+                                                zIndex: 1
+                                            }}
+                                            contentFit='cover'
+                                        />
+                                        {userIndex === index && isButtonSharePressed && (
+                                            <View style={{ position: "absolute", top: 10, right: 15, zIndex: 2 }}>
+                                                <SvgComponent svgKey="DotWithCheckSVG" width={moderateScale(22)} height={moderateScale(22)} fill={'#ffffff'} />
+                                            </View>
+                                        )}
+                                        <Text style={{ textAlign: "center", color: "#8E8E93", marginVertical: 10 }}>{user.username}</Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                            <View style={{ marginHorizontal: 10 }}>
+                                {isButtonSharePressed && (
+                                    <TouchableOpacity activeOpacity={0.9} onPress={() => { handleShareMessage() }}>
+                                        <LinearGradient
+                                            colors={['#007AFF', '#1c87fc', '#007AFF']}
+                                            start={{ x: 0, y: 0 }} // Define the start point (top-left corner)
+                                            end={{ x: 1, y: 0 }}   // Define the end point (top-right corner)
+                                            locations={[0, 0.5, 1]} // Adjust the positions of color stops
+                                            style={{
+                                                width: "100%",
+                                                height: 40,
+                                                borderRadius: 10,
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                            }}>
+                                            <Text style={{
+                                                color: '#fff',
+                                                textAlign: 'center',
+                                            }}>Share</Text>
+                                        </LinearGradient>
+                                    </TouchableOpacity>
+                                )}
+                            </View>
+                        </View>
                     </View>
                 </ReactNativeModal>
             </View>
@@ -354,7 +503,7 @@ const PostImage = ({ post, handleLike }) => {
 //#endregion
 
 //#region Post Footer
-const PostFooter = ({ toggleContainer, handleLike, post, handleSavedPost, savedPosts }) => {
+const PostFooter = ({ toggleContainer, handleLike, post, handleSavedPost, savedPosts, handleSharePostToggle, }) => {
     const isPostSaved = savedPosts?.saved_post_id?.includes(post.id) || false;
     const isPostLiked = post?.likes_by_users?.includes(firebase.auth().currentUser.email)
     return (
@@ -366,7 +515,7 @@ const PostFooter = ({ toggleContainer, handleLike, post, handleSavedPost, savedP
                 <TouchableOpacity onPress={toggleContainer}>
                     <Icon svgKey={Icons[1].name} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => handleSharePostToggle(post)}>
                     <Icon svgKey={Icons[2].name} />
                 </TouchableOpacity>
             </View>
