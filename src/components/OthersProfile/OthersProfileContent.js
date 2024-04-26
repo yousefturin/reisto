@@ -14,12 +14,35 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);
     const [followersAndFollowing, setFollowersAndFollowing] = useState([])
     const [followersAndFollowingForPassedUser, setFollowersAndFollowingForPassedUser] = useState([])
-
+    const [userDataAfterNavigation, setUserDataAfterNavigation] = useState(userDataToBeNavigated)
     const isUserFollowed = followersAndFollowing?.following?.includes(userDataToBeNavigated.id)
+    // a stupid code was made before depending on the route to get all the data of the user, but now it will only be the id of the user and the rest will be fetched.
+    useEffect(() => {
+        const GetPostOwnerData = (userDataToBeNavigated) => {
+            return new Promise((resolve, reject) => {
+                const unsubscribe = db.collection('users').where('owner_uid', '==', userDataToBeNavigated.owner_uid).limit(1).onSnapshot(snapshot => {
+                    const data = snapshot.docs.map(doc => doc.data())[0];
+                    const userDataNew = {
+                        username: data.username,
+                        profile_picture: data.profile_picture,
+                        displayed_name: data.displayed_name,
+                        bio: data.bio,
+                        link: data.link,
+                        id: data.email,
+                        owner_uid: userDataToBeNavigated.owner_uid
+                    };
+                    // this was the only way to do it otherwise the useStat wil not be updated when it pass the Params to navigation
+                    setUserDataAfterNavigation(userDataNew);
+                });
+                return () => unsubscribe();
+            });
+        };
 
+        // Call the function here
+        GetPostOwnerData(userDataToBeNavigated);
+    }, []);
     useEffect(() => {
         let unsubscribe;
-
         const getFollowersAndFollowingDataForCurrentUser = async () => {
             const querySnapshot = await db.collection('users')
                 .doc(firebase.auth().currentUser.email)
@@ -59,7 +82,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
         let unsubscribe;
         const getFollowersAndFollowingDataForPassedUser = async () => {
             const querySnapshot = await db.collection('users')
-                .doc(userDataToBeNavigated.id)
+                .doc(userDataAfterNavigation.id)
                 .collection('following_followers')
                 .limit(1) // Limit query to one document
                 .get();
@@ -93,7 +116,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
     // there is issue in this part of code when making the user follow another user for first time.
     const handleFollowing = () => {
         const currentFollowingStatus = !followersAndFollowing?.following?.includes(
-            userDataToBeNavigated?.id
+            userDataAfterNavigation?.id
         )
         const currentFollowingStatusForPassedUser = !followersAndFollowingForPassedUser.followers.includes(
             firebase.auth().currentUser.email
@@ -102,14 +125,14 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
             .doc(firebase.auth().currentUser.email)
             .collection('following_followers').doc(followersAndFollowing.id).update({
                 following: currentFollowingStatus ? firebase.firestore.FieldValue.arrayUnion(
-                    userDataToBeNavigated.id
+                    userDataAfterNavigation.id
                 )
                     : firebase.firestore.FieldValue.arrayRemove(
-                        userDataToBeNavigated.id
+                        userDataAfterNavigation.id
                     ),
             }).then(() => {
                 db.collection('users')
-                    .doc(userDataToBeNavigated.id)
+                    .doc(userDataAfterNavigation.id)
                     .collection('following_followers').doc(followersAndFollowingForPassedUser.id).update({
                         followers: currentFollowingStatusForPassedUser ? firebase.firestore.FieldValue.arrayUnion(
                             firebase.auth().currentUser.email
@@ -126,7 +149,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
         <View style={{ flexDirection: "column", }}>
             <View style={{ flexDirection: "row", }}>
                 <View style={{ width: "30%", justifyContent: "center", alignItems: "center" }}>
-                    <Image source={{ uri: userDataToBeNavigated.profile_picture, cache: "force-cache" }}
+                    <Image source={{ uri: userDataAfterNavigation.profile_picture, cache: "force-cache" }}
                         style={{
                             width: 90,
                             height: 90,
@@ -169,25 +192,25 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
                 </View>
             </View>
             {/* Will be connected to DB soon */}
-            {userDataToBeNavigated.displayed_name &&
+            {userDataAfterNavigation.displayed_name &&
                 <View style={{ marginHorizontal: 20, maxHeight: 50, }} >
                     <Text style={{ color: "#fff", fontSize: 14, fontWeight: "700" }}>
-                        {userDataToBeNavigated.displayed_name}
+                        {userDataAfterNavigation.displayed_name}
                     </Text>
                 </View>
             }
-            {userDataToBeNavigated.bio &&
+            {userDataAfterNavigation.bio &&
                 <View style={{ marginHorizontal: 20, maxHeight: 50 }} >
                     <Text style={{ color: "#fff" }}>
-                        {userDataToBeNavigated.bio}
+                        {userDataAfterNavigation.bio}
                     </Text>
                 </View>
             }
-            {userDataToBeNavigated.link &&
+            {userDataAfterNavigation.link &&
                 <TouchableOpacity activeOpacity={0.8} style={{ marginHorizontal: 20, marginTop: 5, maxHeight: 50, flexDirection: "row-reverse", alignItems: "center", justifyContent: "flex-end" }}
                     onPress={() => setIsModalVisible(!isModalVisible)}>
                     <Text style={{ color: "#d8e0fa" }}>
-                        {extractDomain(userDataToBeNavigated.link)}
+                        {extractDomain(userDataAfterNavigation.link)}
                     </Text>
                     <SvgComponent svgKey="LinkSVG" width={moderateScale(18)} height={moderateScale(18)} />
                 </TouchableOpacity>
@@ -267,7 +290,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
                     }} />
                     <View style={{ marginTop: 10 }}></View>
                     <Divider width={1} orientation='horizontal' color="#383838" />
-                    <WebView source={{ uri: userDataToBeNavigated.link }} />
+                    <WebView source={{ uri: userDataAfterNavigation.link }} />
                 </View>
             </Modal>
         </View>
