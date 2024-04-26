@@ -16,20 +16,24 @@ const AboutThisUserScreen = ({ route }) => {
     // const targetTime = new Date((timestampObj.seconds * 1000) + (timestampObj.nanoseconds / 1000000));
     const [userData, setUserData] = useState([])
     useEffect(() => {
-        fetchUserData();
-    }, [])
-    const fetchUserData = () => {
-        const unsubscribe = db.collection('users').where('owner_uid', '==', ownerID).limit(1).onSnapshot(snapshot => {
-            const data = snapshot.docs.map(doc => doc.data())[0];
-            setUserData({
-                username: data.username,
-                profile_picture: data.profile_picture,
-                //short cut to get the date correctly formatted before assigning 
-                createdAt: formatCreatedAt(new Date((data.createdAt.seconds * 1000) + (data.createdAt.nanoseconds / 1000000)))
+        let unsubscribe
+        const fetchUserData = () => {
+            unsubscribe = db.collection('users').where('owner_uid', '==', ownerID).limit(1).onSnapshot(snapshot => {
+                const data = snapshot.docs.map(doc => doc.data())[0];
+                setUserData({
+                    username: data.username,
+                    profile_picture: data.profile_picture,
+                    //short cut to get the date correctly formatted before assigning 
+                    createdAt: formatCreatedAt(new Date((data.createdAt.seconds * 1000) + (data.createdAt.nanoseconds / 1000000)))
+                });
             });
-        });
-        return () => unsubscribe();
-    }
+        }
+        fetchUserData();
+        return () => {
+            // Unsubscribe when component unmounts
+            unsubscribe && unsubscribe();
+        };
+    }, [])
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
             <SavedPostsHeader header={"About this account"} />
