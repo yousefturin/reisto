@@ -15,7 +15,6 @@ const OtherUsersProfileScreen = ({ route }) => {
 
     useEffect(() => {
         const unsubscribe = fetchUserPosts();
-
         // Return cleanup function to unsubscribe when component unmounts
         return () => {
             unsubscribe();
