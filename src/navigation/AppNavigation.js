@@ -25,6 +25,7 @@ import AboutThisUserScreen from "../screens/AboutThisUserScreen";
 import MessagingIndividualScreen from "../screens/MessagingIndividualScreen";
 import UserFollowingAndFollowersListScreen from "../screens/UserFollowingAndFollowersListScreen";
 import MessagingNewForFollowersAndFollowingScreen from "../screens/MessagingNewForFollowersAndFollowingScreen";
+import FromMessagesToSharedPost from "../screens/FromMessagesToSharedPost";
 
 const Stack = createStackNavigator();
 
@@ -86,7 +87,8 @@ const AuthAppNavigator = () => {
         && currentRouteName !== 'MessagingMain'
         && currentRouteName !== 'AboutThisUser'
         && currentRouteName !== 'MessageIndividual'
-        && currentRouteName !== 'MessagingNewMessageForFollowerAndFollowings';
+        && currentRouteName !== 'MessagingNewMessageForFollowerAndFollowings'
+        && currentRouteName !== 'FromMessagesToSharedPost';
     return (
         <>
             <Stack.Navigator
@@ -213,6 +215,13 @@ const AuthAppNavigator = () => {
                 <Stack.Screen
                     name={"MessagingNewMessageForFollowerAndFollowings"}
                     component={MessagingNewForFollowersAndFollowingScreen}
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+                <Stack.Screen
+                    name={"FromMessagesToSharedPost"}
+                    component={FromMessagesToSharedPost}
                     options={{
                         headerShown: false,
                     }}
