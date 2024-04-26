@@ -1,5 +1,5 @@
 import { Dimensions, FlatList, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import Post from '../components/Home/Post'
 import SvgComponent from '../utils/SvgComponents'
 import initializeScalingUtils from '../utils/NormalizeSize';
@@ -17,6 +17,7 @@ const OthersProfilePostScreen = ({ route }) => {
     const flatListRef = useRef();
     const [initialScrollIndex, setInitialScrollIndex] = useState(null);
     const userData = useContext(UserContext);
+    const [usersForSharePosts, setUsersForSharePosts] = useState([]);
 
     const handleScrollToIndexFailed = info => {
         const wait = new Promise(resolve => setTimeout(resolve, 500));
@@ -24,7 +25,55 @@ const OthersProfilePostScreen = ({ route }) => {
             flatListRef.current?.scrollToIndex({ index: info.index, animated: true });
         });
     };
+    useLayoutEffect(() => {
+        fetchData();
+    }, []);
 
+    const fetchData = async () => {
+        try {
+            
+            const querySnapshot = await db.collection('users').doc(firebase.auth().currentUser.email).collection('following_followers').limit(1).get();
+            if (!querySnapshot.empty) {
+                const doc = querySnapshot.docs[0];
+                const data = doc.data();
+
+                const fetchPromises = [];
+                const fetchPromisesSecond = [];
+
+                for (const follower of data.followers) {
+                    const fetchPromise = db.collection('users').doc(follower).get();
+                    fetchPromises.push(fetchPromise);
+                }
+
+                for (const following of data.following) {
+                    const fetchPromise = db.collection('users').doc(following).get();
+                    fetchPromisesSecond.push(fetchPromise);
+                }
+
+                const [followerDocs, followingDocs] = await Promise.all([Promise.all(fetchPromises), Promise.all(fetchPromisesSecond)]);
+
+                const followersData = followerDocs.filter(doc => doc.exists).map(doc => doc.data());
+                const followingData = followingDocs.filter(doc => doc.exists).map(doc => doc.data());
+
+                const allUsersData = [...followersData, ...followingData];
+                const uniqueUserIds = new Set();
+                const filteredUsersData = allUsersData.filter(user => {
+                    if (uniqueUserIds.has(user.owner_uid)) {
+                        return false;
+                    } else {
+                        uniqueUserIds.add(user.owner_uid);
+                        return true;
+                    }
+                });
+
+                setUsersForSharePosts(filteredUsersData);
+            } else {
+                console.log("No document found in the collection.");
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
 
     useEffect(() => {
         // Calculate initialScrollIndex only when posts are fetched
@@ -41,57 +90,57 @@ const OthersProfilePostScreen = ({ route }) => {
     }, [posts, scrollToPostId]);
 
     useEffect(() => {
-        const unsubscribe = fetchUserPosts();
+        let unsubscribe
+        const fetchUserPosts = () => {
+            const user = firebase.auth().currentUser;
+            if (user) {
+                const query = db.collection('users').doc(userDataToBeNavigated.id)
+                    .collection('posts')
+                    .orderBy('createdAt', 'desc');
 
-        // Return cleanup function to unsubscribe when component unmounts
+                unsubscribe = query.onSnapshot(snapshot => {
+                    const userPostsWithProfilePicture = snapshot.docs.map(async post => {
+                        const dbUserPostData = post.data();
+                        try {
+                            const userDoc = await db.collection('users').doc(dbUserPostData.owner_email).get()
+                            const dbUserData = userDoc.data()
+                            const dbUserProfilePicture = dbUserData.profile_picture
+                            return {
+                                id: post.id,
+                                profile_picture: dbUserProfilePicture,
+                                ...dbUserPostData
+                            }
+                        } catch (error) {
+                            console.error('Error fetching user document:', error)
+                            return {
+                                id: post.id,
+                                ...dbUserPostData
+                            }
+                        }
+                    })
+                    Promise.all(userPostsWithProfilePicture).then(posts => {
+                        setPost(posts)
+                    }).catch(error => {
+                        console.error('Error fetching posts with profile pictures:', error);
+                    })
+                }, error => {
+                    console.error("Error fetching posts:", error);
+                });
+            }
+            else {
+                console.error("No authenticated user found.");
+                return () => { };
+            }
+        };
+        fetchUserPosts();
         return () => {
-            unsubscribe();
+            unsubscribe && unsubscribe();
         };
     }, []);
 
-    const fetchUserPosts = () => {
-        const user = firebase.auth().currentUser;
-        if (user) {
-            const query = db.collection('users').doc(userDataToBeNavigated.id)
-                .collection('posts')
-                .orderBy('createdAt', 'desc');
 
-            return query.onSnapshot(snapshot => {
-                const userPostsWithProfilePicture = snapshot.docs.map(async post => {
-                    const dbUserPostData = post.data();
-                    try {
-                        const userDoc = await db.collection('users').doc(dbUserPostData.owner_email).get()
-                        const dbUserData = userDoc.data()
-                        const dbUserProfilePicture = dbUserData.profile_picture
-                        return {
-                            id: post.id,
-                            profile_picture: dbUserProfilePicture,
-                            ...dbUserPostData
-                        }
-                    } catch (error) {
-                        console.error('Error fetching user document:', error)
-                        return {
-                            id: post.id,
-                            ...dbUserPostData
-                        }
-                    }
-                })
-                Promise.all(userPostsWithProfilePicture).then(posts => {
-                    setPost(posts)
-                }).catch(error => {
-                    console.error('Error fetching posts with profile pictures:', error);
-                })
-            }, error => {
-                console.error("Error fetching posts:", error);
-            });
-        }
-        else{
-            console.error("No authenticated user found.");
-            return () => { };
-        }
-    };
     const renderItem = ({ item }) => (
-        <Post post={item} userData={userData} />
+        <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} />
     )
 
 
