@@ -252,7 +252,7 @@ stroke="#ffffff" stroke-width="1.5"  fill="none" stroke-linecap="round" stroke-l
 	<path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
 		d="M4.2,14.4L7.8,18l12-12" />
 </svg>`,
-doubleCheckSVG: `
+  doubleCheckSVG: `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 	<path fill="none"  stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
 		d="M1.4,14L5,17.6l12-12" />
@@ -260,7 +260,7 @@ doubleCheckSVG: `
 		d="M9.5,17.3l1.1,1l12-12" />
 
 </svg>`,
-ImageSVG:`
+  ImageSVG: `
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 	<path  fill="none" d="M5 21L16 10L21 15" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"
 		stroke-linejoin="round"></path>
@@ -269,7 +269,12 @@ ImageSVG:`
 	<circle fill="none" cx="8.5" cy="8.5" r="1.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"
 		stroke-linejoin="round"></circle>
 </svg>`,
-
+  DotWithCheckSVG: `
+  <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  >
+  <circle cx="12" cy="12" r="9.5" fill="#0E7AFE" stroke="#0E7AFE" stroke-linecap="round" stroke-width="1.5"/>
+  <path d="M7.6,13.3l2,2l6.7-6.7" fill="none" stroke-linecap="round" stroke="#add1f7" stroke-linejoin="round" stroke-width="2"/>
+  </svg>
+  `,
 
 }
 
