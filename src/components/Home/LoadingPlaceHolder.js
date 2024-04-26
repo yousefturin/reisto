@@ -10,7 +10,7 @@ const SkeletonCommonProps = {
         duration: 2000,
     }
 }
-const LoadingPlaceHolder = () => {
+const LoadingPlaceHolder = ({ fromWhere }) => {
     return (
         <>
             <LoaderPostHeader />
@@ -22,10 +22,13 @@ const LoadingPlaceHolder = () => {
                 <LoaderPostCaption />
                 <LoaderPostTimeStamp />
             </View>
-            <View style={{ marginTop: 15 }}>
-                <LoaderPostHeader />
-                <LoaderPostImage />
-            </View>
+            {/* // If the post is shared, the footer will not be displayed */}
+            {fromWhere !== "sharedPost" &&
+                <View style={{ marginTop: 15 }}>
+                    <LoaderPostHeader />
+                    <LoaderPostImage />
+                </View>
+            }
         </>
     )
 }
