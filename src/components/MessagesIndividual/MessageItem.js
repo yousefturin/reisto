@@ -2,21 +2,76 @@ import { View, Text, Dimensions } from 'react-native'
 import React from 'react'
 import SvgComponent from '../../utils/SvgComponents'
 import initializeScalingUtils from '../../utils/NormalizeSize';
-import calculateTimeDifference from '../../utils/TimeDifferenceCalculator';
 import { CalculateCreateAt } from '../../utils/TimeBasedOnCreatedAt';
 import { Image } from 'expo-image';
 import { blurHash } from '../../../assets/HashBlurData';
+import { TouchableOpacity } from 'react-native';
+import { firebase } from '../../firebase'
+import { useNavigation } from '@react-navigation/native';
 
 const MessageItem = ({ message, currentUser }) => {
-    const { moderateScale } = initializeScalingUtils(Dimensions);
+    const navigation = useNavigation();
 
+    const { moderateScale } = initializeScalingUtils(Dimensions);
+    const handleNavigationFromSharedPostToUserProfile = (data) => {
+        const currentUser = firebase.auth().currentUser;
+        if (currentUser.uid === data.owner_uid) {
+            //navigate to my profile
+            navigation.navigate("UserProfile");
+        } else {
+            //navigate to other user's profile
+            const userDataToBeNavigated = {
+                ...data, // Copy all properties from item
+                id: data.owner_email, // Replace email with id
+                username: data.user
+            };
+            navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated: userDataToBeNavigated });
+        }
+    }
+    const handleNavigationFromSharedPostToPost = (postId, userID) => {
+        navigation.navigate("FromMessagesToSharedPost", { postId: postId, userID: userID });
+        // console.log(postId);
+    }
     if (currentUser?.owner_uid == message.owner_id) {
         //this message is sent by me
-        return (
-            <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 10, marginRight: 10 }}>
-                <View style={{ alignItems: 'flex-end', maxWidth: '80%', }}>
-                    {message.image &&
-                        <View style={{ height: 259, borderRadius: 20, margin: 10, overflow: 'hidden' }}>
+        if (message?.type_of_message === "text") {
+            return (
+                <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 10, marginRight: 10 }}>
+                    <View style={{ alignItems: 'flex-end', maxWidth: '80%', }}>
+                        <View style={{ zIndex: 999, backgroundColor: '#007AFF', borderRadius: 15, borderBottomRightRadius: 10, alignItems: "center" }}>
+                            <Text style={{ color: "#fff", fontSize: 16, padding: 10, paddingBottom: 0, letterSpacing: -0.1, }}>
+                                {message?.text}
+                            </Text>
+                            {/* this is a sketchy way of doing it, but it works */}
+                            {message?.seenBy.length === 2 ? (
+                                <View style={{ alignSelf: "flex-end", flexDirection: "row", marginHorizontal: 10, margin: 3 }}>
+                                    <SvgComponent svgKey="doubleCheckSVG" width={moderateScale(10)} height={moderateScale(10)} stroke={'#b2b2b9'} />
+                                    <Text style={{ color: "#b2b2b9", fontSize: 10, fontWeight: "400" }}>{CalculateCreateAt(message.createdAt)}</Text>
+                                </View>
+                            ) : (
+                                <View style={{ alignSelf: "flex-end", flexDirection: "row", marginHorizontal: 10, margin: 3 }}>
+                                    <SvgComponent svgKey="CheckSVG" width={moderateScale(10)} height={moderateScale(10)} stroke={'#b2b2b9'} />
+                                    <Text style={{ color: "#b2b2b9", fontSize: 10, fontWeight: "400" }}>{message?.createdAt ? CalculateCreateAt(message.createdAt) : '  '}</Text>
+                                </View>
+                            )}
+                        </View>
+                        <View style={{
+                            zIndex: 0, width: 0, height: 0,
+                            borderTopWidth: 10, borderTopColor: 'transparent',
+                            borderRightWidth: 15, borderRightColor: '#007AFF',
+                            borderBottomWidth: 10, borderBottomColor: 'transparent',
+                            transform: [{ rotate: '90deg' }], marginTop: -20,
+                            marginRight: -1
+                        }} />
+                    </View>
+                </View>
+            )
+        }
+        if (message?.type_of_message === "image") {
+            return (
+                <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 10, marginRight: 10 }}>
+                    <View style={{ alignItems: 'flex-end', maxWidth: '80%', }}>
+                        <View style={{ height: 259, borderRadius: 20, marginVertical: 10, overflow: 'hidden' }}>
                             <Image
                                 source={{ uri: message?.image, cache: "force-cache" }}
                                 style={{
@@ -30,72 +85,165 @@ const MessageItem = ({ message, currentUser }) => {
                                 transition={50}
                             />
                         </View>
-                    }
-                    {message?.text !== null &&
-                        <>
-                            <View style={{ zIndex: 999, backgroundColor: '#007AFF', borderRadius: 15, borderBottomRightRadius: 10, alignItems: "center" }}>
-                                <Text style={{ color: "#fff", fontSize: 16, padding: 10, paddingBottom: 0, letterSpacing: -0.1, }}>
-                                    {message?.text}
-                                </Text>
-                                {/* this is a sketchy way of doing it, but it works */}
-                                {message?.seenBy.length === 2 ? (
-                                    <View style={{ alignSelf: "flex-end", flexDirection: "row", marginHorizontal: 10, margin: 3 }}>
-                                        <SvgComponent svgKey="doubleCheckSVG" width={moderateScale(10)} height={moderateScale(10)} stroke={'#b2b2b9'} />
-                                        <Text style={{ color: "#b2b2b9", fontSize: 10, fontWeight: "400" }}>{CalculateCreateAt(message.createdAt)}</Text>
-                                    </View>
-                                ) : (
-                                    <View style={{ alignSelf: "flex-end", flexDirection: "row", marginHorizontal: 10, margin: 3 }}>
-                                        <SvgComponent svgKey="CheckSVG" width={moderateScale(10)} height={moderateScale(10)} stroke={'#b2b2b9'} />
-                                        <Text style={{ color: "#b2b2b9", fontSize: 10, fontWeight: "400" }}>{message?.createdAt ? CalculateCreateAt(message.createdAt) : '  '}</Text>
-                                    </View>
-                                )}
-                            </View>
-                            <View style={{
-                                zIndex: 0, width: 0, height: 0,
-                                borderTopWidth: 10, borderTopColor: 'transparent',
-                                borderRightWidth: 15, borderRightColor: '#007AFF',
-                                borderBottomWidth: 10, borderBottomColor: 'transparent',
-                                transform: [{ rotate: '90deg' }], marginTop: -20,
-                                marginRight: -1
-                            }} />
-                        </>
-                    }
-                </View>
-            </View>
-        )
-    } else {
-        return (
-            <View style={{ flexDirection: "row", justifyContent: "flex-start", marginBottom: 10, marginLeft: 10 }}>
-                <View style={{ alignItems: 'flex-start', maxWidth: '80%', }}>
-                    <View style={{ zIndex: 999, backgroundColor: '#262626', borderRadius: 15, borderBottomLeftRadius: 10, }}>
-                        <Text style={{ color: "#fff", fontSize: 16, padding: 10, paddingBottom: 0, letterSpacing: -0.1, alignSelf: "flex-start" }}>
-                            {message?.text}
-                        </Text>
-                        {/* this is a sketchy way of doing it, but it works */}
-                        {message?.seenBy.length === 2 ? (
-                            <View style={{ alignSelf: "flex-end", flexDirection: "row", marginHorizontal: 10, margin: 3 }}>
-                                <SvgComponent svgKey="doubleCheckSVG" width={moderateScale(10)} height={moderateScale(10)} stroke={'#b2b2b9'} />
-                                <Text style={{ color: "#b2b2b9", fontSize: 10, fontWeight: "400" }}>{CalculateCreateAt(message.createdAt)}</Text>
-                            </View>
-                        ) : (
-                            <View style={{ alignSelf: "flex-end", flexDirection: "row", marginHorizontal: 10, margin: 3 }}>
-                                <SvgComponent svgKey="CheckSVG" width={moderateScale(10)} height={moderateScale(10)} fill={'#b2b2b9'} />
-                                <Text style={{ color: "#b2b2b9", fontSize: 10, fontWeight: "400" }}>{CalculateCreateAt(message.createdAt)}</Text>
-                            </View>
-                        )}
                     </View>
-                    <View style={{
-                        zIndex: 0, width: 0, height: 0,
-                        borderTopWidth: 10, borderTopColor: 'transparent',
-                        borderRightWidth: 15, borderRightColor: '#262626',
-                        borderBottomWidth: 10, borderBottomColor: 'transparent',
-                        transform: [{ rotate: '90deg' }], marginTop: -20,
-                        marginLeft: -1
-                    }} />
-
                 </View>
-            </View>
-        )
+            )
+        }
+        if (message?.type_of_message === "share_post") {
+            return (
+                <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 10, marginRight: 10 }}>
+                    <View style={{ alignItems: 'flex-end', maxWidth: '80%', }}>
+                        <TouchableOpacity onPress={() => handleNavigationFromSharedPostToPost(message.shared_data.id, message.shared_data.owner_email)} activeOpacity={0.9}>
+                            <TouchableOpacity style={{ flexDirection: "row", alignItems: "center", backgroundColor: "#262626", borderTopRightRadius: 20, borderTopLeftRadius: 20, marginTop: 10 }} activeOpacity={0.9}
+                                onPress={() => handleNavigationFromSharedPostToUserProfile(message.shared_data)}>
+                                <Image
+                                    source={{ uri: message?.shared_data?.profile_picture, cache: "force-cache" }}
+                                    style={{
+                                        width: 35,
+                                        height: 35,
+                                        borderRadius: 50,
+                                        borderWidth: 1,
+                                        borderColor: "#2b2b2b",
+                                        margin: 10
+                                    }}
+                                    placeholder={blurHash}
+                                    contentFit="cover"
+                                    transition={50}
+                                />
+                                <Text style={{ color: "#fff", fontWeight: "700", fontSize: 16, }}>{message?.shared_data?.user}</Text>
+                            </TouchableOpacity>
+
+                            <View style={{ height: 259, overflow: 'hidden' }}>
+                                <Image
+                                    source={{ uri: message?.shared_data?.imageURL, cache: "force-cache" }}
+                                    style={{
+                                        width: 260,
+                                        height: 260,
+                                    }}
+                                    contentFit="contain"
+                                    placeholder={blurHash}
+                                    cachePolicy={"memory-disk"}
+                                    transition={50}
+                                />
+                            </View>
+                            <View style={{ backgroundColor: '#262626', borderBottomRightRadius: 20, borderBottomLeftRadius: 20, flexDirection: "row", maxWidth: 260, marginBottom: 10 }}>
+                                <Text style={{ color: "#fff", margin: 10 }} numberOfLines={2} ellipsizeMode="tail">
+                                    <Text style={{ fontWeight: "700" }}>{message?.shared_data?.user} </Text>
+                                    <Text style={{ color: "#8E8E93" }} >
+                                        {message?.shared_data?.caption}
+                                    </Text>
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            )
+        }
+    } else {
+        //this message belongs to the other user
+        if (message?.type_of_message === "text") {
+            return (
+                <View style={{ flexDirection: "row", justifyContent: "flex-start", marginBottom: 10, marginLeft: 10 }}>
+                    <View style={{ alignItems: 'flex-start', maxWidth: '80%', }}>
+                        <View style={{ zIndex: 999, backgroundColor: '#262626', borderRadius: 15, borderBottomLeftRadius: 10, }}>
+                            <Text style={{ color: "#fff", fontSize: 16, padding: 10, paddingBottom: 0, letterSpacing: -0.1, alignSelf: "flex-start" }}>
+                                {message?.text}
+                            </Text>
+                            {/* this is a sketchy way of doing it, but it works */}
+                            {message?.seenBy.length === 2 ? (
+                                <View style={{ alignSelf: "flex-end", flexDirection: "row", marginHorizontal: 10, margin: 3 }}>
+                                    <Text style={{ color: "#b2b2b9", fontSize: 10, fontWeight: "400" }}>{CalculateCreateAt(message.createdAt)}</Text>
+                                </View>
+                            ) : (
+                                <View style={{ alignSelf: "flex-end", flexDirection: "row", marginHorizontal: 10, margin: 3 }}>
+                                    <Text style={{ color: "#b2b2b9", fontSize: 10, fontWeight: "400" }}>{CalculateCreateAt(message.createdAt)}</Text>
+                                </View>
+                            )}
+                        </View>
+                        <View style={{
+                            zIndex: 0, width: 0, height: 0,
+                            borderTopWidth: 10, borderTopColor: 'transparent',
+                            borderRightWidth: 15, borderRightColor: '#262626',
+                            borderBottomWidth: 10, borderBottomColor: 'transparent',
+                            transform: [{ rotate: '90deg' }], marginTop: -20,
+                            marginLeft: -1
+                        }} />
+                    </View>
+                </View>
+            )
+        }
+        if (message?.type_of_message === "image") {
+            return (
+                <View style={{ flexDirection: "row", justifyContent: "flex-start", marginBottom: 10, marginLeft: 10 }}>
+                    <View style={{ alignItems: 'flex-start', maxWidth: '80%', }}>
+                        <View style={{ height: 259, borderRadius: 20, marginVertical: 10, overflow: 'hidden' }}>
+                            <Image
+                                source={{ uri: message?.image, cache: "force-cache" }}
+                                style={{
+                                    width: 260,
+                                    height: 260,
+                                    borderRadius: 20,
+                                }}
+                                contentFit="contain"
+                                placeholder={blurHash}
+                                cachePolicy={"memory-disk"}
+                                transition={50}
+                            />
+                        </View>
+                    </View>
+                </View>
+            )
+        }
+        if (message?.type_of_message === "share_post") {
+            return (
+                <View style={{ flexDirection: "row", justifyContent: "flex-start", marginBottom: 10, marginLeft: 10 }}>
+                    <View style={{ alignItems: 'flex-start', maxWidth: '80%', }}>
+                        <TouchableOpacity onPress={() => handleNavigationFromSharedPostToPost(message.shared_data.id, message.shared_data.owner_email)} activeOpacity={0.9}>
+                            <TouchableOpacity style={{ flexDirection: "row", alignItems: "center", backgroundColor: "#262626", borderTopRightRadius: 20, borderTopLeftRadius: 20, marginTop: 10 }} activeOpacity={0.9}
+                                onPress={() => handleNavigationFromSharedPostToUserProfile(message.shared_data)}>
+                                <Image
+                                    source={{ uri: message?.shared_data?.profile_picture, cache: "force-cache" }}
+                                    style={{
+                                        width: 35,
+                                        height: 35,
+                                        borderRadius: 50,
+                                        borderWidth: 1,
+                                        borderColor: "#2b2b2b",
+                                        margin: 10
+                                    }}
+                                    placeholder={blurHash}
+                                    contentFit="cover"
+                                    transition={50}
+                                />
+                                <Text style={{ color: "#fff", fontWeight: "700", fontSize: 16, }}>{message?.shared_data?.user}</Text>
+                            </TouchableOpacity>
+
+                            <View style={{ height: 259, overflow: 'hidden' }}>
+                                <Image
+                                    source={{ uri: message?.shared_data?.imageURL, cache: "force-cache" }}
+                                    style={{
+                                        width: 260,
+                                        height: 260,
+                                    }}
+                                    contentFit="contain"
+                                    placeholder={blurHash}
+                                    cachePolicy={"memory-disk"}
+                                    transition={50}
+                                />
+                            </View>
+                            <View style={{ backgroundColor: '#262626', borderBottomRightRadius: 20, borderBottomLeftRadius: 20, flexDirection: "row", maxWidth: 260, marginBottom: 10 }}>
+                                <Text style={{ color: "#fff", margin: 10 }} numberOfLines={2} ellipsizeMode="tail">
+                                    <Text style={{ fontWeight: "700" }}>{message?.shared_data?.user} </Text>
+                                    <Text style={{ color: "#8E8E93" }} >
+                                        {message?.shared_data?.caption}
+                                    </Text>
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            )
+        }
     }
 }
 
