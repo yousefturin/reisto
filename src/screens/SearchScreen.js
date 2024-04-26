@@ -102,7 +102,7 @@ const SearchScreen = () => {
                 });
                 setItems(allPosts);
             });
-        }else{
+        } else {
             console.error("No authenticated user found.");
             return () => { };
         }
@@ -143,46 +143,46 @@ const SearchScreen = () => {
 
 
     useEffect(() => {
-        const unsubscribe = fetchPost();
-    
-        // Return cleanup function to unsubscribe when component unmounts
+        let unsubscribe;
+        // this is only for testing the UI,UX and it will be changed for random posts to be displayedF
+        const fetchPost = () => {
+            const query = db.collectionGroup('posts').orderBy('createdAt', 'desc');
+            // get the id of each post, and destructure the posts then order them based on createdAt as desc
+            unsubscribe = query.onSnapshot(snapshot => {
+                const postsWithProfilePictures = snapshot.docs.map(async post => {
+                    const dbPostData = post.data();
+                    try {
+                        const userDoc = await db.collection('users').doc(dbPostData.owner_email).get()
+                        const dbUserData = userDoc.data()
+                        const dbProfilePicture = dbUserData.profile_picture
+                        return {
+                            id: post.id,
+                            profile_picture: dbProfilePicture, // this is work the picture is from the current logged in user not the one that is mapped to the post!
+                            ...dbPostData
+                        }
+                    } catch (error) {
+                        console.error('Error fetching user document:', error)
+                        return {
+                            id: post.id,
+                            ...dbPostData // Fallback to original post data if user document fetch fails
+                        }
+                    }
+                })
+                Promise.all(postsWithProfilePictures).then(posts => {
+                    setPosts(posts)
+                }).catch(error => {
+                    console.error('Error fetching posts with profile pictures:', error);
+                })
+            });
+        };
+        fetchPost()
         return () => {
-            unsubscribe();
+            unsubscribe && unsubscribe();
         };
     }, []);
-    
 
-    // this is only for testing the UI,UX and it will be changed for random posts to be displayedF
-    const fetchPost = () => {
-        const query = db.collectionGroup('posts').orderBy('createdAt', 'desc');
-        // get the id of each post, and destructure the posts then order them based on createdAt as desc
-        return query.onSnapshot(snapshot => {
-            const postsWithProfilePictures = snapshot.docs.map(async post => {
-                const dbPostData = post.data();
-                try {
-                    const userDoc = await db.collection('users').doc(dbPostData.owner_email).get()
-                    const dbUserData = userDoc.data()
-                    const dbProfilePicture = dbUserData.profile_picture
-                    return {
-                        id: post.id,
-                        profile_picture: dbProfilePicture, // this is work the picture is from the current logged in user not the one that is mapped to the post!
-                        ...dbPostData
-                    }
-                } catch (error) {
-                    console.error('Error fetching user document:', error)
-                    return {
-                        id: post.id,
-                        ...dbPostData // Fallback to original post data if user document fetch fails
-                    }
-                }
-            })
-            Promise.all(postsWithProfilePictures).then(posts => {
-                setPosts(posts)
-            }).catch(error => {
-                console.error('Error fetching posts with profile pictures:', error);
-            })
-        });
-    };
+
+
 
     return (
         // this must be on a scrollView-<<<<<<<<<<<<<<<<
