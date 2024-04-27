@@ -147,7 +147,7 @@ const FormikPostUploader = () => {
                             {/* there was no other way to pass the value */}
                             <AddNewPostHeader handleSubmit={handleSubmit} isValid={isValid} />
                             <ScrollView
-                                keyboardDismissMode="on-drag"
+                                // keyboardDismissMode="on-drag"
                                 keyboardShouldPersistTaps={'always'} 
                                 showsVerticalScrollIndicator={false}  >
                                 <>
@@ -185,6 +185,7 @@ const FormikPostUploader = () => {
                                                 style={{ fontSize: 18, color: "#fff", marginHorizontal: 10, marginVertical: 10 }}
                                                 placeholder='Write a caption...' placeholderTextColor={"#2b2b2b"}
                                                 multiline
+                                                scrollEnabled={false}
                                                 textContentType='none'
                                                 keyboardType='default'
                                                 onChangeText={handleChange('caption')}
@@ -205,6 +206,7 @@ const FormikPostUploader = () => {
                                             <TextInput
                                                 multiline
                                                 numberOfLines={10}
+                                                scrollEnabled={false}//the issue with keyboard avoiding view since 2017 and still no fix from facebook to this issue, and the only work around is to use scrollEnabled={false}
                                                 placeholder='Enter ingredients...'
                                                 placeholderTextColor={"#2b2b2b"}
                                                 textContentType='none'
@@ -227,6 +229,7 @@ const FormikPostUploader = () => {
                                             <Text style={{ color: "#fff", marginVertical: 10, fontSize: 20, fontWeight: "700" }}>Instructions</Text>
                                             <TextInput
                                                 multiline
+                                                scrollEnabled={false}
                                                 numberOfLines={10}
                                                 placeholder='Enter instructions...'
                                                 placeholderTextColor={"#2b2b2b"}
