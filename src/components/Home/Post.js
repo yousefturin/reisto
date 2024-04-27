@@ -165,8 +165,8 @@ const Post = ({ post, userData, isLastPost, usersForSharePosts }) => {
         // open modal, since the useState of setSharePostModal is considered bad code.So it is made from the Post component.
         setSharePostModal(true);
         const { category, captionIngredients,
-            captionInstructions,comments,
-            createdAt,likes_by_users,
+            captionInstructions, comments,
+            createdAt, likes_by_users,
             timeOfMake, ...postToShare } = post;
 
         setSelectedPostToShare(postToShare);
@@ -205,6 +205,7 @@ const Post = ({ post, userData, isLastPost, usersForSharePosts }) => {
         let message = null
 
         handleCreateChat()
+        setSharePostModal(false);
 
         try {
             let roomId = GenerateRoomId(userData.owner_uid, userToBeSharedPostWith.owner_uid);
@@ -224,8 +225,8 @@ const Post = ({ post, userData, isLastPost, usersForSharePosts }) => {
             })
         } catch (error) {
             Alert.alert(error.message);
-        }finally{
-            setSharePostModal(false);
+        } finally {
+            console.log("Message Sent")
         }
     }
 
