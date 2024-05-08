@@ -9,12 +9,13 @@ import initializeScalingUtils from '../utils/NormalizeSize';
 import * as Yup from 'yup'
 import { Formik } from 'formik'
 import { db, firebase } from '../firebase';
+import { colorPalette } from '../Config/Theme';
 
 const UserEditProfileIndividualDataScreen = ({ route }) => {
     const { userData, key, value } = route.params
     const navigation = useNavigation();
     return (
-        <SafeAreaView style={{ backgroundColor: "#050505", flex: 1, justifyContent: "flex-start" }}>
+        <SafeAreaView style={{ backgroundColor: colorPalette.dark.Primary , flex: 1, justifyContent: "flex-start" }}>
             <ContentEditProfileIndividual headerTitle={key} navigation={navigation} prevValue={value} />
         </SafeAreaView>
     )
@@ -65,7 +66,7 @@ const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue }) =>
                                     multiline={false}
                                     autoFocus
                                     placeholder={`${headerTitle}`}
-                                    placeholderTextColor={"#656565"}
+                                    placeholderTextColor={colorPalette.dark.textTertiary}
                                     textContentType='none'
                                     keyboardType='default'
                                     value={values.DisplayedName}
@@ -73,21 +74,21 @@ const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue }) =>
                                     onBlur={() => {
                                         handleBlur('DisplayedName')
                                     }}
-                                    style={{ marginHorizontal: 10, marginVertical: 20, marginLeft: 20, fontSize: 18, fontWeight: "400", color: "#f2f2f2", }}
+                                    style={{ marginHorizontal: 10, marginVertical: 20, marginLeft: 20, fontSize: 18, fontWeight: "400", color: colorPalette.dark.textSubPrimary, }}
                                 />
                                 <TouchableOpacity style={{ padding: 10, marginRight: 10 }} onPress={() => setFieldValue('DisplayedName', '')}>
                                     <SvgComponent svgKey="CloseCirclerSVG" width={moderateScale(18)} height={moderateScale(18)} />
                                 </TouchableOpacity>
                             </View>
-                            <Divider width={0.5} orientation='horizontal' color="#2b2b2b" />
+                            <Divider width={0.5} orientation='horizontal' color={colorPalette.dark.dividerPrimary} />
                             {errors.DisplayedName && (
                                 <Text style={{ fontSize: 13, color: "tomato", marginHorizontal: 10, marginTop: 5, marginLeft: 20, }}>*{errors.DisplayedName}</Text>
                             )}
                             <Text
-                                style={{ marginHorizontal: 10, marginVertical: 20, marginLeft: 20, fontSize: 14, fontWeight: "400", color: "#656565", }}
+                                style={{ marginHorizontal: 10, marginVertical: 20, marginLeft: 20, fontSize: 14, fontWeight: "400", color: colorPalette.dark.textTertiary, }}
                             >Help people discover your account by using the name you're known by: either your full name, nickname or business name.</Text>
                             <Text
-                                style={{ marginHorizontal: 10, marginLeft: 20, fontSize: 14, fontWeight: "400", color: "#656565", }}
+                                style={{ marginHorizontal: 10, marginLeft: 20, fontSize: 14, fontWeight: "400", color: colorPalette.dark.textTertiary, }}
                             >You can only change your name once withing 14 days.</Text>
                         </>
                     )}
@@ -111,7 +112,7 @@ const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue }) =>
                                     multiline={false}
                                     autoFocus
                                     placeholder={`${headerTitle}`}
-                                    placeholderTextColor={"#656565"}
+                                    placeholderTextColor={colorPalette.dark.textTertiary}
                                     textContentType='none'
                                     keyboardType='default'
                                     value={values.Bio}
@@ -119,13 +120,13 @@ const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue }) =>
                                     onBlur={() => {
                                         handleBlur('Bio')
                                     }}
-                                    style={{ marginHorizontal: 10, marginVertical: 20, marginLeft: 20, fontSize: 18, fontWeight: "400", color: "#f2f2f2", }}
+                                    style={{ marginHorizontal: 10, marginVertical: 20, marginLeft: 20, fontSize: 18, fontWeight: "400", color: colorPalette.dark.textSubPrimary, }}
                                 />
                                 <TouchableOpacity style={{ padding: 10, marginRight: 10 }} onPress={() => setFieldValue('Bio', '')}>
                                     <SvgComponent svgKey="CloseCirclerSVG" width={moderateScale(18)} height={moderateScale(18)} />
                                 </TouchableOpacity>
                             </View>
-                            <Divider width={0.5} orientation='horizontal' color="#2b2b2b" />
+                            <Divider width={0.5} orientation='horizontal' color={colorPalette.dark.dividerPrimary}  />
                             {errors.Bio && (
                                 <Text style={{ fontSize: 13, color: "tomato", marginHorizontal: 10, marginTop: 5, marginLeft: 20, }}>*{errors.Bio}</Text>
                             )}
@@ -151,7 +152,7 @@ const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue }) =>
                                     multiline={false}
                                     autoFocus
                                     placeholder={`${headerTitle}`}
-                                    placeholderTextColor={"#656565"}
+                                    placeholderTextColor={colorPalette.dark.textTertiary}
                                     textContentType='none'
                                     keyboardType='default'
                                     value={values.Link}
@@ -159,13 +160,13 @@ const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue }) =>
                                     onBlur={() => {
                                         handleBlur('Link')
                                     }}
-                                    style={{ marginHorizontal: 10, marginVertical: 20, marginLeft: 20, fontSize: 18, fontWeight: "400", color: "#f2f2f2", }}
+                                    style={{ marginHorizontal: 10, marginVertical: 20, marginLeft: 20, fontSize: 18, fontWeight: "400", color: colorPalette.dark.textSubPrimary, }}
                                 />
                                 <TouchableOpacity style={{ padding: 10, marginRight: 10 }} onPress={() => setFieldValue('Link', '')}>
                                     <SvgComponent svgKey="CloseCirclerSVG" width={moderateScale(18)} height={moderateScale(18)} />
                                 </TouchableOpacity>
                             </View>
-                            <Divider width={0.5} orientation='horizontal' color="#2b2b2b" />
+                            <Divider width={0.5} orientation='horizontal' color={colorPalette.dark.dividerPrimary}  />
                             {errors.Link && (
                                 <Text style={{ fontSize: 13, color: "tomato", marginHorizontal: 10, marginTop: 5, marginLeft: 20, }}>*{errors.Link}</Text>
                             )}
