@@ -4,6 +4,7 @@ import EditProfileHeader from '../components/UserEditProfile/EditProfileHeader';
 import { useNavigation } from '@react-navigation/native';
 import { Image } from 'expo-image';
 import { blurHash } from '../../assets/HashBlurData';
+import { colorPalette } from '../Config/Theme';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -43,18 +44,18 @@ const UserFollowingAndFollowersListScreen = ({ route }) => {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary  }}>
             <EditProfileHeader headerTitle={userData.username} navigation={navigation} />
             <View style={{ flexDirection: "row", justifyContent: "space-around", position: "relative" }}>
                 <TouchableOpacity
                     onPress={() => { handleDataSwitch("followers") }}
                     style={{ padding: 10 }}>
-                    <Text style={{ color: paramFlag === "followers" ? "#fff" : "#8E8E93", fontSize: 16, fontWeight: paramFlag === "followers" ? "700" : "500" }}>follower</Text>
+                    <Text style={{ color: paramFlag === "followers" ? colorPalette.dark.textPrimary : colorPalette.dark.textSecondary, fontSize: 16, fontWeight: paramFlag === "followers" ? "700" : "500" }}>follower</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => { handleDataSwitch("following") }}
                     style={{ padding: 10 }}>
-                    <Text style={{ color: paramFlag === "following" ? "#fff" : "#8E8E93", fontSize: 16, fontWeight: paramFlag === "following" ? "700" : "500" }}>following</Text>
+                    <Text style={{ color: paramFlag === "following" ? colorPalette.dark.textPrimary : colorPalette.dark.textSecondary, fontSize: 16, fontWeight: paramFlag === "following" ? "700" : "500" }}>following</Text>
                 </TouchableOpacity>
 
                 <Animated.View style={{
@@ -63,7 +64,7 @@ const UserFollowingAndFollowersListScreen = ({ route }) => {
                     left: 0,
                     width: "20%",
                     height: 2,
-                    backgroundColor: '#fff',
+                    backgroundColor: colorPalette.dark.textPrimary,
                     transform: [{
                         translateX: animatedValue.interpolate({
                             inputRange: [0, 1],
@@ -86,7 +87,7 @@ const UserFollowingAndFollowersListScreen = ({ route }) => {
                                             borderRadius: 50,
                                             margin: 7,
                                             borderWidth: 1.5,
-                                            borderColor: "#2b2b2b"
+                                            borderColor: colorPalette.dark.Secondary
                                         }}
                                         placeholder={blurHash}
                                         contentFit="cover"
@@ -95,8 +96,8 @@ const UserFollowingAndFollowersListScreen = ({ route }) => {
                                 </View>
 
                                 <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
-                                    <Text style={{ color: "#fff", fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
-                                    <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
+                                    <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
+                                    <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
                                 </View>
                             </TouchableOpacity>
                         ))}
@@ -113,7 +114,7 @@ const UserFollowingAndFollowersListScreen = ({ route }) => {
                                             borderRadius: 50,
                                             margin: 7,
                                             borderWidth: 1.5,
-                                            borderColor: "#2b2b2b"
+                                            borderColor: colorPalette.dark.Secondary
                                         }}
                                         placeholder={blurHash}
                                         contentFit="cover"
@@ -122,8 +123,8 @@ const UserFollowingAndFollowersListScreen = ({ route }) => {
                                 </View>
 
                                 <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
-                                    <Text style={{ color: "#fff", fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
-                                    <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
+                                    <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
+                                    <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
                                 </View>
                             </TouchableOpacity>
                         ))}
