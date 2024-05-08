@@ -6,6 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { db, firebase } from '../../firebase';
 import { Image } from 'expo-image';
+import { colorPalette } from '../../Config/Theme';
 const EditProfileImage = ({ userData }) => {
     const [image, setImage] = useState(null);
     const pickImage = async () => {
@@ -49,7 +50,7 @@ const EditProfileImage = ({ userData }) => {
                             borderRadius: 50,
                             margin: 20,
                             borderWidth: 1.5,
-                            borderColor: "#2b2b2b"
+                            borderColor: colorPalette.dark.Secondary
                         }}
                         placeholder={blurHash}
                         contentFit="cover"
@@ -63,7 +64,7 @@ const EditProfileImage = ({ userData }) => {
                             borderRadius: 50,
                             margin: 20,
                             borderWidth: 1.5,
-                            borderColor: "#2b2b2b"
+                            borderColor: colorPalette.dark.Secondary
                         }}
                         placeholder={blurHash}
                         contentFit="cover"
@@ -73,7 +74,7 @@ const EditProfileImage = ({ userData }) => {
 
             </TouchableOpacity>
             <TouchableOpacity onPress={() => pickImage()} activeOpacity={0.9}>
-                <Text style={{ color: "#0E7AFE", fontWeight: "600", fontSize: 16, textAlign: "center", marginBottom: 18 }}>Edit or remove picture</Text>
+                <Text style={{ color: colorPalette.dark.appPrimary, fontWeight: "600", fontSize: 16, textAlign: "center", marginBottom: 18 }}>Edit or remove picture</Text>
             </TouchableOpacity>
         </View>
     )
