@@ -4,6 +4,7 @@ import SvgComponent from '../../utils/SvgComponents'
 import initializeScalingUtils from '../../utils/NormalizeSize';
 import { useNavigation } from '@react-navigation/native';
 import { MessagesNumContext } from '../../context/MessagesNumProvider';
+import { colorPalette } from '../../Config/Theme';
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
@@ -14,7 +15,7 @@ const Header = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity>
-        <SvgComponent svgKey="LogoSVG" width={moderateScale(60)} height={moderateScale(60)} fill={'#ffffff'} />
+        <SvgComponent svgKey="LogoSVG" width={moderateScale(60)} height={moderateScale(60)} fill={colorPalette.dark.textPrimary} />
       </TouchableOpacity>
 
       <View style={styles.iconsContainer}>
@@ -23,7 +24,7 @@ const Header = () => {
 
             <Text style={styles.unreadBadgeText}>{messagesNum !== 0 ? messagesNum : null}</Text>
           </View>
-          <SvgComponent svgKey="ChatSVG" width={moderateScale(22)} height={moderateScale(22)} fill={'#ffffff'} />
+          <SvgComponent svgKey="ChatSVG" width={moderateScale(22)} height={moderateScale(22)} fill={colorPalette.dark.textPrimary} />
         </TouchableOpacity>
       </View>
     </View>
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     zIndex: 9999,
   },
   unreadBadgeText: {
-    color: "#fff",
+    color: colorPalette.dark.textPrimary,
     fontWeight: "600",
   },
 });
