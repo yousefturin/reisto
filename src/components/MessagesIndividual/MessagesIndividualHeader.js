@@ -7,6 +7,7 @@ import { Image } from 'expo-image';
 import { blurHash } from '../../../assets/HashBlurData';
 import { Divider } from 'react-native-elements';
 import { db } from '../../firebase';
+import { colorPalette } from '../../Config/Theme';
 
 
 const MessagesIndividualHeader = ({ header }) => {
@@ -46,7 +47,7 @@ const MessagesIndividualHeader = ({ header }) => {
                                 height: 35,
                                 borderRadius: 50,
                                 borderWidth: 1,
-                                borderColor: "#2b2b2b"
+                                borderColor: colorPalette.dark.Secondary
                             }}
                             placeholder={blurHash}
                             contentFit="cover"
@@ -55,13 +56,13 @@ const MessagesIndividualHeader = ({ header }) => {
                         />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => handleNavigation()}>
-                        <Text style={{ color: "#fff", fontWeight: "600", fontSize: 20, }}>{header.username}</Text>
+                        <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "600", fontSize: 20, }}>{header.username}</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{ margin: 10, width: moderateScale(30) }}>
                 </View>
             </View>
-            <Divider width={0.5} orientation='horizontal' color="#2b2b2b" />
+            <Divider width={0.5} orientation='horizontal' color={colorPalette.dark.dividerPrimary} />
         </>
     )
 }
