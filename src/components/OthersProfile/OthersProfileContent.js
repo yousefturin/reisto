@@ -8,6 +8,7 @@ import { extractDomain } from '../../utils/ExtractDomainFromLink';
 import { WebView } from 'react-native-webview';
 import { Divider } from 'react-native-elements';
 import { db, firebase } from '../../firebase';
+import { colorPalette } from '../../Config/Theme';
 
 const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -156,7 +157,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
                             borderRadius: 50,
                             margin: 10,
                             borderWidth: 1.5,
-                            borderColor: "#2b2b2b"
+                            borderColor: colorPalette.dark.Secondary
                         }}
                         placeholder={blurHash}
                         contentFit="cover"
@@ -164,28 +165,28 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
                 </View>
                 <View style={{ flexDirection: "row", justifyContent: "space-evenly", flex: 1, }}>
                     <View style={{ alignItems: "center", justifyContent: "center" }}>
-                        <Text style={{ color: "#fff", fontWeight: "600", fontSize: 18 }}>
+                        <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "600", fontSize: 18 }}>
                             {Object.keys(userPosts).length}
                         </Text>
-                        <Text style={{ color: "#cccccc" }}>
+                        <Text style={{ color: colorPalette.dark.textQuaternary }}>
                             recipes
                         </Text>
                     </View>
 
                     <View style={{ alignItems: "center", justifyContent: "center" }}>
-                        <Text style={{ color: "#fff", fontWeight: "600", fontSize: 18 }}>
+                        <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "600", fontSize: 18 }}>
                             {Object.keys(followersAndFollowingForPassedUser?.followers || 0).length}
                         </Text>
-                        <Text style={{ color: "#cccccc" }}>
+                        <Text style={{ color: colorPalette.dark.textQuaternary }}>
                             followers
                         </Text>
                     </View>
 
                     <View style={{ alignItems: "center", justifyContent: "center" }}>
-                        <Text style={{ color: "#fff", fontWeight: "600", fontSize: 18 }}>
+                        <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "600", fontSize: 18 }}>
                             {Object.keys(followersAndFollowingForPassedUser?.following || 0).length}
                         </Text>
-                        <Text style={{ color: "#cccccc" }}>
+                        <Text style={{ color: colorPalette.dark.textQuaternary}}>
                             following
                         </Text>
                     </View>
@@ -194,14 +195,14 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
             {/* Will be connected to DB soon */}
             {userDataAfterNavigation.displayed_name &&
                 <View style={{ marginHorizontal: 20, maxHeight: 50, }} >
-                    <Text style={{ color: "#fff", fontSize: 14, fontWeight: "700" }}>
+                    <Text style={{ color: colorPalette.dark.textPrimary, fontSize: 14, fontWeight: "700" }}>
                         {userDataAfterNavigation.displayed_name}
                     </Text>
                 </View>
             }
             {userDataAfterNavigation.bio &&
                 <View style={{ marginHorizontal: 20, maxHeight: 50 }} >
-                    <Text style={{ color: "#fff" }}>
+                    <Text style={{ color: colorPalette.dark.textPrimary }}>
                         {userDataAfterNavigation.bio}
                     </Text>
                 </View>
@@ -209,7 +210,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
             {userDataAfterNavigation.link &&
                 <TouchableOpacity activeOpacity={0.8} style={{ marginHorizontal: 20, marginTop: 5, maxHeight: 50, flexDirection: "row-reverse", alignItems: "center", justifyContent: "flex-end" }}
                     onPress={() => setIsModalVisible(!isModalVisible)}>
-                    <Text style={{ color: "#d8e0fa" }}>
+                    <Text style={{ color: colorPalette.dark.textURL }}>
                         {extractDomain(userDataAfterNavigation.link)}
                     </Text>
                     <SvgComponent svgKey="LinkSVG" width={moderateScale(18)} height={moderateScale(18)} />
@@ -225,17 +226,17 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
                 <TouchableOpacity activeOpacity={0.8} onPress={() => handleFollowing()}>
                     <View style={{
                         marginTop: 20,
-                        backgroundColor: isUserFollowed ? "#1C1C1E" : "#0E7AFE",
+                        backgroundColor: isUserFollowed ? colorPalette.dark.Quinary : colorPalette.dark.appPrimary,
                         borderWidth: 1,
                         borderRadius: 8,
-                        borderColor: isUserFollowed ? "#1C1C1E" : "#0E7AFE",
+                        borderColor: isUserFollowed ? colorPalette.dark.Quinary : colorPalette.dark.appPrimary,
                         paddingVertical: 8,
                         width: 180,
                     }}>
                         <Text style={{
                             fontSize: 16,
                             fontWeight: "500",
-                            color: "#ffffff",
+                            color: colorPalette.dark.textPrimary,
                             textAlign: "center"
                         }}> {isUserFollowed ? "Unfollow" : "Follow"}</Text>
                     </View>
@@ -243,17 +244,17 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
                 <TouchableOpacity activeOpacity={0.8}>
                     <View style={{
                         marginTop: 20,
-                        backgroundColor: "#1C1C1E",
+                        backgroundColor: colorPalette.dark.Quinary,
                         borderWidth: 1,
                         borderRadius: 8,
-                        borderColor: "#1C1C1E",
+                        borderColor: colorPalette.dark.Quinary,
                         paddingVertical: 8,
                         width: 180,
                     }}>
                         <Text style={{
                             fontSize: 16,
                             fontWeight: "500",
-                            color: "#ffffff",
+                            color: colorPalette.dark.textPrimary,
                             textAlign: "center"
                         }}>Share profile</Text>
                     </View>
@@ -270,12 +271,12 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
                 }}
             >
                 <View
-                    style={{ backgroundColor: "#262626", flex: 1 }}
+                    style={{ backgroundColor: colorPalette.dark.SubPrimary, flex: 1 }}
                 >
                     <View style={{
                         height: 5,
                         width: 40,
-                        backgroundColor: "#1C1C1E",
+                        backgroundColor: colorPalette.dark.Quinary,
                         borderRadius: 10,
                         marginTop: 10,
                         shadowColor: "black",
@@ -285,11 +286,11 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
                         },
                         shadowOpacity: 0.1,
                         shadowRadius: 1,
-                        backgroundColor: "#383838",
+                        backgroundColor: colorPalette.dark.Tertiary,
                         alignSelf: "center"
                     }} />
                     <View style={{ marginTop: 10 }}></View>
-                    <Divider width={1} orientation='horizontal' color="#383838" />
+                    <Divider width={1} orientation='horizontal' color={colorPalette.dark.dividerPrimary} />
                     <WebView source={{ uri: userDataAfterNavigation.link }} />
                 </View>
             </Modal>
