@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { SearchBar } from 'react-native-elements'
 import { StyleSheet } from 'react-native'
 import initializeScalingUtils from '../../utils/NormalizeSize'
+import { colorPalette } from '../../Config/Theme'
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
 const MessageMainSearchBar = ({ RightIconContainerStyle,
@@ -76,19 +77,19 @@ const MessageMainSearchBar = ({ RightIconContainerStyle,
 const SearchScreenStyles = StyleSheet.create({
     container: {
         flexGrow: 1,
-        backgroundColor: "#050505",
+        backgroundColor: colorPalette.dark.Primary ,
         justifyContent: "center",
         alignItems: "center",
         paddingBottom: moderateScale(88),
     },
     searchBarContainer: {
         paddingHorizontal: moderateScale(10),
-        backgroundColor: "#050505",
+        backgroundColor: colorPalette.dark.Primary ,
         borderBottomColor: "transparent",
         borderTopColor: "transparent",
     },
     searchBarInputContainer: {
-        backgroundColor: "#1C1C1E",
+        backgroundColor: colorPalette.dark.Quinary,
         shadowColor: "black",
         shadowOffset: {
             width: 0,
@@ -105,12 +106,12 @@ const SearchScreenStyles = StyleSheet.create({
         zIndex: 1,
     },
     searchBarInput: {
-        backgroundColor: "#1C1C1E",
-        color: "#dddddd",
+        backgroundColor: colorPalette.dark.Quinary,
+        color: colorPalette.dark.textQuaternary,
         borderLeftColor: "transparent",
         borderRightColor: "transparent",
         borderWidth: 0.5,
-        borderColor: "#1C1C1E"
+        borderColor: colorPalette.dark.Quinary
     },
 })
 export default MessageMainSearchBar
