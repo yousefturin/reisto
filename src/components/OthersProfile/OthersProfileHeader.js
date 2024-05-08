@@ -3,6 +3,7 @@ import React from 'react'
 import { useNavigation } from '@react-navigation/native';
 import initializeScalingUtils from '../../utils/NormalizeSize';
 import SvgComponent from '../../utils/SvgComponents';
+import { colorPalette } from '../../Config/Theme';
 
 const OthersProfileHeader = ({ userDataToBeNavigated }) => {
     const navigation = useNavigation();
@@ -21,10 +22,10 @@ const OthersProfileHeader = ({ userDataToBeNavigated }) => {
                 <SvgComponent svgKey="ArrowBackSVG" width={moderateScale(30)} height={moderateScale(30)} />
             </TouchableOpacity>
             <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", flex: 1 }}>
-                <Text style={{ color: "#fff", fontWeight: "600", fontSize: 20, }}>{userDataToBeNavigated.username}</Text>
+                <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "600", fontSize: 20, }}>{userDataToBeNavigated.username}</Text>
             </View>
             <TouchableOpacity onPress={() => handleNavigationToMessages()} style={{ width: moderateScale(30) }}>
-                <Text style={{ color: "#fff", fontWeight: "900", }}>...</Text>
+                <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "900", }}>...</Text>
             </TouchableOpacity>
         </View>
     )
