@@ -4,6 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import SvgComponent from "../utils/SvgComponents";
 import initializeScalingUtils from "../utils/NormalizeSize"
 import LoginForm from '../components/Login/LoginForm';
+import { colorPalette } from '../Config/Theme';
 
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
@@ -12,10 +13,10 @@ export default function LoginScreen({ }) {
     const navigation = useNavigation();
     // const { login } = useAuth();
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary }}>
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <SvgComponent svgKey="LogoSVG" width={moderateScale(80)} height={moderateScale(80)} fill={'#ffffff'} />
+                    <SvgComponent svgKey="LogoSVG" width={moderateScale(80)} height={moderateScale(80)} fill={colorPalette.dark.textPrimary} />
                 </View>
                 <LoginForm navigation={navigation} />
             </View>
