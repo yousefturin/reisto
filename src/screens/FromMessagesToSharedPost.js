@@ -7,6 +7,7 @@ import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder';
 import { useNavigation } from '@react-navigation/native';
 import SvgComponent from '../utils/SvgComponents';
 import initializeScalingUtils from '../utils/NormalizeSize';
+import { colorPalette } from '../Config/Theme';
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
@@ -128,7 +129,7 @@ const PostHeader = () => {
                 <SvgComponent svgKey="ArrowBackSVG" width={moderateScale(30)} height={moderateScale(30)} />
             </TouchableOpacity>
             <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", flex: 1 }}>
-                <Text style={{ color: "#fff", fontWeight: "600", fontSize: 20, }}>Posts</Text>
+                <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "600", fontSize: 20, }}>Posts</Text>
             </View>
             <View style={{ margin: 10, width: moderateScale(30) }}>
             </View>
