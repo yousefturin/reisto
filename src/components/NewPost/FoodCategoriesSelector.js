@@ -2,6 +2,7 @@
 import { TouchableOpacity, Text, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import { LinearGradient } from 'expo-linear-gradient';
+import { colorPalette } from '../../Config/Theme';
 
 
 const FoodCategories = ({ setFieldValue, values, handleBlur }) => {
@@ -27,7 +28,7 @@ const FoodCategories = ({ setFieldValue, values, handleBlur }) => {
     };
     return (
         <>
-            <Text style={{ color: "#fff", margin: 10, fontSize: 20, fontWeight: "700" }}>Category</Text>
+            <Text style={{ color: colorPalette.dark.textPrimary, margin: 10, fontSize: 20, fontWeight: "700" }}>Category</Text>
             <ScrollView
                 keyboardDismissMode="on-drag"
                 keyboardShouldPersistTaps={'always'}
@@ -50,7 +51,10 @@ const FoodCategories = ({ setFieldValue, values, handleBlur }) => {
 
                         <LinearGradient
                             // Button Linear Gradient
-                            colors={selectedCategoryIndex == index ? ['#526591', '#304062', '#2D3751'] : ['#7e9bdf', '#6581B7', '#445379']}
+                            colors={selectedCategoryIndex == index ?
+                                [colorPalette.dark.appGradientPrimary2, colorPalette.dark.appGradientSecondary2, colorPalette.dark.appGradientTertiary2]
+                                :
+                                [colorPalette.dark.appGradientPrimary, colorPalette.dark.appGradientSecondary, colorPalette.dark.appGradientTertiary]}
                             style={{
                                 width: 100,
                                 height: 40,
@@ -60,7 +64,7 @@ const FoodCategories = ({ setFieldValue, values, handleBlur }) => {
                                 marginHorizontal: 5,
                             }}>
                             <Text style={{
-                                color: '#fff',
+                                color: colorPalette.dark.textPrimary,
                                 textAlign: 'center',
                             }}>{category.name}</Text>
                         </LinearGradient>
