@@ -3,6 +3,7 @@ import React from 'react'
 import SvgComponent from '../../utils/SvgComponents'
 import initializeScalingUtils from '../../utils/NormalizeSize';
 import { useNavigation } from "@react-navigation/native";
+import { colorPalette } from '../../Config/Theme';
 
 const MessageMainHeader = ({ userData, excludedUsers }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);
@@ -17,7 +18,7 @@ const MessageMainHeader = ({ userData, excludedUsers }) => {
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <SvgComponent svgKey="ArrowBackSVG" width={moderateScale(40)} height={moderateScale(40)} />
                 </TouchableOpacity>
-                <Text style={{ color: "#fff", fontWeight: "800", fontSize: 25, }}>{userData.username}</Text>
+                <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "800", fontSize: 25, }}>{userData.username}</Text>
             </View>
             <View style={{ margin: 10, height: moderateScale(30) }}>
             </View>
