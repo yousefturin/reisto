@@ -8,6 +8,7 @@ import { SearchBar } from 'react-native-elements';
 import { SearchScreenStyles } from './MessagingMainScreen';
 import { Image } from 'expo-image';
 import { blurHash } from '../../assets/HashBlurData';
+import { colorPalette } from '../Config/Theme';
 
 
 
@@ -152,7 +153,7 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
                                                 borderRadius: 50,
                                                 margin: 7,
                                                 borderWidth: 1.5,
-                                                borderColor: "#2b2b2b"
+                                                borderColor: colorPalette.dark.Secondary
                                             }}
                                             placeholder={blurHash}
                                             contentFit="cover"
@@ -161,8 +162,8 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
                                     </View>
 
                                     <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
-                                        <Text style={{ color: "#fff", fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
-                                        {item.displayed_name ? <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text> : <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>Say Hi 👋</Text>}
+                                        <Text style={{ color:colorPalette.dark.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
+                                        {item.displayed_name ? <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text> : <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>Say Hi 👋</Text>}
                                     </View>
                                 </TouchableOpacity>
                             ))
