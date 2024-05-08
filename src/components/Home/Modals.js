@@ -11,6 +11,7 @@ import { Divider } from 'react-native-elements';
 import { firebase, db } from '../../firebase'
 import ReactNativeModal from 'react-native-modal';
 import { useNavigation } from "@react-navigation/native";
+import { colorPalette } from '../../Config/Theme';
 
 const screenHeight = Dimensions.get('window').height;
 const { moderateScale } = initializeScalingUtils(Dimensions);
@@ -47,34 +48,34 @@ export const ModalContentForUserWithSameId = ({ handleSavedPost, savedPosts, pos
             <View style={{ marginHorizontal: 10, marginVertical: 10, marginTop: 25, gap: 10 }}>
                 <View style={{ flexDirection: "row", justifyContent: "space-evenly", }}>
                     <TouchableOpacity onPress={() => handleBeforeSavePost(post)}
-                        activeOpacity={0.7} style={{ flex: 0.45, alignItems: "center", backgroundColor: "#4c4c4c", gap: 7, borderRadius: 10, paddingVertical: 10 }} >
+                        activeOpacity={0.7} style={{ flex: 0.45, alignItems: "center", backgroundColor: colorPalette.dark.modalBtn, gap: 7, borderRadius: 10, paddingVertical: 10 }} >
                         <SvgComponent svgKey={isPostSaved ? "BookMarkSavedSVG" : "BookmarkNotActiveSVG"} width={moderateScale(20)} height={moderateScale(20)} />
-                        <Text style={{ fontSize: 13, color: "#fff", fontWeight: "400" }}>{isPostSaved ? "Unsave" : "Save"}</Text>
+                        <Text style={{ fontSize: 13, color: colorPalette.dark.textPrimary, fontWeight: "400" }}>{isPostSaved ? "Unsave" : "Save"}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity activeOpacity={0.7} style={{ flex: 0.45, alignItems: "center", backgroundColor: "#4c4c4c", gap: 7, borderRadius: 10, paddingVertical: 10 }} >
+                    <TouchableOpacity activeOpacity={0.7} style={{ flex: 0.45, alignItems: "center", backgroundColor: colorPalette.dark.modalBtn, gap: 7, borderRadius: 10, paddingVertical: 10 }} >
                         <SvgComponent svgKey="EditSVG" width={moderateScale(20)} height={moderateScale(20)} />
-                        <Text style={{ fontSize: 13, color: "#fff", fontWeight: "400" }}>Edit</Text>
+                        <Text style={{ fontSize: 13, color: colorPalette.dark.textPrimary, fontWeight: "400" }}>Edit</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{ marginHorizontal: 15, margin: 10, }}>
-                    <TouchableOpacity activeOpacity={0.7} style={{ flexDirection: "row", justifyContent: "flex-start", gap: 10, alignItems: "center", backgroundColor: "#4c4c4c", borderTopLeftRadius: 10, borderTopRightRadius: 10, paddingHorizontal: 20 }} >
+                    <TouchableOpacity activeOpacity={0.7} style={{ flexDirection: "row", justifyContent: "flex-start", gap: 10, alignItems: "center", backgroundColor: colorPalette.dark.modalBtn, borderTopLeftRadius: 10, borderTopRightRadius: 10, paddingHorizontal: 20 }} >
                         <SvgComponent svgKey="CommentSVG" width={moderateScale(22)} height={moderateScale(22)} />
-                        <Text style={{ fontSize: 18, color: "#fff", fontWeight: "400", padding: 20 }}>Turn on commenting</Text>
+                        <Text style={{ fontSize: 18, color: colorPalette.dark.textPrimary, fontWeight: "400", padding: 20 }}>Turn on commenting</Text>
                     </TouchableOpacity>
                     <View style={{}}>
-                        <Divider width={0.5} orientation='horizontal' color="#575757" />
+                        <Divider width={0.5} orientation='horizontal' color={colorPalette.dark.modalDivider} />
                     </View>
-                    <TouchableOpacity activeOpacity={0.7} style={{ flexDirection: "row", justifyContent: "flex-start", gap: 10, alignItems: "center", backgroundColor: "#4c4c4c", paddingHorizontal: 20 }} >
+                    <TouchableOpacity activeOpacity={0.7} style={{ flexDirection: "row", justifyContent: "flex-start", gap: 10, alignItems: "center", backgroundColor: colorPalette.dark.modalBtn, paddingHorizontal: 20 }} >
                         <SvgComponent svgKey="LikeNotActiveSVG" width={moderateScale(22)} height={moderateScale(22)} />
-                        <Text style={{ fontSize: 18, color: "#fff", fontWeight: "400", padding: 20 }}>Hide like count</Text>
+                        <Text style={{ fontSize: 18, color: colorPalette.dark.textPrimary, fontWeight: "400", padding: 20 }}>Hide like count</Text>
                     </TouchableOpacity>
                     <View style={{}}>
-                        <Divider width={0.5} orientation='horizontal' color="#575757" />
+                        <Divider width={0.5} orientation='horizontal' color={colorPalette.dark.modalDivider}  />
                     </View>
                     <TouchableOpacity onPress={() => handelBeforeDeletePost(post)}
-                        activeOpacity={0.7} style={{ flexDirection: "row", justifyContent: "flex-start", gap: 10, alignItems: "center", backgroundColor: "#4c4c4c", borderBottomLeftRadius: 10, borderBottomRightRadius: 10, paddingHorizontal: 20 }} >
+                        activeOpacity={0.7} style={{ flexDirection: "row", justifyContent: "flex-start", gap: 10, alignItems: "center", backgroundColor: colorPalette.dark.modalBtn, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, paddingHorizontal: 20 }} >
                         <SvgComponent svgKey="DeleteSVG" width={moderateScale(22)} height={moderateScale(22)} />
-                        <Text style={{ fontSize: 18, color: "#ed4535", fontWeight: "400", padding: 20 }}>Delete</Text>
+                        <Text style={{ fontSize: 18, color: colorPalette.dark.textError, fontWeight: "400", padding: 20 }}>Delete</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -102,29 +103,29 @@ export const ModalContentForUserWithDifferentSameId = ({ handleSavedPost, savedP
             <View style={{ marginHorizontal: 10, marginVertical: 10, marginTop: 25, gap: 10 }}>
                 <View style={{ flexDirection: "row", justifyContent: "space-evenly", }}>
                     <TouchableOpacity onPress={() => handleBeforeSavePost(post)}
-                        activeOpacity={0.7} style={{ flex: 0.45, alignItems: "center", backgroundColor: "#4c4c4c", gap: 7, borderRadius: 10, paddingVertical: 10 }} >
+                        activeOpacity={0.7} style={{ flex: 0.45, alignItems: "center", backgroundColor: colorPalette.dark.modalBtn, gap: 7, borderRadius: 10, paddingVertical: 10 }} >
                         <SvgComponent svgKey={isPostSaved ? "BookMarkSavedSVG" : "BookmarkNotActiveSVG"} width={moderateScale(20)} height={moderateScale(20)} />
-                        <Text style={{ fontSize: 13, color: "#fff", fontWeight: "400" }}>{isPostSaved ? "Unsave" : "Save"}</Text>
+                        <Text style={{ fontSize: 13, color: colorPalette.dark.textPrimary, fontWeight: "400" }}>{isPostSaved ? "Unsave" : "Save"}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity activeOpacity={0.7} style={{ flex: 0.45, alignItems: "center", backgroundColor: "#4c4c4c", gap: 7, borderRadius: 10, paddingVertical: 10 }} >
+                    <TouchableOpacity activeOpacity={0.7} style={{ flex: 0.45, alignItems: "center", backgroundColor: colorPalette.dark.modalBtn, gap: 7, borderRadius: 10, paddingVertical: 10 }} >
                         <SvgComponent svgKey="EyePasswordSVG" width={moderateScale(20)} height={moderateScale(20)} />
-                        <Text style={{ fontSize: 13, color: "#fff", fontWeight: "400" }}>Not Interested</Text>
+                        <Text style={{ fontSize: 13, color: colorPalette.dark.textPrimary, fontWeight: "400" }}>Not Interested</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{ marginHorizontal: 15, margin: 10, }}>
                     <TouchableOpacity
                         onPress={() => handleAboutThisUser(post)}
-                        activeOpacity={0.7} style={{ flexDirection: "row", justifyContent: "flex-start", gap: 10, alignItems: "center", backgroundColor: "#4c4c4c", borderTopLeftRadius: 10, borderTopRightRadius: 10, paddingHorizontal: 20 }} >
+                        activeOpacity={0.7} style={{ flexDirection: "row", justifyContent: "flex-start", gap: 10, alignItems: "center", backgroundColor: colorPalette.dark.modalBtn, borderTopLeftRadius: 10, borderTopRightRadius: 10, paddingHorizontal: 20 }} >
                         <SvgComponent svgKey="UserIllustrationSVG" width={moderateScale(22)} height={moderateScale(22)} />
-                        <Text style={{ fontSize: 18, color: "#fff", fontWeight: "400", padding: 20 }}>About this account</Text>
+                        <Text style={{ fontSize: 18, color: colorPalette.dark.textPrimary, fontWeight: "400", padding: 20 }}>About this account</Text>
                     </TouchableOpacity>
                     <View style={{}}>
-                        <Divider width={0.5} orientation='horizontal' color="#575757" />
+                        <Divider width={0.5} orientation='horizontal' color={colorPalette.dark.modalDivider}  />
                     </View>
                     <TouchableOpacity
-                        activeOpacity={0.7} style={{ flexDirection: "row", justifyContent: "flex-start", gap: 10, alignItems: "center", backgroundColor: "#4c4c4c", borderBottomLeftRadius: 10, borderBottomRightRadius: 10, paddingHorizontal: 20 }} >
+                        activeOpacity={0.7} style={{ flexDirection: "row", justifyContent: "flex-start", gap: 10, alignItems: "center", backgroundColor: colorPalette.dark.modalBtn, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, paddingHorizontal: 20 }} >
                         <SvgComponent svgKey="ReportIssueSVG" width={moderateScale(22)} height={moderateScale(22)} />
-                        <Text style={{ fontSize: 18, color: "#ed4535", fontWeight: "400", padding: 20 }}>Report</Text>
+                        <Text style={{ fontSize: 18, color: colorPalette.dark.textError, fontWeight: "400", padding: 20 }}>Report</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -147,7 +148,7 @@ export const ModalHeader = () => (
             },
             shadowOpacity: 0.1,
             shadowRadius: 1,
-            backgroundColor: "#727272",
+            backgroundColor: colorPalette.dark.notch,
             alignSelf: "center"
         }} />
     </>
@@ -169,26 +170,26 @@ const ModalAlertForDelete = ({ isAlertModaVisible, setIsAlertModaVisible, setIsM
                 margin: 0,
             }}>
             <View style={{
-                backgroundColor: "#262626",
+                backgroundColor: colorPalette.dark.SubPrimary,
                 height: screenHeight * 0.28,
                 borderRadius: 20,
                 marginHorizontal: 60
             }}>
                 <View style={{ flexDirection: "column", justifyContent: "space-evenly", alignItems: "center", flex: 0.6, paddingHorizontal: 20, }}>
-                    <Text style={{ fontSize: 20, color: "#fff", fontWeight: "600", }}>Delete post?</Text>
-                    <Text style={{ fontSize: 16, color: "#656565", fontWeight: "400", textAlign: "center", }}>This post will be permanently deleted. You will not be able to restore it after deletion.</Text>
+                    <Text style={{ fontSize: 20, color: colorPalette.dark.textPrimary, fontWeight: "600", }}>Delete post?</Text>
+                    <Text style={{ fontSize: 16, color: colorPalette.dark.textTertiary, fontWeight: "400", textAlign: "center", }}>This post will be permanently deleted. You will not be able to restore it after deletion.</Text>
                 </View>
 
-                <Divider width={1} orientation='horizontal' color="#2b2b2b" />
+                <Divider width={1} orientation='horizontal' color={colorPalette.dark.dividerPrimary} />
                 <View style={{ justifyContent: "space-evenly", flex: 0.4 }}>
                     <TouchableOpacity
                         onPress={() => {
                             handelDeletingPost()
                         }}
                     >
-                        <Text style={{ color: "#ed4535", fontWeight: "600", fontSize: 18, textAlign: "center", }}>Delete</Text>
+                        <Text style={{ color: colorPalette.dark.textError, fontWeight: "600", fontSize: 18, textAlign: "center", }}>Delete</Text>
                     </TouchableOpacity>
-                    <Divider width={1} orientation='horizontal' color="#2b2b2b" />
+                    <Divider width={1} orientation='horizontal' color={colorPalette.dark.dividerPrimary}  />
                     <TouchableOpacity
                         onPress={() => {
                             setIsModalVisible(false)
@@ -196,7 +197,7 @@ const ModalAlertForDelete = ({ isAlertModaVisible, setIsAlertModaVisible, setIsM
                                 setIsAlertModaVisible(false)
                             }, 250);
                         }}>
-                        <Text style={{ color: "#dfdfdf", fontWeight: "400", fontSize: 18, textAlign: "center", }}>Cancel</Text>
+                        <Text style={{ color: colorPalette.dark.textQuaternary, fontWeight: "400", fontSize: 18, textAlign: "center", }}>Cancel</Text>
                     </TouchableOpacity>
                 </View>
             </View>
