@@ -8,6 +8,7 @@ import { blurHash } from '../../assets/HashBlurData';
 import SvgComponent from '../utils/SvgComponents';
 import initializeScalingUtils from '../utils/NormalizeSize';
 import { formatCreatedAt } from '../utils/FormatCreateAt';
+import { colorPalette } from '../Config/Theme';
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
@@ -35,9 +36,9 @@ const AboutThisUserScreen = ({ route }) => {
         };
     }, [])
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary }}>
             <SavedPostsHeader header={"About this account"} />
-            <Divider width={0.7} orientation='horizontal' color="#2b2b2b" />
+            <Divider width={0.7} orientation='horizontal' color={colorPalette.dark.dividerPrimary} />
             <AboutThisUserContent userData={userData} />
         </SafeAreaView>
     )
@@ -53,33 +54,33 @@ const AboutThisUserContent = ({ userData }) => (
                     borderRadius: 50,
                     margin: 10,
                     borderWidth: 1.5,
-                    borderColor: "#2b2b2b"
+                    borderColor: colorPalette.dark.Secondary
                 }}
                 placeholder={blurHash}
                 contentFit="cover"
                 transition={50}
                 cachePolicy={"memory-disk"} />
             <View style={{ marginHorizontal: 20, maxHeight: 50, margin: 10 }} >
-                <Text style={{ color: "#fff", fontSize: 14, fontWeight: "700" }}>
+                <Text style={{ color: colorPalette.dark.textPrimary, fontSize: 14, fontWeight: "700" }}>
                     {userData.username}
                 </Text>
             </View>
-            <Text style={{ fontSize: 12, color: "#8E8E93", textAlign: "center", fontWeight: "500" }}>To help keep our community authentic, we're showing information about accounts on Reisto.</Text>
+            <Text style={{ fontSize: 12, color: colorPalette.dark.textSecondary, textAlign: "center", fontWeight: "500" }}>To help keep our community authentic, we're showing information about accounts on Reisto.</Text>
         </View>
         <View style={{ marginHorizontal: 10 }}>
             <View style={{ flexDirection: "row", gap: 10, marginVertical: 30, }}>
                 <SvgComponent svgKey="CalenderSVG" width={moderateScale(30)} height={moderateScale(30)} />
                 <View style={{ justifyContent: "center" }}>
-                    <Text style={{ color: "#fff", fontSize: 16, fontWeight: "500" }}>Date joined</Text>
-                    <Text style={{ fontSize: 12, color: "#8E8E93", fontWeight: "400" }}>{userData.createdAt}</Text>
+                    <Text style={{ color: colorPalette.dark.textPrimary, fontSize: 16, fontWeight: "500" }}>Date joined</Text>
+                    <Text style={{ fontSize: 12, color: colorPalette.dark.textSecondary, fontWeight: "400" }}>{userData.createdAt}</Text>
                 </View>
             </View>
             <View style={{ flexDirection: "row", gap: 10 }}>
                 <SvgComponent svgKey="LocationSVG" width={moderateScale(30)} height={moderateScale(30)} />
                 <View style={{ justifyContent: "center" }}>
-                    <Text style={{ color: "#fff", fontSize: 16, fontWeight: "500" }}>Account based in</Text>
+                    <Text style={{ color: colorPalette.dark.textPrimary, fontSize: 16, fontWeight: "500" }}>Account based in</Text>
                     {/* temp till the db and back-end fix the issue for getting location */}
-                    <Text style={{ fontSize: 12, color: "#8E8E93", fontWeight: "400" }}>{userData.location ? "undefined" : "Türkiye"}</Text>
+                    <Text style={{ fontSize: 12, color: colorPalette.dark.textSecondary, fontWeight: "400" }}>{userData.location ? "undefined" : "Türkiye"}</Text>
                 </View>
             </View>
         </View>
