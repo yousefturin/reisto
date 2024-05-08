@@ -6,6 +6,7 @@ import { db, firebase } from '../firebase'
 import OthersProfileHeader from '../components/OthersProfile/OthersProfileHeader'
 import OthersProfileContent from '../components/OthersProfile/OthersProfileContent'
 import LoadingPlaceHolder from '../components/Search/LoadingPlaceHolder'
+import { colorPalette } from '../Config/Theme'
 
 const OtherUsersProfileScreen = ({ route }) => {
     const { userDataToBeNavigated } = route.params
@@ -57,7 +58,7 @@ const OtherUsersProfileScreen = ({ route }) => {
         setScrollToPostId(postId)
     }
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary  }}>
             <>
                 <OthersProfileHeader userDataToBeNavigated={userDataToBeNavigated} />
                 <ScrollView
