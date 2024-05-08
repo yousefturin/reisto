@@ -13,6 +13,7 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import AddNewPostHeader from './AddNewPost';
 import UploadImageToStorage from '../../utils/UploadImageToStorage';
 import { Image } from 'expo-image';
+import { colorPalette } from '../../Config/Theme';
 
 
 
@@ -156,7 +157,7 @@ const FormikPostUploader = () => {
                                             {!image ? (
                                                 <TouchableOpacity
                                                     onPress={() => pickImage(setFieldValue, setFieldTouched)} activeOpacity={0.8}>
-                                                    <SvgComponent svgKey="DummyImage" width={moderateScale(390)} height={moderateScale(280)} fill={'#ffffff'} />
+                                                    <SvgComponent svgKey="DummyImage" width={moderateScale(390)} height={moderateScale(280)} fill={colorPalette.dark.textPrimary} />
                                                 </TouchableOpacity>
                                             ) : (
                                                 <TouchableOpacity
@@ -171,7 +172,7 @@ const FormikPostUploader = () => {
                                                 </TouchableOpacity>
                                             )}
                                         </View>
-                                        <Divider width={0.7} orientation='horizontal' color="#2b2b2b" />
+                                        <Divider width={0.7} orientation='horizontal' color={colorPalette.dark.dividerPrimary} />
                                         {touched.imageURL && errors.imageURL && (
                                             <Text style={{ fontSize: 13, color: "tomato", margin: 10 }}>*{errors.imageURL}</Text>
                                         )}
@@ -180,10 +181,10 @@ const FormikPostUploader = () => {
                                             <Text style={{ fontSize: 13, color: "tomato", margin: 10 }}>*{errors.category}</Text>
                                         )}
                                         <View style={{ marginHorizontal: 10 }}>
-                                            <Text style={{ color: "#fff", marginVertical: 10, paddingTop: 10, fontSize: 20, fontWeight: "700" }}>Caption</Text>
+                                            <Text style={{ color: colorPalette.dark.textPrimary, marginVertical: 10, paddingTop: 10, fontSize: 20, fontWeight: "700" }}>Caption</Text>
                                             <TextInput
-                                                style={{ fontSize: 18, color: "#fff", marginHorizontal: 10, marginVertical: 10 }}
-                                                placeholder='Write a caption...' placeholderTextColor={"#2b2b2b"}
+                                                style={{ fontSize: 18, color: colorPalette.dark.textPrimary, marginHorizontal: 10, marginVertical: 10 }}
+                                                placeholder='Write a caption...' placeholderTextColor={colorPalette.dark.textPlaceholder}
                                                 multiline
                                                 scrollEnabled={false}
                                                 textContentType='none'
@@ -202,13 +203,13 @@ const FormikPostUploader = () => {
                                             )}
                                             {/* will be change to custom picker */}
 
-                                            <Text style={{ color: "#fff", marginVertical: 10, fontSize: 20, fontWeight: "700" }}>Ingredients</Text>
+                                            <Text style={{ color: colorPalette.dark.textPrimary, marginVertical: 10, fontSize: 20, fontWeight: "700" }}>Ingredients</Text>
                                             <TextInput
                                                 multiline
                                                 numberOfLines={10}
                                                 scrollEnabled={false}//the issue with keyboard avoiding view since 2017 and still no fix from facebook to this issue, and the only work around is to use scrollEnabled={false}
                                                 placeholder='Enter ingredients...'
-                                                placeholderTextColor={"#2b2b2b"}
+                                                placeholderTextColor={colorPalette.dark.textPlaceholder}
                                                 textContentType='none'
                                                 keyboardType='default'
                                                 onFocus={() => {
@@ -220,19 +221,19 @@ const FormikPostUploader = () => {
                                                 onBlur={() => {
                                                     handleBlur('captionIngredients')
                                                 }}
-                                                style={{ marginHorizontal: 10, marginVertical: 10, color: "#fff", fontSize: 18, }}
+                                                style={{ marginHorizontal: 10, marginVertical: 10, color: colorPalette.dark.textPrimary, fontSize: 18, }}
                                                 value={Array.isArray(values.captionIngredients) ? values.captionIngredients.join('\n') : ''}
                                             />
                                             {touched.captionIngredients && errors.captionIngredients && (
                                                 <Text style={{ fontSize: 13, color: "tomato", margin: 10 }}>*{errors.captionIngredients}</Text>
                                             )}
-                                            <Text style={{ color: "#fff", marginVertical: 10, fontSize: 20, fontWeight: "700" }}>Instructions</Text>
+                                            <Text style={{ color: colorPalette.dark.textPrimary, marginVertical: 10, fontSize: 20, fontWeight: "700" }}>Instructions</Text>
                                             <TextInput
                                                 multiline
                                                 scrollEnabled={false}
                                                 numberOfLines={10}
                                                 placeholder='Enter instructions...'
-                                                placeholderTextColor={"#2b2b2b"}
+                                                placeholderTextColor={colorPalette.dark.textPlaceholder}
                                                 textContentType='none'
                                                 keyboardType='default'
                                                 onChangeText={(text) => {
@@ -244,16 +245,16 @@ const FormikPostUploader = () => {
                                                 onFocus={() => {
                                                     setFieldTouched('captionInstructions', true);
                                                 }}
-                                                style={{ marginHorizontal: 10, marginVertical: 10, color: "#fff", fontSize: 18, }}
+                                                style={{ marginHorizontal: 10, marginVertical: 10, color: colorPalette.dark.textPrimary, fontSize: 18, }}
                                                 value={Array.isArray(values.captionInstructions) ? values.captionInstructions.join('\n') : ''}
                                             />
                                             {touched.captionInstructions && errors.captionInstructions && (
                                                 <Text style={{ fontSize: 13, color: "tomato", margin: 10 }}>*{errors.captionInstructions}</Text>
                                             )}
-                                            <Text style={{ color: "#fff", marginVertical: 10, fontSize: 20, fontWeight: "700" }}>Time of making</Text>
+                                            <Text style={{ color: colorPalette.dark.textPrimary, marginVertical: 10, fontSize: 20, fontWeight: "700" }}>Time of making</Text>
                                             <TextInput
-                                                style={{ fontSize: 18, color: "#fff", marginHorizontal: 10, marginVertical: 10 }}
-                                                placeholder='Write a time of preparation...' placeholderTextColor={"#2b2b2b"}
+                                                style={{ fontSize: 18, color: colorPalette.dark.textPrimary, marginHorizontal: 10, marginVertical: 10 }}
+                                                placeholder='Write a time of preparation...' placeholderTextColor={colorPalette.dark.textPlaceholder}
                                                 textContentType='none'
                                                 keyboardType='numeric'
                                                 onChangeText={handleChange('timeOfMake')}
