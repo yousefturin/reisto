@@ -4,6 +4,7 @@ import Post from '../components/Home/Post'
 import { db, firebase } from '../firebase';
 import SavedPostsHeader from '../components/SavedPosts/SavedPostsHeader';
 import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder';
+import { colorPalette } from '../Config/Theme';
 const windowHeight = Dimensions.get('window').height;
 
 const SearchExplorePostTimeLineScreen = ({ route }) => {
@@ -131,7 +132,7 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
 
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary  }}>
             <SavedPostsHeader header={"All Posts"} />
             {posts.length !== 0 ? (
                 <FlatList
