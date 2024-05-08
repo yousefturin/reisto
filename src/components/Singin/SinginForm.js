@@ -4,6 +4,7 @@ import * as Yup from 'yup'
 import { Formik } from 'formik'
 import Validator from 'email-validator'
 import { firebase, db } from '../../firebase';
+import { colorPalette } from '../../Config/Theme'
 
 const SinginForm = ({ navigation }) => {
     const SinginFormSchema = Yup.object().shape({
@@ -89,7 +90,7 @@ const SinginForm = ({ navigation }) => {
                                 : styles.errorShadow // Apply error shadow if input is invalid
                         ]}
                         placeholder='john'
-                        placeholderTextColor={"#D3D3D6"}
+                        placeholderTextColor={colorPalette.dark.textPlaceholderSecondary}
                         value={values.name}
                         textContentType='name'
                         keyboardType='default'
@@ -116,7 +117,7 @@ const SinginForm = ({ navigation }) => {
                                 : styles.errorShadow // Apply error shadow if input is invalid
                         ]}
                         placeholder='john@example.com'
-                        placeholderTextColor={"#D3D3D6"}
+                        placeholderTextColor={colorPalette.dark.textPlaceholderSecondary}
                         value={values.email}
                         textContentType='emailAddress'
                         keyboardType='email-address'
@@ -137,7 +138,7 @@ const SinginForm = ({ navigation }) => {
                                 : styles.errorShadow // Apply error shadow if input is invalid
                         ]}
                         placeholder='password'
-                        placeholderTextColor={"#D3D3D6"}
+                        placeholderTextColor={colorPalette.dark.textPlaceholderSecondary}
                         secureTextEntry={true}
                         value={values.password}
                         textContentType='password'
@@ -187,17 +188,17 @@ const styles = StyleSheet.create({
     inputLabel: {
         fontSize: 17,
         fontWeight: "600",
-        color: "#ffffff",
+        color: colorPalette.dark.textPrimary,
         marginBottom: 8,
     },
     inputControl: {
         height: 44,
-        backgroundColor: "#F8F8FC",
+        backgroundColor: colorPalette.dark.Quaternary,
         paddingHorizontal: 16,
         borderRadius: 12,
         fontSize: 15,
         fontWeight: "500",
-        color: "#222",
+        color: colorPalette.dark.SubSecondary,
         borderWidth: 0.5,
         borderColor: 'transparent'
     },
@@ -210,10 +211,10 @@ const styles = StyleSheet.create({
     },
     btn: (isValid, Validator, values) => ({
         marginTop: 20,
-        backgroundColor: isValid && Validator.validate(values.email) ? "#1C1C1E" : "#c2c2c6",
+        backgroundColor: isValid && Validator.validate(values.email) ?colorPalette.dark.Quinary : colorPalette.dark.textQuinary,
         borderWidth: 1,
         borderRadius: 8,
-        borderColor: isValid ? "#1C1C1E" : "#c2c2c6",
+        borderColor: isValid ? colorPalette.dark.Quinary : colorPalette.dark.textQuinary,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
@@ -222,12 +223,12 @@ const styles = StyleSheet.create({
     btnText: {
         fontSize: 18,
         fontWeight: "600",
-        color: "#ffffff"
+        color: colorPalette.dark.textPrimary
     },
     formFooter: {
         fontSize: 17,
         fontWeight: "600",
-        color: "#222",
+        color: colorPalette.dark.SubSecondary,
         textAlign: "center",
         letterSpacing: 0.2,
         marginBottom: 30,
