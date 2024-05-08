@@ -13,6 +13,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { blurHash } from '../../assets/HashBlurData';
 import UploadImageToStorage from '../../src/utils/UploadImageToStorage';
+import { colorPalette } from '../Config/Theme';
 
 // two hours of debugging and then it apparently was userDataUid.owner_id and not userDataUid.owner_uid-<<<<<<<<(fixed)
 const MessagingIndividualScreen = ({ route }) => {
@@ -186,7 +187,7 @@ const MessagingIndividualScreen = ({ route }) => {
         }
     };
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary }}>
             <MessagesIndividualHeader header={userDataUid} />
             <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -200,27 +201,27 @@ const MessagingIndividualScreen = ({ route }) => {
                     showsVerticalScrollIndicator={false}
                     keyboardDismissMode="on-drag"
                     keyboardShouldPersistTaps={'always'}>
-                    <View style={{ flex: 1, backgroundColor: "#050505", justifyContent: "space-between" }}>
+                    <View style={{ flex: 1, backgroundColor: colorPalette.dark.Primary, justifyContent: "space-between" }}>
                         <View style={{ flex: 1 }}>
                             <MessageList scrollViewRef={scrollViewRef} messages={messages} currentUser={userData} />
                         </View>
                         <View style={{ marginBottom: 10, paddingTop: 20, }}>
-                            <View style={{ flexDirection: "row", marginHorizontal: 10, justifyContent: "space-between", backgroundColor: "#050505", borderRadius: 50, borderWidth: 0.5, borderColor: "#2b2b2b" }}>
+                            <View style={{ flexDirection: "row", marginHorizontal: 10, justifyContent: "space-between", backgroundColor: colorPalette.dark.Primary, borderRadius: 50, borderWidth: 0.5, borderColor: colorPalette.dark.Secondary }}>
                                 <TextInput
                                     ref={inputRef}
                                     onChangeText={handleChangeText}
                                     placeholder={`Type message for ${userDataUid.username}...`}
-                                    placeholderTextColor={"#383838"}
-                                    style={{ flex: 1, margin: 17, color: "#ffff" }}
+                                    placeholderTextColor={colorPalette.dark.textPlaceholder}
+                                    style={{ flex: 1, margin: 17, color: colorPalette.dark.textPrimary }}
                                 />
                                 {textRef.current !== "" ? (
                                     <TouchableOpacity onPress={handleSendMessage}
                                         style={{ justifyContent: "center" }}>
                                         <LinearGradient
                                             // Button Linear Gradient
-                                            colors={['#007AFF', '#007AFF', '#007AFF']}
+                                            colors={[colorPalette.dark.appPrimary, colorPalette.dark.appPrimary, colorPalette.dark.appPrimary]}
                                             style={{ marginRight: 9, padding: 7, borderRadius: 50, justifyContent: "center", alignItems: "center" }}>
-                                            <SvgComponent svgKey="SubmitCommentSVG" width={moderateScale(18)} height={moderateScale(18)} fill={'#ffffff'} />
+                                            <SvgComponent svgKey="SubmitCommentSVG" width={moderateScale(18)} height={moderateScale(18)} fill={colorPalette.dark.textPrimary} />
                                         </LinearGradient>
                                     </TouchableOpacity>
                                 ) : (
@@ -228,7 +229,7 @@ const MessagingIndividualScreen = ({ route }) => {
                                         style={{ justifyContent: "center" }}>
                                         <LinearGradient
                                             // Button Linear Gradient
-                                            colors={['#2b2b2b', '#2b2b2b', '#2b2b2b']}
+                                            colors={[colorPalette.dark.Secondary, colorPalette.dark.Secondary, colorPalette.dark.Secondary]}
                                             style={{ marginRight: 9, padding: 7, borderRadius: 50, justifyContent: "center", alignItems: "center" }}>
                                             <SvgComponent svgKey="ImageSVG" width={moderateScale(18)} height={moderateScale(18)} />
                                         </LinearGradient>
