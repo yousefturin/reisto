@@ -6,6 +6,7 @@ import initializeScalingUtils from '../../utils/NormalizeSize';
 import { Divider } from 'react-native-elements';
 import { useNavigation } from "@react-navigation/native";
 import { blurHash } from '../../../assets/HashBlurData';
+import { colorPalette } from '../../Config/Theme';
 
 const NavigationStack = ({ routeName, userData }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);
@@ -21,7 +22,7 @@ const NavigationStack = ({ routeName, userData }) => {
         return null; // Or any loading indicator
     }
     const navigation = useNavigation();
-    
+
     // still needs fixing this issue where there are 
     // common screens that are used in the navigation stack and based on that 
     // the icon show change to active or inactive.
@@ -71,7 +72,7 @@ const NavigationStack = ({ routeName, userData }) => {
     const NavigationButtons = ({ routeName }) => {
         return (
             <>
-                <Divider width={1} orientation='horizontal' color="#2b2b2b" />
+                <Divider width={0.5} orientation='horizontal' color={colorPalette.dark.dividerPrimary}/>
                 <View style={{ flexDirection: "row", justifyContent: "space-around", height: 80, paddingTop: 5, }}>
                     {icons.slice(0, 4).map((icon, index) => (
                         <TouchableOpacity
@@ -103,7 +104,7 @@ const NavigationStack = ({ routeName, userData }) => {
                                 height: moderateScale(25),
                                 borderRadius: 50,
                                 borderWidth: icons[4].action.includes(routeName) ? 1.5 : 1,
-                                borderColor: icons[4].action.includes(routeName) ? "#ffff" : "#2b2b2b"
+                                borderColor: icons[4].action.includes(routeName) ? colorPalette.dark.textPrimary : colorPalette.dark.Secondary
                             }}
                             placeholder={blurHash}
                             cachePolicy={"memory-disk"}
@@ -117,7 +118,7 @@ const NavigationStack = ({ routeName, userData }) => {
     //#endregion
 
     return (
-        <View style={{ backgroundColor: "#050505" }}>
+        <View style={{ backgroundColor: colorPalette.dark.Primary }}>
             <NavigationButtons routeName={routeName} />
         </View>
     )
