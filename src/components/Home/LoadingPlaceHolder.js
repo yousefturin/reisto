@@ -1,10 +1,11 @@
 import { View } from 'react-native'
 import React from 'react'
 import { Skeleton } from 'moti/skeleton'
+import { colorPalette } from '../../Config/Theme'
 
 const SkeletonCommonProps = {
     colorMode: 'dark',
-    backgroundColor: '#2b2b2b',
+    backgroundColor: colorPalette.dark.Secondary,
     transition: {
         type: 'timing',
         duration: 2000,
@@ -142,7 +143,7 @@ const LoaderPostCategoryAndTime = () => (
                 {...SkeletonCommonProps}
             />
         </View>
-        <View style={{ height: "100%", width: 1, borderRadius: 50, backgroundColor: "#2b2b2b", }} />
+        <View style={{ height: "100%", width: 1, borderRadius: 50, backgroundColor: colorPalette.dark.Secondary, }} />
         <View style={{ width: "20%", padding: 5, justifyContent: "center", alignItems: "flex-start", }}>
             <Skeleton
                 show
