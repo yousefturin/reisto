@@ -26,6 +26,7 @@ import MessagingIndividualScreen from "../screens/MessagingIndividualScreen";
 import UserFollowingAndFollowersListScreen from "../screens/UserFollowingAndFollowersListScreen";
 import MessagingNewForFollowersAndFollowingScreen from "../screens/MessagingNewForFollowersAndFollowingScreen";
 import FromMessagesToSharedPost from "../screens/FromMessagesToSharedPost";
+import { colorPalette } from "../Config/Theme";
 
 const Stack = createStackNavigator();
 
@@ -60,7 +61,7 @@ const customCardStyleInterpolator = ({ current, next, layouts }) => {
     };
 };
 const headerTintColor = "white";
-const backgroundBarColor = "#050505";
+const backgroundBarColor = colorPalette.dark.Primary ;
 
 const headerStyle = {
     height: 100,
