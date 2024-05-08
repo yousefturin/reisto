@@ -1,11 +1,12 @@
 import { View } from 'react-native'
 import React from 'react'
 import { Skeleton } from 'moti/skeleton'
+import { colorPalette } from '../../Config/Theme'
 
 const MessageLoadingPlaceHolder = () => {
     const SkeletonCommonProps = {
         colorMode: 'dark',
-        backgroundColor: '#2b2b2b',
+        backgroundColor: colorPalette.dark.Secondary,
         transition: {
             type: 'timing',
             duration: 2000,
