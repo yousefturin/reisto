@@ -8,6 +8,7 @@ import { Dimensions, View } from 'react-native';
 import SvgComponent from '../utils/SvgComponents';
 import initializeScalingUtils from '../utils/NormalizeSize';
 import { MessagesNumProvider } from '../context/MessagesNumProvider';
+import { colorPalette } from '../Config/Theme';
 
 const AuthNavigation = () => {
     const [currentUser, setCurrentUser] = useState(null)
@@ -15,7 +16,7 @@ const AuthNavigation = () => {
     const DarkThemeNavigator = {
         colors: {
             primary: 'rgb(10, 132, 255)',
-            background: '#050505',
+            background: colorPalette.Primary,
             card: 'rgb(18, 18, 18)',
             text: 'rgb(229, 229, 231)',
             border: 'rgb(39, 39, 41)',
@@ -37,11 +38,11 @@ const AuthNavigation = () => {
     const LoadingIndicator = () => {
         const { moderateScale } = initializeScalingUtils(Dimensions);
         return (
-            <View style={{ flex: 1, backgroundColor: "#050505", }}>
+            <View style={{ flex: 1, backgroundColor: colorPalette.Primary, }}>
                 <View style={{ flex: 0.8, justifyContent: "center", alignItems: "center", }}>
                     <LottieView source={require('./splash.json')} autoPlay loop style={{ width: moderateScale(150), height: moderateScale(150), }} />
                     <View style={{ marginLeft: 7, }}>
-                        <SvgComponent svgKey="LogoSVG" width={moderateScale(100)} height={moderateScale(100)} fill={'#ffffff'} />
+                        <SvgComponent svgKey="LogoSVG" width={moderateScale(100)} height={moderateScale(100)} fill={colorPalette.textPrimary} />
                     </View>
                 </View>
             </View>
@@ -53,12 +54,13 @@ const AuthNavigation = () => {
     return (
         <NavigationContainer theme={DarkThemeNavigator}>
             {currentUser ?
-                <UserProvider>
-                    <MessagesNumProvider>
-                        <AuthAppNavigator />
-                    </MessagesNumProvider>
-                </UserProvider>
+                    <UserProvider>
+                        <MessagesNumProvider>
+                            <AuthAppNavigator />
+                        </MessagesNumProvider>
+                    </UserProvider>
                 : <UnAuthAppNavigator />}
+
         </NavigationContainer>
     );
 }
