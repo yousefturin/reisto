@@ -6,6 +6,7 @@ import { UserContext } from '../context/UserDataProvider'
 import ProfileContent from '../components/Profile/ProfileContent'
 import ProfilePost from '../components/Profile/ProfilePost'
 import LoadingPlaceHolder from '../components/Search/LoadingPlaceHolder'
+import { colorPalette } from '../Config/Theme'
 
 const UserProfileScreen = () => {
     const userData = useContext(UserContext);
@@ -63,7 +64,7 @@ const UserProfileScreen = () => {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary  }}>
             <>
                 <ProfileHeader handleLogout={handleLogout} userData={userData} />
                 <ScrollView
