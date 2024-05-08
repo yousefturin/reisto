@@ -5,6 +5,7 @@ import initializeScalingUtils from '../../utils/NormalizeSize';
 import { Divider } from 'react-native-elements';
 import SvgComponent from '../../utils/SvgComponents';
 import Modal from 'react-native-modal';
+import { colorPalette } from '../../Config/Theme';
 
 const Icons = [
     {
@@ -34,7 +35,7 @@ const ProfileHeader = ({ handleLogout, userData }) => {
     return (
         <>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10 }}>
-                <Text style={{ color: "#fff", fontWeight: "800", fontSize: 25, marginLeft: 15 }}>{userData.username}</Text>
+                <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "800", fontSize: 25, marginLeft: 15 }}>{userData.username}</Text>
                 <View style={{ margin: 10, height: moderateScale(30) }}>
                 </View>
                 <TouchableOpacity style={{ margin: 10 }} onPress={toggleContainer} >
@@ -73,7 +74,7 @@ const ProfileMenu = ({ isContainerVisible, setContainerVisible, handleLogout, mo
             }}
         >
             <View style={{
-                backgroundColor: "#262626",
+                backgroundColor: colorPalette.dark.SubPrimary,
                 height: screenHeight * 0.35,
                 borderTopRightRadius: 20,
                 borderTopLeftRadius: 20
@@ -84,41 +85,41 @@ const ProfileMenu = ({ isContainerVisible, setContainerVisible, handleLogout, mo
                 <TouchableOpacity style={{ margin: 10, marginLeft: 20, marginTop: 15, marginBottom: 15, flexDirection: "row", justifyContent: "flex-start", gap: 20, alignItems: "center" }} onPress={() => handleSettings()} >
                     <SvgComponent svgKey={Icons[0].iconTitle} width={moderateScale(22)} height={moderateScale(22)} />
                     <View style={{ flexDirection: "column", flex: 1, }}>
-                        <Text style={{ fontSize: 20, color: "#fff", fontWeight: "400" }}>{Icons[0].name}</Text>
+                        <Text style={{ fontSize: 20, color: colorPalette.dark.textPrimary, fontWeight: "400" }}>{Icons[0].name}</Text>
                     </View>
                 </TouchableOpacity>
                 <View style={{ marginLeft: moderateScale(61) }}>
-                    <Divider width={0.5} orientation='horizontal' color="#383838" />
+                    <Divider width={0.5} orientation='horizontal' color={colorPalette.dark.dividerPrimary} />
                 </View>
                 {/* Activities button */}
                 <TouchableOpacity style={{ margin: 10, marginLeft: 20, marginTop: 15, marginBottom: 15, flexDirection: "row", justifyContent: "flex-start", gap: 20, alignItems: "center" }} onPress={() => handleActivity()} >
                     <SvgComponent svgKey={Icons[1].iconTitle} width={moderateScale(22)} height={moderateScale(22)} />
                     <View style={{ flexDirection: "column", flex: 1, }}>
-                        <Text style={{ fontSize: 20, color: "#fff", fontWeight: "400" }}>{Icons[1].name}</Text>
+                        <Text style={{ fontSize: 20, color: colorPalette.dark.textPrimary, fontWeight: "400" }}>{Icons[1].name}</Text>
                     </View>
                 </TouchableOpacity>
                 <View style={{ marginLeft: moderateScale(61) }}>
-                    <Divider width={0.5} orientation='horizontal' color="#383838" />
+                    <Divider width={0.5} orientation='horizontal' color={colorPalette.dark.dividerPrimary} />
                 </View>
                 {/* Saved button */}
                 <TouchableOpacity style={{ margin: 10, marginLeft: 20, marginTop: 15, marginBottom: 15, flexDirection: "row", justifyContent: "flex-start", gap: 20, alignItems: "center" }} onPress={() => handleSaved()} >
                     <SvgComponent svgKey={Icons[2].iconTitle} width={moderateScale(22)} height={moderateScale(22)} />
                     <View style={{ flexDirection: "column", flex: 1, }}>
-                        <Text style={{ fontSize: 20, color: "#fff", fontWeight: "400" }}>{Icons[2].name}</Text>
+                        <Text style={{ fontSize: 20, color: colorPalette.dark.textPrimary, fontWeight: "400" }}>{Icons[2].name}</Text>
                     </View>
                 </TouchableOpacity>
                 <View style={{ marginLeft: moderateScale(61) }}>
-                    <Divider width={0.5} orientation='horizontal' color="#383838" />
+                    <Divider width={0.5} orientation='horizontal' color={colorPalette.dark.dividerPrimary} />
                 </View>
                 {/* Logout button */}
                 <TouchableOpacity style={{ margin: 10, marginLeft: 20, marginTop: 15, marginBottom: 15, flexDirection: "row", justifyContent: "flex-start", gap: 20, alignItems: "center" }} onPress={() => handleLogout()} >
                     <SvgComponent svgKey={Icons[3].iconTitle} width={moderateScale(22)} height={moderateScale(22)} />
                     <View style={{ flexDirection: "column", flex: 1, }}>
-                        <Text style={{ fontSize: 20, color: "#fff", fontWeight: "400" }}>{Icons[3].name}</Text>
+                        <Text style={{ fontSize: 20, color: colorPalette.dark.textPrimary, fontWeight: "400" }}>{Icons[3].name}</Text>
                     </View>
                 </TouchableOpacity>
                 <View style={{ marginLeft: moderateScale(61) }}>
-                    <Divider width={0.5} orientation='horizontal' color="#383838" />
+                    <Divider width={0.5} orientation='horizontal' color={colorPalette.dark.dividerPrimary} />
                 </View>
 
             </View>
@@ -141,7 +142,7 @@ const ProfileMenuHeader = () => (
             },
             shadowOpacity: 0.1,
             shadowRadius: 1,
-            backgroundColor: "#727272",
+            backgroundColor: colorPalette.dark.notch,
             alignSelf: "center"
         }} />
     </>
