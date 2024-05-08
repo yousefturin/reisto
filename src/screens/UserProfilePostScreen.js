@@ -6,6 +6,7 @@ import initializeScalingUtils from '../utils/NormalizeSize';
 import { db, firebase } from '../firebase';
 import { useNavigation } from "@react-navigation/native";
 import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder';
+import { colorPalette } from '../Config/Theme';
 
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
@@ -144,7 +145,7 @@ const UserProfilePostScreen = ({ route }) => {
 
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary }}>
             <OwnerProfileHeader userData={userData} />
             {posts.length !== 0 ? (
                 <FlatList
@@ -177,8 +178,8 @@ const OwnerProfileHeader = ({ userData }) => {
                 <SvgComponent svgKey="ArrowBackSVG" width={moderateScale(30)} height={moderateScale(30)} />
             </TouchableOpacity>
             <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", flex: 1 }}>
-                <Text style={{ color: "#8E8E93", fontWeight: "600", fontSize: 12 }}>{userData.username.toUpperCase()}</Text>
-                <Text style={{ color: "#fff", fontWeight: "600", fontSize: 20, }}>Posts</Text>
+                <Text style={{ color: colorPalette.dark.textSecondary, fontWeight: "600", fontSize: 12 }}>{userData.username.toUpperCase()}</Text>
+                <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "600", fontSize: 20, }}>Posts</Text>
             </View>
             <View style={{ margin: 10, width: moderateScale(30) }}>
             </View>
