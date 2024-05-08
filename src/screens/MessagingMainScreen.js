@@ -13,6 +13,7 @@ import { blurHash } from '../../assets/HashBlurData'
 import { SearchBar } from 'react-native-elements'
 import initializeScalingUtils from '../utils/NormalizeSize'
 import { useNavigation } from '@react-navigation/native'
+import { colorPalette } from '../Config/Theme'
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
 const MessagingMainScreen = () => {
@@ -189,7 +190,7 @@ const MessagingMainScreen = () => {
     //#endregion
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary  }}>
             <MessageMainHeader excludedUsers={excludedUsers} userData={userData} />
             <SearchBar
                 placeholder={"Search..."}
@@ -230,7 +231,7 @@ const MessagingMainScreen = () => {
                                             borderRadius: 50,
                                             margin: 7,
                                             borderWidth: 1.5,
-                                            borderColor: "#2b2b2b"
+                                            borderColor: colorPalette.dark.Secondary
                                         }}
                                         placeholder={blurHash}
                                         contentFit="cover"
@@ -239,8 +240,8 @@ const MessagingMainScreen = () => {
                                 </View>
 
                                 <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
-                                    <Text style={{ color: "#fff", fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
-                                    {item.displayed_name ? <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text> : <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>Say Hi 👋</Text>}
+                                    <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
+                                    {item.displayed_name ? <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text> : <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>Say Hi 👋</Text>}
                                 </View>
                             </TouchableOpacity>
                         )) : null}
@@ -258,12 +259,12 @@ const MessagingMainScreen = () => {
 export const SearchScreenStyles = StyleSheet.create({
     searchBarContainer: {
         paddingHorizontal: moderateScale(10),
-        backgroundColor: "#050505",
+        backgroundColor: colorPalette.dark.Primary,
         borderBottomColor: "transparent",
         borderTopColor: "transparent",
     },
     searchBarInputContainer: {
-        backgroundColor: "#1C1C1E",
+        backgroundColor: colorPalette.dark.Quinary,
         shadowColor: "black",
         shadowOffset: {
             width: 0,
@@ -280,12 +281,12 @@ export const SearchScreenStyles = StyleSheet.create({
         zIndex: 1,
     },
     searchBarInput: {
-        backgroundColor: "#1C1C1E",
-        color: "#dddddd",
+        backgroundColor:colorPalette.dark.Quinary,
+        color: colorPalette.dark.textQuaternary,
         borderLeftColor: "transparent",
         borderRightColor: "transparent",
         borderWidth: 0.5,
-        borderColor: "#1C1C1E",
+        borderColor: colorPalette.dark.Quinary,
     },
 })
 export default MessagingMainScreen
