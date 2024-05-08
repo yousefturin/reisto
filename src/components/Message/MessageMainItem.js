@@ -11,6 +11,7 @@ import calculateTimeDifference from '../../utils/TimeDifferenceCalculator';
 import SvgComponent from '../../utils/SvgComponents';
 import initializeScalingUtils from '../../utils/NormalizeSize';
 import { MessagesNumContext } from '../../context/MessagesNumProvider';
+import { colorPalette } from '../../Config/Theme';
 
 
 const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
@@ -21,7 +22,7 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);
     const SkeletonCommonProps = {
         colorMode: 'dark',
-        backgroundColor: '#2b2b2b',
+        backgroundColor: colorPalette.dark.Secondary,
         transition: {
             type: 'timing',
             duration: 2000,
@@ -72,15 +73,15 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
                             <View style={{ flexDirection: "row-reverse", gap: 2, }}>
                                 <>
                                     {lastMessage.text === null ? (
-                                        <Text style={{ color: "#8E8E93", fontSize: 15, fontWeight: "500", }} numberOfLines={1} ellipsizeMode="tail">Sent</Text>
+                                        <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 15, fontWeight: "500", }} numberOfLines={1} ellipsizeMode="tail">Sent</Text>
 
                                     ) : (
-                                        <Text style={{ color: "#8E8E93", fontSize: 15, fontWeight: "500", }} numberOfLines={1} ellipsizeMode="tail">{lastMessage?.text}</Text>
+                                        <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 15, fontWeight: "500", }} numberOfLines={1} ellipsizeMode="tail">{lastMessage?.text}</Text>
 
                                     )}
                                 </>
                                 <View style={{ alignSelf: "center" }}>
-                                    <SvgComponent svgKey="CheckSVG" width={moderateScale(13)} height={moderateScale(13)} stroke={'#8E8E93'} />
+                                    <SvgComponent svgKey="CheckSVG" width={moderateScale(13)} height={moderateScale(13)} stroke={colorPalette.dark.textSecondary} />
                                 </View>
                             </View>
                         ) : (
@@ -94,14 +95,14 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
             // if not me the just show it normally
             return <View style={{ flexDirection: "row-reverse", gap: 2, }}>
                 {!lastMessage.seenBy.includes(userData.owner_uid) ? (
-                    <Text style={{ color: !lastMessage.seenBy.includes(userData.owner_uid) ? "#fff" : "#8E8E93", fontSize: 15, fontWeight: !lastMessage.seenBy.includes(userData.owner_uid) ? "700" : "500", }} numberOfLines={1} ellipsizeMode="tail"  >1 new Message</Text>
+                    <Text style={{ color: !lastMessage.seenBy.includes(userData.owner_uid) ? colorPalette.dark.textPrimary : colorPalette.dark.textSecondary, fontSize: 15, fontWeight: !lastMessage.seenBy.includes(userData.owner_uid) ? "700" : "500", }} numberOfLines={1} ellipsizeMode="tail"  >1 new Message</Text>
                 ) : (
-                    <Text style={{ color: !lastMessage.seenBy.includes(userData.owner_uid) ? "#fff" : "#8E8E93", fontSize: 15, fontWeight: !lastMessage.seenBy.includes(userData.owner_uid) ? "700" : "500", }} numberOfLines={1} ellipsizeMode="tail"  >Seen</Text>
+                    <Text style={{ color: !lastMessage.seenBy.includes(userData.owner_uid) ? colorPalette.dark.textPrimary : colorPalette.dark.textSecondary, fontSize: 15, fontWeight: !lastMessage.seenBy.includes(userData.owner_uid) ? "700" : "500", }} numberOfLines={1} ellipsizeMode="tail"  >Seen</Text>
                 )}
                 {/* // if the user did not fetch the last message then show the dot as it indicate that the message is not seen yet by the user */}
                 <View style={{ alignSelf: "center" }}>
                     {lastMessage?.seenBy.includes(userData.owner_uid) ? (
-                        <SvgComponent svgKey="doubleCheckSVG" width={moderateScale(13)} height={moderateScale(13)} stroke={'#8E8E93'} />
+                        <SvgComponent svgKey="doubleCheckSVG" width={moderateScale(13)} height={moderateScale(13)} stroke={colorPalette.dark.textSecondary} />
                     ) : (
                         null
                     )}
@@ -110,11 +111,11 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
         }
         // if not me the just show it normally
         return <View style={{ flexDirection: "row-reverse", gap: 2, }}>
-            <Text style={{ color: !lastMessage.seenBy.includes(userData.owner_uid) ? "#fff" : "#8E8E93", fontSize: 15, fontWeight: !lastMessage.seenBy.includes(userData.owner_uid) ? "700" : "500", }} numberOfLines={1} ellipsizeMode="tail"  >{lastMessage?.text}</Text>
+            <Text style={{ color: !lastMessage.seenBy.includes(userData.owner_uid) ? colorPalette.dark.textPrimary : colorPalette.dark.textSecondary, fontSize: 15, fontWeight: !lastMessage.seenBy.includes(userData.owner_uid) ? "700" : "500", }} numberOfLines={1} ellipsizeMode="tail"  >{lastMessage?.text}</Text>
             {/* // if the user did not fetch the last message then show the dot as it indicate that the message is not seen yet by the user */}
             <View style={{ alignSelf: "center" }}>
                 {lastMessage?.seenBy.includes(userData.owner_uid) ? (
-                    <SvgComponent svgKey="doubleCheckSVG" width={moderateScale(13)} height={moderateScale(13)} stroke={'#8E8E93'} />
+                    <SvgComponent svgKey="doubleCheckSVG" width={moderateScale(13)} height={moderateScale(13)} stroke={colorPalette.dark.textSecondary} />
                 ) : (
                     null
                 )}
@@ -142,7 +143,7 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
                             borderRadius: 50,
                             margin: 7,
                             borderWidth: 1.5,
-                            borderColor: "#2b2b2b"
+                            borderColor: colorPalette.dark.Secondary
                         }}
                         placeholder={blurHash}
                         transition={50}
@@ -152,7 +153,7 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
                 </View>
                 <View style={{ flexDirection: "column", flex: 0.55, justifyContent: "center", alignItems: "flex-start" }}>
 
-                    <Text style={{ color: "#fff", fontWeight: lastMessage && lastMessage.seenBy?.includes(userData.owner_uid) ? "700" : "900", fontSize: 16 }}>{item.username}</Text>
+                    <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: lastMessage && lastMessage.seenBy?.includes(userData.owner_uid) ? "700" : "900", fontSize: 16 }}>{item.username}</Text>
                     {loading ? (
                         <Skeleton
                             show
@@ -162,7 +163,7 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
                         />
                     ) : (
                         <>
-                            {lastMessage ? renderLastMessage() : <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>Say Hi 👋</Text>}
+                            {lastMessage ? renderLastMessage() : <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>Say Hi 👋</Text>}
                         </>
                     )}
                 </View>
@@ -174,14 +175,14 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
                             {lastMessage && lastMessage.seenBy?.includes(userData.owner_uid) ? (
                                 null
                             ) : (
-                                <SvgComponent svgKey="DotSVG" width={moderateScale(8)} height={moderateScale(8)} fill={'#ffffff'} />
+                                <SvgComponent svgKey="DotSVG" width={moderateScale(8)} height={moderateScale(8)} fill={colorPalette.dark.textPrimary} />
                             )}
                         </>
                     )}
 
                 </View>
                 <View style={{ flex: 0.2, justifyContent: "center", alignItems: "center" }}>
-                    <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>{lastMessage ? renderTime() : ''}</Text>
+                    <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>{lastMessage ? renderTime() : ''}</Text>
                 </View>
             </TouchableOpacity >
         );
@@ -199,7 +200,7 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
                             borderRadius: 50,
                             margin: 7,
                             borderWidth: 1.5,
-                            borderColor: "#2b2b2b"
+                            borderColor: colorPalette.dark.Secondary
                         }}
                         placeholder={blurHash}
                         transition={50}
@@ -208,9 +209,9 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag }) => {
                     />
                 </View>
                 <View style={{ flexDirection: "column", width: "60%", justifyContent: "center", alignItems: "flex-start" }}>
-                    <Text style={{ color: "#fff", fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
+                    <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
                     {/* just to style the username in the center if there is no display_name to be shown */}
-                    {item.displayed_name ? <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text> : <Text style={{ color: "#8E8E93", fontSize: 13, fontWeight: "500" }}>Say Hi 👋</Text>}
+                    {item.displayed_name ? <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text> : <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>Say Hi 👋</Text>}
                 </View>
             </TouchableOpacity>
         )
