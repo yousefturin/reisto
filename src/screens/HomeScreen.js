@@ -5,6 +5,7 @@ import Post from '../components/Home/Post'
 import { db, firebase } from '../firebase'
 import { UserContext } from '../context/UserDataProvider'
 import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder'
+import { colorPalette } from '../Config/Theme'
 
 
 const HomeScreen = () => {
@@ -12,7 +13,6 @@ const HomeScreen = () => {
     const [posts, setPosts] = useState([])
     const [usersForSharePosts, setUsersForSharePosts] = useState([]);
     const userData = useContext(UserContext);
-
     useEffect(() => {
         // Call fetchPost when the component mounts
         const unsubscribe = fetchPost();
@@ -133,7 +133,7 @@ const HomeScreen = () => {
         }
     };
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary  }}>
             <Header />
             {posts.length !== 0 ? (
                 <FlatList
