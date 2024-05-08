@@ -26,7 +26,7 @@ import ReactNativeModal from 'react-native-modal';
 import { ModalContentForUserWithDifferentSameId, ModalContentForUserWithSameId, ModalHeader } from './Modals';
 import { GenerateRoomId } from '../../utils/GenerateChatId';
 import { addDoc, collection } from 'firebase/firestore';
-
+import { colorPalette } from '../../Config/Theme';
 const screenHeight = Dimensions.get('window').height;
 const { moderateScale } = initializeScalingUtils(Dimensions);
 const Icons = [
@@ -233,7 +233,6 @@ const Post = ({ post, userData, isLastPost, usersForSharePosts }) => {
 
     return (
         <View style={{ paddingBottom: isLastPost ? 55 : 30 }}>
-            {/* <Divider width={1} orientation='horizontal' color="#222222" /> */}
             <PostHeader post={post} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}
                 userData={userData} handleSavedPost={handleSavedPost}
                 savedPosts={savedPosts}
@@ -271,7 +270,7 @@ const Post = ({ post, userData, isLastPost, usersForSharePosts }) => {
                         opacity: isAlertModaVisible ? 0 : 1
                     }}>
                     <View style={{
-                        backgroundColor: "#262626",
+                        backgroundColor: colorPalette.dark.SubPrimary,
                         height: userData.owner_uid === post.owner_uid ? screenHeight * 0.4 : screenHeight * 0.33,
                         borderTopRightRadius: 20,
                         borderTopLeftRadius: 20
@@ -300,7 +299,7 @@ const Post = ({ post, userData, isLastPost, usersForSharePosts }) => {
                         margin: 0,
                     }}>
                     <View style={{
-                        backgroundColor: "#262626",
+                        backgroundColor: colorPalette.dark.SubPrimary,
                         height: screenHeight * 0.4,
                         borderTopRightRadius: 20,
                         borderTopLeftRadius: 20
@@ -319,17 +318,17 @@ const Post = ({ post, userData, isLastPost, usersForSharePosts }) => {
                                             source={{ uri: user.profile_picture }}
                                             style={{
                                                 width: '100%', aspectRatio: 1, borderRadius: 50, borderWidth: 1,
-                                                borderColor: userIndex === index && isButtonSharePressed ? "#add1f7" : "#2b2b2b", position: "relative",
+                                                borderColor: userIndex === index && isButtonSharePressed ? colorPalette.dark.appSecondary : colorPalette.dark.Secondary, position: "relative",
                                                 zIndex: 1
                                             }}
                                             contentFit='cover'
                                         />
                                         {userIndex === index && isButtonSharePressed && (
                                             <View style={{ position: "absolute", top: 10, right: 15, zIndex: 2 }}>
-                                                <SvgComponent svgKey="DotWithCheckSVG" width={moderateScale(22)} height={moderateScale(22)} fill={'#ffffff'} />
+                                                <SvgComponent svgKey="DotWithCheckSVG" width={moderateScale(22)} height={moderateScale(22)} fill={colorPalette.dark.textPrimary} />
                                             </View>
                                         )}
-                                        <Text style={{ textAlign: "center", color: "#8E8E93", marginVertical: 10 }}>{user.username}</Text>
+                                        <Text style={{ textAlign: "center", color: colorPalette.dark.textSecondary, marginVertical: 10 }}>{user.username}</Text>
                                     </TouchableOpacity>
                                 ))}
                             </View>
@@ -337,7 +336,7 @@ const Post = ({ post, userData, isLastPost, usersForSharePosts }) => {
                                 {isButtonSharePressed && (
                                     <TouchableOpacity activeOpacity={0.9} onPress={() => { handleShareMessage() }}>
                                         <LinearGradient
-                                            colors={['#007AFF', '#1c87fc', '#007AFF']}
+                                            colors={[colorPalette.dark.appPrimary, colorPalette.dark.appSubPrimary, colorPalette.dark.appPrimary]}
                                             start={{ x: 0, y: 0 }} // Define the start point (top-left corner)
                                             end={{ x: 1, y: 0 }}   // Define the end point (top-right corner)
                                             locations={[0, 0.5, 1]} // Adjust the positions of color stops
@@ -349,7 +348,7 @@ const Post = ({ post, userData, isLastPost, usersForSharePosts }) => {
                                                 justifyContent: 'center',
                                             }}>
                                             <Text style={{
-                                                color: '#fff',
+                                                color: colorPalette.dark.textPrimary,
                                                 textAlign: 'center',
                                             }}>Share</Text>
                                         </LinearGradient>
@@ -369,7 +368,7 @@ const Post = ({ post, userData, isLastPost, usersForSharePosts }) => {
 const TimeStamp = ({ post }) => (
     post.createdAt && (
         <View style={{ marginTop: 5 }}>
-            <Text style={{ color: "#8E8E93" }}>
+            <Text style={{ color: colorPalette.dark.textSecondary }}>
                 {calculateTimeDifference(post.createdAt)} ago
             </Text>
         </View>
@@ -425,10 +424,10 @@ const PostHeader = ({ post, isModalVisible, setIsModalVisible, userData, }) => {
                     contentFit="cover"
                     transition={50}
                 />
-                <Text style={{ color: "#fff", marginLeft: 6, fontWeight: "700" }}>{post.user}</Text>
+                <Text style={{ color: colorPalette.dark.textPrimary, marginLeft: 6, fontWeight: "700" }}>{post.user}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setIsModalVisible(!isModalVisible)}>
-                <Text style={{ color: "#fff", fontWeight: "900", marginBottom: 15, marginRight: 10 }}>...</Text>
+                <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "900", marginBottom: 15, marginRight: 10 }}>...</Text>
             </TouchableOpacity>
         </View>
     )
@@ -493,7 +492,7 @@ const PostImage = ({ post, handleLike }) => {
                         opacity: fadeAnimation,
                         position: "absolute"
                     }}>
-                    <SvgComponent svgKey="LikeActiveSVG" width={moderateScale(60)} height={moderateScale(60)} fill={'#ffffff'} />
+                    <SvgComponent svgKey="LikeActiveSVG" width={moderateScale(60)} height={moderateScale(60)} fill={colorPalette.dark.textPrimary} />
                 </Animated.View>
             )}
         </TouchableOpacity>
@@ -533,14 +532,14 @@ const PostFooter = ({ toggleContainer, handleLike, post, handleSavedPost, savedP
 
 //#region Icon Buttons
 const Icon = ({ svgKey }) => (
-    <SvgComponent svgKey={svgKey} width={moderateScale(24)} height={moderateScale(24)} fill={'#ffffff'} />
+    <SvgComponent svgKey={svgKey} width={moderateScale(24)} height={moderateScale(24)} fill={colorPalette.dark.textPrimary} />
 )
 //#endregion
 
 //#region Likes Display
 const Likes = ({ post }) => (
     <View style={{ flexDirection: "row", marginTop: 4, }}>
-        <Text style={{ color: "#fff", fontWeight: "700" }}>{post.likes_by_users.length.toLocaleString('en')} Likes</Text>
+        <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "700" }}>{post.likes_by_users.length.toLocaleString('en')} Likes</Text>
     </View>
 )
 //#endregion
@@ -549,13 +548,13 @@ const Likes = ({ post }) => (
 const CategoryAndTime = ({ post }) => (
     <View style={{ flexDirection: "row", marginTop: 5, gap: 10 }}>
         <LinearGradient
-            colors={['#7e9bdf', '#6581B7', '#445379']}
+            colors={[colorPalette.dark.appGradientPrimary, colorPalette.dark.appGradientSecondary, colorPalette.dark.appGradientTertiary]}
             style={{ minWidth: "20%", maxWidth: "30%", padding: 5, borderRadius: 50, justifyContent: "center", alignItems: "center" }}>
-            <Text style={{ color: "#fff", fontWeight: "600" }}>{post.category}</Text>
+            <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "600" }}>{post.category}</Text>
         </LinearGradient>
-        <View style={{ height: "100%", width: 1, borderRadius: 50, backgroundColor: "#fff" }}></View>
+        <View style={{ height: "100%", width: 1, borderRadius: 50, backgroundColor: colorPalette.dark.textPrimary }}></View>
         <View style={{ width: "20%", padding: 5, justifyContent: "center", alignItems: "flex-start" }}>
-            <Text style={{ color: "#fff", fontWeight: "600" }}>{post.timeOfMake} min</Text>
+            <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "600" }}>{post.timeOfMake} min</Text>
         </View>
     </View>
 )
@@ -565,10 +564,10 @@ const CategoryAndTime = ({ post }) => (
 const Caption = ({ post, isExpanded, toggleCaption }) => (
     <>
         <View style={{ flexDirection: "row", marginTop: 5 }}>
-            <Text style={{ color: "#fff" }} onPress={toggleCaption}>
+            <Text style={{ color: colorPalette.dark.textPrimary }} onPress={toggleCaption}>
                 <Text style={{ fontWeight: "700" }}>{post.user} </Text>
                 {isExpanded ? post.caption : post.caption.slice(0, 100) + '... '}
-                <Text style={{ color: "#8E8E93" }}>
+                <Text style={{ color: colorPalette.dark.textSecondary }}>
                     {isExpanded ? '' : 'more'}
                 </Text>
             </Text>
@@ -583,8 +582,8 @@ const Caption = ({ post, isExpanded, toggleCaption }) => (
 //#region Caption Ingredient
 const CaptionIngredient = ({ post }) => (
     <>
-        <Text style={{ fontWeight: "700", fontSize: 18, color: "#fff", marginBottom: 5, marginTop: 10 }}>Ingredients</Text>
-        <Text style={{ color: "#fff" }}>
+        <Text style={{ fontWeight: "700", fontSize: 18, color: colorPalette.dark.textPrimary, marginBottom: 5, marginTop: 10 }}>Ingredients</Text>
+        <Text style={{ color: colorPalette.dark.textPrimary }}>
             {(
                 post.captionIngredients.map((ingredient, index) => (
                     <Text key={index}>
@@ -601,8 +600,8 @@ const CaptionIngredient = ({ post }) => (
 //#region Caption Instruction
 const CaptionInstruction = ({ post }) => (
     <>
-        <Text style={{ fontWeight: "700", fontSize: 18, color: "#fff", marginBottom: 5, marginTop: 0 }}>Instructions</Text>
-        <Text style={{ color: "#fff" }}>
+        <Text style={{ fontWeight: "700", fontSize: 18, color: colorPalette.dark.textPrimary, marginBottom: 5, marginTop: 0 }}>Instructions</Text>
+        <Text style={{ color: colorPalette.dark.textPrimary }}>
             {(
                 post.captionInstructions.map((instruction, index) => (
                     <Text key={index}>
@@ -623,7 +622,7 @@ const CommentSection = ({ post }) => (
     does not have any comments and by that the React will not render teh 0 value because it is not wrapped 
     in text component, and to return teh value of true or false from that line condition it must use the "!!" */}
         {!!post.comments.length && (
-            <Text style={{ color: "#8E8E93" }}>
+            <Text style={{ color: colorPalette.dark.textSecondary }}>
                 View{post.comments.length > 1 ? ' all' : ''} {post.comments.length}{' '}
                 {post.comments.length > 1 ? 'comments' : 'comment'}
             </Text>
@@ -654,10 +653,11 @@ const Comments = ({ post, isContainerVisible, setContainerVisible, userData, han
             onRequestClose={() => {
                 setContainerVisible(!isContainerVisible);
             }}
+            on
 
         >
             <View
-                style={{ backgroundColor: "#262626", flex: 1 }}
+                style={{ backgroundColor: colorPalette.dark.SubPrimary, flex: 1 }}
             >
 
                 <CommentsHeader />
@@ -669,7 +669,7 @@ const Comments = ({ post, isContainerVisible, setContainerVisible, userData, han
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     keyboardVerticalOffset={30}
                 >
-                    <Divider width={1} orientation='horizontal' color="#383838" />
+                    <Divider width={1} orientation='horizontal' color={colorPalette.dark.dividerPrimary} />
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", }}>
 
                         <Image source={{ uri: userData.profile_picture, cache: "force-cache" }}
@@ -680,7 +680,7 @@ const Comments = ({ post, isContainerVisible, setContainerVisible, userData, han
                                 margin: 20,
                                 marginBottom: 50,
                                 borderWidth: 1,
-                                borderColor: "#2b2b2b"
+                                borderColor: colorPalette.dark.Secondary
                             }}
                             placeholder={blurHash}
                             contentFit="cover"
@@ -696,12 +696,12 @@ const Comments = ({ post, isContainerVisible, setContainerVisible, userData, han
                                 autoFocus={true}
                                 spellCheck={true}
                                 style={[{
-                                    flexGrow: 1, flexShrink: 1, color: "#ffffff", paddingHorizontal: 16,
+                                    flexGrow: 1, flexShrink: 1, color: colorPalette.dark.textPrimary, paddingHorizontal: 16,
                                     paddingTop: Platform.OS === 'ios' ? 15 : 0,
                                     paddingBottom: 15,
                                 }]}
                                 placeholder={`Add a Comment for ${post.user}...`}
-                                placeholderTextColor={"#383838"}
+                                placeholderTextColor={colorPalette.dark.placeholder}
                                 value={commentText}
                                 textContentType='none'
                                 multiline={true}
@@ -715,9 +715,12 @@ const Comments = ({ post, isContainerVisible, setContainerVisible, userData, han
                             }} >
                                 <LinearGradient
                                     // Button Linear Gradient
-                                    colors={btnStat ? ['#bebebe', '#727272', '#4c4c4c'] : ['#7e9bdf', '#6581B7', '#445379']}
+                                    colors={btnStat ?
+                                        [colorPalette.dark.appInactiveGradientPrimary, colorPalette.dark.appInactiveGradientSecondary, colorPalette.dark.appInactiveGradientTertiary]
+                                        :
+                                        [colorPalette.dark.appGradientPrimary, colorPalette.dark.appGradientSecondary, colorPalette.dark.appGradientTertiary]}
                                     style={{ marginRight: 10, padding: 5, borderRadius: 11, justifyContent: "center", alignItems: "center" }}>
-                                    <SvgComponent svgKey="SubmitCommentSVG" width={moderateScale(18)} height={moderateScale(18)} fill={'#ffffff'} />
+                                    <SvgComponent svgKey="SubmitCommentSVG" width={moderateScale(18)} height={moderateScale(18)} fill={colorPalette.dark.textPrimary} />
                                 </LinearGradient>
 
                             </TouchableOpacity>
@@ -752,15 +755,15 @@ const CommentsContent = ({ post }) => {
                             />
 
                             <View style={{ flexDirection: "column", width: "80%", flexGrow: 1 }}>
-                                <Text style={{ color: "#fff", marginLeft: 6, fontWeight: "700" }}>{comment.username}</Text>
-                                <Text style={{ color: "#ffffff", marginLeft: 6, }}>
+                                <Text style={{ color: colorPalette.dark.textPrimary, marginLeft: 6, fontWeight: "700" }}>{comment.username}</Text>
+                                <Text style={{ color: colorPalette.dark.textPrimary, marginLeft: 6, }}>
                                     {comment.comment}
                                 </Text>
                             </View>
                         </View>
 
                         <View>
-                            <Text style={{ color: "#979797", marginRight: 6, }}> {calculateTimeDifference(comment.createdAt)}</Text>
+                            <Text style={{ color: colorPalette.dark.textSecondary, marginRight: 6, }}> {calculateTimeDifference(comment.createdAt)}</Text>
                         </View>
                     </View>
                 </View>
@@ -776,8 +779,8 @@ const CommentsContent = ({ post }) => {
 const CommentsHeader = ({ }) => (
     <>
         <View style={styles.ModalTopNotch} />
-        <Text style={{ color: "#fff", fontWeight: "700", fontSize: 20, alignSelf: "center", padding: 20, marginTop: 5 }}>Comments</Text>
-        <Divider width={1} orientation='horizontal' color="#383838" />
+        <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "700", fontSize: 20, alignSelf: "center", padding: 20, marginTop: 5 }}>Comments</Text>
+        <Divider width={1} orientation='horizontal' color={colorPalette.dark.dividerPrimary} />
     </>
 )
 //#endregion
@@ -792,7 +795,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         marginLeft: 6,
         borderWidth: 1,
-        borderColor: "#2b2b2b"
+        borderColor: colorPalette.dark.Secondary
     },
     leftFooterIconsContainer: {
         flexDirection: "row",
@@ -816,11 +819,11 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.1,
         shadowRadius: 1,
-        backgroundColor: "#727272",
+        backgroundColor: colorPalette.dark.notch,
         alignSelf: "center"
     },
     inputControl: {
-        borderColor: "#383838",
+        borderColor: colorPalette.dark.dividerPrimary,
         borderWidth: 1,
         flexDirection: 'row',
         alignItems: "center",
