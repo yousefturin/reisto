@@ -4,6 +4,7 @@ import { UserContext } from '../context/UserDataProvider';
 import { db, firebase } from '../firebase';
 import SavedPostsHeader from '../components/SavedPosts/SavedPostsHeader';
 import SavedPostsGrid from '../components/SavedPosts/SavedPostsGrid';
+import { colorPalette } from '../Config/Theme';
 
 const UserSavedPostScreen = () => {
     const userData = useContext(UserContext);
@@ -80,7 +81,7 @@ const UserSavedPostScreen = () => {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary  }}>
             <>
                 <SavedPostsHeader header={"Saved Posts"} />
                 <ScrollView
