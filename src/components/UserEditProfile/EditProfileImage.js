@@ -7,7 +7,7 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import { db, firebase } from '../../firebase';
 import { Image } from 'expo-image';
 import { colorPalette } from '../../Config/Theme';
-const EditProfileImage = ({ userData }) => {
+const EditProfileImage = ({ userData, theme }) => {
     const [image, setImage] = useState(null);
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -29,7 +29,7 @@ const EditProfileImage = ({ userData }) => {
                 const unsubscribe = db.collection('users').doc(firebase.auth().currentUser.email)
                     .update({
                         profile_picture: base64Image
-                    }).then(()=>{
+                    }).then(() => {
                         console.log('Document successfully updated comments!')
                     }).catch(error => {
                         console.error('Error updating document: ', error)
@@ -50,7 +50,7 @@ const EditProfileImage = ({ userData }) => {
                             borderRadius: 50,
                             margin: 20,
                             borderWidth: 1.5,
-                            borderColor: colorPalette.dark.Secondary
+                            borderColor: theme.Secondary
                         }}
                         placeholder={blurHash}
                         contentFit="cover"
@@ -64,7 +64,7 @@ const EditProfileImage = ({ userData }) => {
                             borderRadius: 50,
                             margin: 20,
                             borderWidth: 1.5,
-                            borderColor: colorPalette.dark.Secondary
+                            borderColor: theme.Secondary
                         }}
                         placeholder={blurHash}
                         contentFit="cover"
@@ -74,7 +74,7 @@ const EditProfileImage = ({ userData }) => {
 
             </TouchableOpacity>
             <TouchableOpacity onPress={() => pickImage()} activeOpacity={0.9}>
-                <Text style={{ color: colorPalette.dark.appPrimary, fontWeight: "600", fontSize: 16, textAlign: "center", marginBottom: 18 }}>Edit or remove picture</Text>
+                <Text style={{ color: theme.appPrimary, fontWeight: "600", fontSize: 16, textAlign: "center", marginBottom: 18 }}>Edit or remove picture</Text>
             </TouchableOpacity>
         </View>
     )

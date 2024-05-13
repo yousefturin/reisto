@@ -62,7 +62,6 @@ const SavedPostsGrid = ({ posts, userData, navigateToScreen }) => {
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
-        paddingHorizontal: gapSize,
         paddingVertical: gapSize,
     },
     image: {

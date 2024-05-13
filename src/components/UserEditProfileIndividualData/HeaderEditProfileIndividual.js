@@ -6,7 +6,7 @@ import { Divider } from 'react-native-elements';
 import Modal from 'react-native-modal';
 import { colorPalette } from '../../Config/Theme';
 
-const HeaderEditProfileIndividual = ({ headerTitle, navigation, handleSubmit, isValid }) => {
+const HeaderEditProfileIndividual = ({ headerTitle, navigation, handleSubmit, isValid, theme }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);
     const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -19,19 +19,19 @@ const HeaderEditProfileIndividual = ({ headerTitle, navigation, handleSubmit, is
         <>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10 }}>
                 <TouchableOpacity style={{ margin: 10, }} onPress={() => handleGoingBack()}>
-                    <SvgComponent svgKey="ArrowBackSVG" width={moderateScale(30)} height={moderateScale(30)} />
+                    <SvgComponent svgKey="ArrowBackSVG" width={moderateScale(30)} height={moderateScale(30)} stroke={theme.textPrimary} />
                 </TouchableOpacity>
-                <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "700", fontSize: 20, marginLeft: 15 }}>{headerTitle}</Text>
+                <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 20, marginLeft: 15 }}>{headerTitle}</Text>
                 <TouchableOpacity style={{ margin: 10 }} onPress={handleSubmit} disabled={!isValid}>
-                    <Text style={{ color: !isValid ? colorPalette.dark.textQuaternary : colorPalette.dark.appPrimary, fontWeight: "600", fontSize: 20, }}>Done</Text>
+                    <Text style={{ color: !isValid ? theme.textQuaternary : theme.appPrimary, fontWeight: "600", fontSize: 20, }}>Done</Text>
                 </TouchableOpacity>
             </View>
-            <Divider width={0.3} orientation='horizontal' color={colorPalette.dark.dividerPrimary} />
-            <ModalAlert navigation={navigation} handleGoingBack={handleGoingBack} isModalVisible={isModalVisible} />
+            <Divider width={0.3} orientation='horizontal' color={theme.dividerPrimary} />
+            <ModalAlert theme={theme} navigation={navigation} handleGoingBack={handleGoingBack} isModalVisible={isModalVisible} />
         </>
     )
 }
-const ModalAlert = ({ navigation, handleGoingBack, isModalVisible }) => {
+const ModalAlert = ({ navigation, handleGoingBack, isModalVisible, theme }) => {
     const screenHeight = Dimensions.get('window').height;
 
     return (
@@ -44,29 +44,29 @@ const ModalAlert = ({ navigation, handleGoingBack, isModalVisible }) => {
                 margin: 0,
             }}>
             <View style={{
-                backgroundColor: colorPalette.dark.SubPrimary,
+                backgroundColor: theme.SubPrimary,
                 height: screenHeight * 0.28,
                 borderRadius: 20,
                 marginHorizontal: 60
             }}>
                 <View style={{ flexDirection: "column", justifyContent: "space-evenly", alignItems: "center", flex: 0.6, paddingHorizontal: 20, }}>
-                    <Text style={{ fontSize: 20, color: colorPalette.dark.textPrimary, fontWeight: "600", }}>Discard changes?</Text>
-                    <Text style={{ fontSize: 16, color: colorPalette.dark.textTertiary, fontWeight: "400", textAlign: "center", }}>If you go back now, you will lose your changes.</Text>
+                    <Text style={{ fontSize: 20, color: theme.textPrimary, fontWeight: "600", }}>Discard changes?</Text>
+                    <Text style={{ fontSize: 16, color: theme.textTertiary, fontWeight: "400", textAlign: "center", }}>If you go back now, you will lose your changes.</Text>
                 </View>
 
-                <Divider width={1} orientation='horizontal' color={colorPalette.dark.dividerPrimary}/>
+                <Divider width={1} orientation='horizontal' color={theme.dividerPrimary} />
                 <View style={{ justifyContent: "space-evenly", flex: 0.4 }}>
                     <TouchableOpacity
                         onPress={() => {
                             handleGoingBack();
                             navigation.goBack();
                         }}>
-                        <Text style={{ color: colorPalette.dark.appPrimary, fontWeight: "600", fontSize: 18, textAlign: "center", }}>Discard changes</Text>
+                        <Text style={{ color: theme.appPrimary, fontWeight: "600", fontSize: 18, textAlign: "center", }}>Discard changes</Text>
                     </TouchableOpacity>
-                    <Divider width={1} orientation='horizontal' color={colorPalette.dark.dividerPrimary}/>
+                    <Divider width={1} orientation='horizontal' color={theme.dividerPrimary} />
                     <TouchableOpacity
                         onPress={() => handleGoingBack()}>
-                        <Text style={{ color: colorPalette.dark.textQuaternary, fontWeight: "400", fontSize: 18, textAlign: "center", }}>Keep editing</Text>
+                        <Text style={{ color: theme.Primary === "#050505" ? theme.textQuaternary : theme.textPrimary, fontWeight: "400", fontSize: 18, textAlign: "center", }}>Keep editing</Text>
                     </TouchableOpacity>
                 </View>
 

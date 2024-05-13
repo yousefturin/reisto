@@ -14,7 +14,7 @@ import { colorPalette } from '../../Config/Theme';
 
 
 
-const ProfileContent = ({ userData, userPosts }) => {
+const ProfileContent = ({ userData, userPosts, theme }) => {
     const navigation = useNavigation();
     const handleEditProfileNavigation = () => {
         navigation.navigate("UserEditProfile", {
@@ -35,7 +35,7 @@ const ProfileContent = ({ userData, userPosts }) => {
                 .collection('following_followers')
                 .limit(1)
                 .get();
-    
+
             if (!querySnapshot.empty) {
                 const doc = querySnapshot.docs[0];
                 const docRef = doc.ref;
@@ -54,9 +54,9 @@ const ProfileContent = ({ userData, userPosts }) => {
                 console.log("No document found in the collection.");
             }
         };
-    
+
         fetchData();
-    
+
         return () => {
             // Unsubscribe when component unmounts
             unsubscribe && unsubscribe();
@@ -108,7 +108,7 @@ const ProfileContent = ({ userData, userPosts }) => {
             console.error("Error fetching data:", error);
         }
     };
-    
+
     const handleUserFollowingAndFollowerDisplay = (flag) => {
         let data
         if (flag === "followers") {
@@ -137,7 +137,7 @@ const ProfileContent = ({ userData, userPosts }) => {
                             borderRadius: 50,
                             margin: 10,
                             borderWidth: 1.5,
-                            borderColor: colorPalette.dark.Secondary
+                            borderColor: theme.Secondary
                         }}
                         placeholder={blurHash}
                         contentFit="cover"
@@ -146,28 +146,28 @@ const ProfileContent = ({ userData, userPosts }) => {
                 </View>
                 <View style={{ flexDirection: "row", justifyContent: "space-evenly", flex: 1, }}>
                     <View style={{ alignItems: "center", justifyContent: "center" }}>
-                        <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "600", fontSize: 18 }}>
+                        <Text style={{ color: theme.textPrimary, fontWeight: "600", fontSize: 18 }}>
                             {Object.keys(userPosts).length}
                         </Text>
-                        <Text style={{ color: colorPalette.dark.textQuaternary }}>
+                        <Text style={{ color: theme.textQuaternary }}>
                             recipes
                         </Text>
                     </View>
 
                     <TouchableOpacity onPress={() => handleUserFollowingAndFollowerDisplay("followers")} style={{ alignItems: "center", justifyContent: "center" }}>
-                        <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "600", fontSize: 18 }}>
+                        <Text style={{ color: theme.textPrimary, fontWeight: "600", fontSize: 18 }}>
                             {Object.keys(followersAndFollowing?.followers).length}
                         </Text>
-                        <Text style={{ color: colorPalette.dark.textQuaternary }}>
+                        <Text style={{ color: theme.textQuaternary }}>
                             followers
                         </Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={() => handleUserFollowingAndFollowerDisplay("following")} style={{ alignItems: "center", justifyContent: "center" }}>
-                        <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "600", fontSize: 18 }}>
+                        <Text style={{ color: theme.textPrimary, fontWeight: "600", fontSize: 18 }}>
                             {Object.keys(followersAndFollowing?.following).length}
                         </Text>
-                        <Text style={{ color: colorPalette.dark.textQuaternary}}>
+                        <Text style={{ color: theme.textQuaternary }}>
                             following
                         </Text>
                     </TouchableOpacity>
@@ -177,14 +177,14 @@ const ProfileContent = ({ userData, userPosts }) => {
             {/* Will be connected to DB soon */}
             {userData.displayed_name &&
                 <View style={{ marginHorizontal: 20, maxHeight: 50, }} >
-                    <Text style={{ color: colorPalette.dark.textPrimary, fontSize: 14, fontWeight: "700" }}>
+                    <Text style={{ color: theme.textPrimary, fontSize: 14, fontWeight: "700" }}>
                         {userData.displayed_name}
                     </Text>
                 </View>
             }
             {userData.bio &&
                 <View style={{ marginHorizontal: 20, maxHeight: 50 }} >
-                    <Text style={{ color: colorPalette.dark.textPrimary }}>
+                    <Text style={{ color: theme.textPrimary }}>
                         {userData.bio}
                     </Text>
                 </View>
@@ -192,10 +192,10 @@ const ProfileContent = ({ userData, userPosts }) => {
             {userData.link &&
                 <TouchableOpacity activeOpacity={0.8} style={{ marginHorizontal: 20, marginTop: 5, maxHeight: 50, flexDirection: "row-reverse", alignItems: "center", justifyContent: "flex-end" }}
                     onPress={() => setIsModalVisible(!isModalVisible)}>
-                    <Text style={{ color: colorPalette.dark.textURL }}>
+                    <Text style={{ color: theme.textURL }}>
                         {extractDomain(userData.link)}
                     </Text>
-                    <SvgComponent svgKey="LinkSVG" width={moderateScale(18)} height={moderateScale(18)} />
+                    <SvgComponent svgKey="LinkSVG" width={moderateScale(18)} height={moderateScale(18)} stroke={theme.textURL} />
                 </TouchableOpacity>
             }
             <Modal
@@ -209,12 +209,12 @@ const ProfileContent = ({ userData, userPosts }) => {
                 }}
             >
                 <View
-                    style={{ backgroundColor: colorPalette.dark.SubPrimary, flex: 1 }}
+                    style={{ backgroundColor: theme.SubPrimary, flex: 1 }}
                 >
                     <View style={{
                         height: 5,
                         width: 40,
-                        backgroundColor: colorPalette.dark.Quinary,
+                        backgroundColor: theme.Quinary,
                         borderRadius: 10,
                         marginTop: 10,
                         shadowColor: "black",
@@ -224,11 +224,11 @@ const ProfileContent = ({ userData, userPosts }) => {
                         },
                         shadowOpacity: 0.1,
                         shadowRadius: 1,
-                        backgroundColor: colorPalette.dark.Tertiary,
+                        backgroundColor: theme.Tertiary,
                         alignSelf: "center"
                     }} />
                     <View style={{ marginTop: 10 }}></View>
-                    <Divider width={1} orientation='horizontal' color={colorPalette.dark.dividerPrimary} />
+                    <Divider width={1} orientation='horizontal' color={theme.dividerPrimary} />
                     <WebView source={{ uri: userData.link }} />
                 </View>
             </Modal>
@@ -242,17 +242,17 @@ const ProfileContent = ({ userData, userPosts }) => {
                 <TouchableOpacity activeOpacity={0.8} onPress={() => handleEditProfileNavigation()}>
                     <View style={{
                         marginTop: 20,
-                        backgroundColor: colorPalette.dark.Quinary,
+                        backgroundColor: theme.Quinary,
                         borderWidth: 1,
                         borderRadius: 8,
-                        borderColor: colorPalette.dark.Quinary,
+                        borderColor: theme.Quinary,
                         paddingVertical: 8,
                         width: 180,
                     }}>
                         <Text style={{
                             fontSize: 16,
                             fontWeight: "500",
-                            color: colorPalette.dark.textPrimary,
+                            color: theme.textPrimary,
                             textAlign: "center"
                         }}>Edit profile</Text>
                     </View>
@@ -260,17 +260,17 @@ const ProfileContent = ({ userData, userPosts }) => {
                 <TouchableOpacity activeOpacity={0.8}>
                     <View style={{
                         marginTop: 20,
-                        backgroundColor: colorPalette.dark.Quinary,
+                        backgroundColor: theme.Quinary,
                         borderWidth: 1,
                         borderRadius: 8,
-                        borderColor: colorPalette.dark.Quinary,
+                        borderColor: theme.Quinary,
                         paddingVertical: 8,
                         width: 180,
                     }}>
                         <Text style={{
                             fontSize: 16,
                             fontWeight: "500",
-                            color: colorPalette.dark.textPrimary,
+                            color: theme.textPrimary,
                             textAlign: "center"
                         }}>Share profile</Text>
                     </View>

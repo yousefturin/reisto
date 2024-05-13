@@ -5,7 +5,7 @@ import { Divider } from 'react-native-elements';
 import { UserContext } from '../../context/UserDataProvider';
 import { colorPalette } from '../../Config/Theme';
 
-const EditProfileForm = ({ navigation }) => {
+const EditProfileForm = ({ navigation, theme }) => {
     const [isNamePressed, setIsNamePressed] = useState(false);
     const [isBioPressed, setIsBioPressed] = useState(false);
     const [isLinkPressed, setIsLinkPressed] = useState(false);
@@ -66,43 +66,43 @@ const EditProfileForm = ({ navigation }) => {
     }
     return (
         <View style={{}}>
-            <View style={{ flexDirection: "column", backgroundColor: isNamePressed ? colorPalette.dark.Secondary : colorPalette.dark.Primary }}>
+            <View style={{ flexDirection: "column", backgroundColor: isNamePressed ? theme.Secondary : theme.Primary }}>
                 <TouchableOpacity style={{ flexDirection: "row", }}
                     onPressIn={() => handlePressIn('Name')}
                     onPressOut={() => handlePressOut('Name')}
                     onPress={() => handleNavigationPress('Name')}
                     activeOpacity={1}>
-                    <Text style={{ fontSize: 18, fontWeight: "400", color: colorPalette.dark.textSubPrimary, marginVertical: 15, width: "25%", marginLeft: 20 }}>Name</Text>
-                    <Text style={{ fontSize: 18, fontWeight: "400", color: isNamePressed ? colorPalette.dark.btnPrimary : userData.displayed_name ? colorPalette.dark.textSubPrimary : colorPalette.dark.Secondary, marginVertical: 15, width: "75%" }}>{userData.displayed_name ? userData.displayed_name : "Name"}</Text>
+                    <Text style={{ fontSize: 18, fontWeight: "400", color: theme.textSubPrimary, marginVertical: 15, width: "25%", marginLeft: 20 }}>Name</Text>
+                    <Text style={{ fontSize: 18, fontWeight: "400", color: isNamePressed ? theme.btnPrimary : userData.displayed_name ? theme.textSubPrimary : theme.Primary === "#050505" ? theme.Secondary : theme.dividerPrimary, marginVertical: 15, width: "75%" }}>{userData.displayed_name ? userData.displayed_name : "Name"}</Text>
                 </TouchableOpacity>
-                <Divider width={0.5} orientation='horizontal' color={colorPalette.dark.dividerPrimary} style={{ width: "65%", alignSelf: "flex-end", marginHorizontal: 20 }} />
+                <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} style={{ width: "65%", alignSelf: "flex-end", marginHorizontal: 20 }} />
             </View>
             <View style={{ flexDirection: "column", }}>
                 <TouchableOpacity style={{ flexDirection: "row" }}
                     activeOpacity={1}>
-                    <Text style={{ fontSize: 18, fontWeight: "400", color: colorPalette.dark.textSubPrimary, marginVertical: 15, width: "25%", marginLeft: 20 }}>Username</Text>
-                    <Text style={{ fontSize: 18, color: colorPalette.dark.textPrimary, marginVertical: 15, width: "75%" }}>{userData.username}</Text>
+                    <Text style={{ fontSize: 18, fontWeight: "400", color: theme.textSubPrimary, marginVertical: 15, width: "25%", marginLeft: 20 }}>Username</Text>
+                    <Text style={{ fontSize: 18, color: theme.textPrimary, marginVertical: 15, width: "75%" }}>{userData.username}</Text>
                 </TouchableOpacity>
-                <Divider width={0.5} orientation='horizontal' color={colorPalette.dark.dividerPrimary} style={{ width: "65%", alignSelf: "flex-end", marginHorizontal: 20 }} />
+                <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} style={{ width: "65%", alignSelf: "flex-end", marginHorizontal: 20 }} />
             </View>
             <View style={{ flexDirection: "column" }}>
-                <TouchableOpacity style={{ flexDirection: "row", backgroundColor: isBioPressed ? colorPalette.dark.Secondary : colorPalette.dark.Primary }}
+                <TouchableOpacity style={{ flexDirection: "row", backgroundColor: isBioPressed ? theme.Secondary : theme.Primary }}
                     onPressIn={() => handlePressIn('Bio')}
                     onPressOut={() => handlePressOut('Bio')}
                     onPress={() => handleNavigationPress('Bio')}
                     activeOpacity={1}>
-                    <Text style={{ fontSize: 18, fontWeight: "400", color: colorPalette.dark.textSubPrimary, marginVertical: 15, width: "25%", marginLeft: 20 }}>Bio</Text>
-                    <Text style={{ fontSize: 18, fontWeight: "400", color: isBioPressed ? colorPalette.dark.btnPrimary : userData.bio ? colorPalette.dark.textSubPrimary : colorPalette.dark.Secondary, marginVertical: 15, width: "75%" }}>{userData.bio ? userData.bio : "Bio"}</Text>
+                    <Text style={{ fontSize: 18, fontWeight: "400", color: theme.textSubPrimary, marginVertical: 15, width: "25%", marginLeft: 20 }}>Bio</Text>
+                    <Text style={{ fontSize: 18, fontWeight: "400", color: isBioPressed ? theme.btnPrimary : userData.bio ? theme.textSubPrimary : theme.Primary === "#050505" ? theme.Secondary : theme.dividerPrimary, marginVertical: 15, width: "75%" }}>{userData.bio ? userData.bio : "Bio"}</Text>
                 </TouchableOpacity>
-                <Divider width={0.5} orientation='horizontal' color={colorPalette.dark.dividerPrimary} style={{ width: "65%", alignSelf: "flex-end", marginHorizontal: 20 }} />
+                <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} style={{ width: "65%", alignSelf: "flex-end", marginHorizontal: 20 }} />
             </View>
-            <TouchableOpacity style={{ flexDirection: "row", backgroundColor: isLinkPressed ? colorPalette.dark.Secondary : colorPalette.dark.Primary }}
+            <TouchableOpacity style={{ flexDirection: "row", backgroundColor: isLinkPressed ? theme.Secondary : theme.Primary }}
                 onPressIn={() => handlePressIn('Link')}
                 onPressOut={() => handlePressOut('Link')}
                 onPress={() => handleNavigationPress('Link')}
                 activeOpacity={1}>
-                <Text style={{ fontSize: 18, fontWeight: "400", color: colorPalette.dark.textSubPrimary, marginVertical: 15, width: "25%", marginLeft: 20 }}>Link</Text>
-                <Text style={{ fontSize: 18, fontWeight: "400", color: isLinkPressed ? colorPalette.dark.btnPrimary : userData.link ? colorPalette.dark.textSubPrimary : colorPalette.dark.Secondary, marginVertical: 15, width: "75%" }}>{userData.link ? userData.link : "Link"}</Text>
+                <Text style={{ fontSize: 18, fontWeight: "400", color: theme.textSubPrimary, marginVertical: 15, width: "25%", marginLeft: 20 }}>Link</Text>
+                <Text style={{ fontSize: 18, fontWeight: "400", color: isLinkPressed ? theme.btnPrimary : userData.link ? theme.textSubPrimary : theme.Primary === "#050505" ? theme.Secondary : theme.dividerPrimary, marginVertical: 15, width: "75%" }}>{userData.link ? userData.link : "Link"}</Text>
             </TouchableOpacity>
         </View>
     )

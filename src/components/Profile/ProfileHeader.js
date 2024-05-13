@@ -25,7 +25,7 @@ const Icons = [
         iconTitle: 'LogoutSVG',
     },
 ]
-const ProfileHeader = ({ handleLogout, userData }) => {
+const ProfileHeader = ({ handleLogout, userData, theme }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);
     // const navigation = useNavigation();
     const [isContainerVisible, setContainerVisible] = useState(false);
@@ -35,19 +35,19 @@ const ProfileHeader = ({ handleLogout, userData }) => {
     return (
         <>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10 }}>
-                <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "800", fontSize: 25, marginLeft: 15 }}>{userData.username}</Text>
+                <Text style={{ color: theme.textPrimary, fontWeight: "800", fontSize: 25, marginLeft: 15 }}>{userData.username}</Text>
                 <View style={{ margin: 10, height: moderateScale(30) }}>
                 </View>
                 <TouchableOpacity style={{ margin: 10 }} onPress={toggleContainer} >
-                    <SvgComponent svgKey="MenuSVG" width={moderateScale(30)} height={moderateScale(30)} />
+                    <SvgComponent svgKey="MenuSVG" width={moderateScale(30)} height={moderateScale(30)} stroke={theme.textPrimary} />
                 </TouchableOpacity>
-                <ProfileMenu setContainerVisible={setContainerVisible} isContainerVisible={isContainerVisible} handleLogout={handleLogout} moderateScale={moderateScale} />
+                <ProfileMenu theme={theme} setContainerVisible={setContainerVisible} isContainerVisible={isContainerVisible} handleLogout={handleLogout} moderateScale={moderateScale} />
             </View>
         </>
     )
 }
 
-const ProfileMenu = ({ isContainerVisible, setContainerVisible, handleLogout, moderateScale }) => {
+const ProfileMenu = ({ isContainerVisible, setContainerVisible, handleLogout, moderateScale, theme }) => {
     const screenHeight = Dimensions.get('window').height;
     const navigation = useNavigation();
     const handleSettings = () => {
@@ -74,52 +74,52 @@ const ProfileMenu = ({ isContainerVisible, setContainerVisible, handleLogout, mo
             }}
         >
             <View style={{
-                backgroundColor: colorPalette.dark.SubPrimary,
+                backgroundColor: theme.SubPrimary,
                 height: screenHeight * 0.35,
                 borderTopRightRadius: 20,
                 borderTopLeftRadius: 20
             }}>
-                <ProfileMenuHeader />
+                <ProfileMenuHeader theme={theme} />
                 {/* mapping function did not work out because of onPress issues where it will be click by itself */}
                 {/* Setting button */}
                 <TouchableOpacity style={{ margin: 10, marginLeft: 20, marginTop: 15, marginBottom: 15, flexDirection: "row", justifyContent: "flex-start", gap: 20, alignItems: "center" }} onPress={() => handleSettings()} >
-                    <SvgComponent svgKey={Icons[0].iconTitle} width={moderateScale(22)} height={moderateScale(22)} />
+                    <SvgComponent svgKey={Icons[0].iconTitle} width={moderateScale(22)} height={moderateScale(22)} stroke={theme.textPrimary} />
                     <View style={{ flexDirection: "column", flex: 1, }}>
-                        <Text style={{ fontSize: 20, color: colorPalette.dark.textPrimary, fontWeight: "400" }}>{Icons[0].name}</Text>
+                        <Text style={{ fontSize: 20, color: theme.textPrimary, fontWeight: "400" }}>{Icons[0].name}</Text>
                     </View>
                 </TouchableOpacity>
                 <View style={{ marginLeft: moderateScale(61) }}>
-                    <Divider width={0.5} orientation='horizontal' color={colorPalette.dark.dividerPrimary} />
+                    <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} />
                 </View>
                 {/* Activities button */}
                 <TouchableOpacity style={{ margin: 10, marginLeft: 20, marginTop: 15, marginBottom: 15, flexDirection: "row", justifyContent: "flex-start", gap: 20, alignItems: "center" }} onPress={() => handleActivity()} >
-                    <SvgComponent svgKey={Icons[1].iconTitle} width={moderateScale(22)} height={moderateScale(22)} />
+                    <SvgComponent svgKey={Icons[1].iconTitle} width={moderateScale(22)} height={moderateScale(22)}  stroke={theme.textPrimary}/>
                     <View style={{ flexDirection: "column", flex: 1, }}>
-                        <Text style={{ fontSize: 20, color: colorPalette.dark.textPrimary, fontWeight: "400" }}>{Icons[1].name}</Text>
+                        <Text style={{ fontSize: 20, color: theme.textPrimary, fontWeight: "400" }}>{Icons[1].name}</Text>
                     </View>
                 </TouchableOpacity>
                 <View style={{ marginLeft: moderateScale(61) }}>
-                    <Divider width={0.5} orientation='horizontal' color={colorPalette.dark.dividerPrimary} />
+                    <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} />
                 </View>
                 {/* Saved button */}
                 <TouchableOpacity style={{ margin: 10, marginLeft: 20, marginTop: 15, marginBottom: 15, flexDirection: "row", justifyContent: "flex-start", gap: 20, alignItems: "center" }} onPress={() => handleSaved()} >
-                    <SvgComponent svgKey={Icons[2].iconTitle} width={moderateScale(22)} height={moderateScale(22)} />
+                    <SvgComponent svgKey={Icons[2].iconTitle} width={moderateScale(22)} height={moderateScale(22)}  stroke={theme.textPrimary}/>
                     <View style={{ flexDirection: "column", flex: 1, }}>
-                        <Text style={{ fontSize: 20, color: colorPalette.dark.textPrimary, fontWeight: "400" }}>{Icons[2].name}</Text>
+                        <Text style={{ fontSize: 20, color: theme.textPrimary, fontWeight: "400" }}>{Icons[2].name}</Text>
                     </View>
                 </TouchableOpacity>
                 <View style={{ marginLeft: moderateScale(61) }}>
-                    <Divider width={0.5} orientation='horizontal' color={colorPalette.dark.dividerPrimary} />
+                    <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} />
                 </View>
                 {/* Logout button */}
                 <TouchableOpacity style={{ margin: 10, marginLeft: 20, marginTop: 15, marginBottom: 15, flexDirection: "row", justifyContent: "flex-start", gap: 20, alignItems: "center" }} onPress={() => handleLogout()} >
-                    <SvgComponent svgKey={Icons[3].iconTitle} width={moderateScale(22)} height={moderateScale(22)} />
+                    <SvgComponent svgKey={Icons[3].iconTitle} width={moderateScale(22)} height={moderateScale(22)} stroke={theme.textPrimary} />
                     <View style={{ flexDirection: "column", flex: 1, }}>
-                        <Text style={{ fontSize: 20, color: colorPalette.dark.textPrimary, fontWeight: "400" }}>{Icons[3].name}</Text>
+                        <Text style={{ fontSize: 20, color: theme.textPrimary, fontWeight: "400" }}>{Icons[3].name}</Text>
                     </View>
                 </TouchableOpacity>
                 <View style={{ marginLeft: moderateScale(61) }}>
-                    <Divider width={0.5} orientation='horizontal' color={colorPalette.dark.dividerPrimary} />
+                    <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} />
                 </View>
 
             </View>
@@ -128,7 +128,7 @@ const ProfileMenu = ({ isContainerVisible, setContainerVisible, handleLogout, mo
 }
 
 
-const ProfileMenuHeader = () => (
+const ProfileMenuHeader = ({ theme }) => (
     <>
         <View style={{
             height: 5,
@@ -142,7 +142,7 @@ const ProfileMenuHeader = () => (
             },
             shadowOpacity: 0.1,
             shadowRadius: 1,
-            backgroundColor: colorPalette.dark.notch,
+            backgroundColor: theme.notch,
             alignSelf: "center"
         }} />
     </>

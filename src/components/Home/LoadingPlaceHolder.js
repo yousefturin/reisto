@@ -3,38 +3,40 @@ import React from 'react'
 import { Skeleton } from 'moti/skeleton'
 import { colorPalette } from '../../Config/Theme'
 
-const SkeletonCommonProps = {
-    colorMode: 'dark',
-    backgroundColor: colorPalette.dark.Secondary,
-    transition: {
-        type: 'timing',
-        duration: 2000,
+
+// the implementation of theme is not yet done
+const LoadingPlaceHolder = ({ fromWhere, theme }) => {
+    const SkeletonCommonProps = {
+        colorMode: theme.Primary === '#050505' ? 'dark':'light' , // if the primary color is dark then the skeleton will be dark
+        backgroundColor: theme.Secondary,
+        transition: {
+            type: 'timing',
+            duration: 2000,
+        }
     }
-}
-const LoadingPlaceHolder = ({ fromWhere }) => {
     return (
         <>
-            <LoaderPostHeader />
-            <LoaderPostImage />
+            <LoaderPostHeader SkeletonCommonProps={SkeletonCommonProps} />
+            <LoaderPostImage  SkeletonCommonProps={SkeletonCommonProps}/>
             <View style={{ marginHorizontal: 15, marginTop: 10, }}>
-                <LoaderPostFooter />
-                <LoaderPostLikes />
-                <LoaderPostCategoryAndTime />
-                <LoaderPostCaption />
-                <LoaderPostTimeStamp />
+                <LoaderPostFooter SkeletonCommonProps={SkeletonCommonProps} />
+                <LoaderPostLikes SkeletonCommonProps={SkeletonCommonProps} />
+                <LoaderPostCategoryAndTime SkeletonCommonProps={SkeletonCommonProps} />
+                <LoaderPostCaption SkeletonCommonProps={SkeletonCommonProps} />
+                <LoaderPostTimeStamp SkeletonCommonProps={SkeletonCommonProps} />
             </View>
             {/* // If the post is shared, the footer will not be displayed */}
             {fromWhere !== "sharedPost" &&
                 <View style={{ marginTop: 15 }}>
-                    <LoaderPostHeader />
-                    <LoaderPostImage />
+                    <LoaderPostHeader SkeletonCommonProps={SkeletonCommonProps} />
+                    <LoaderPostImage SkeletonCommonProps={SkeletonCommonProps} />
                 </View>
             }
         </>
     )
 }
 
-const LoaderPostHeader = () => (
+const LoaderPostHeader = ({SkeletonCommonProps}) => (
 
     <View style={{
         flexDirection: "row",
@@ -71,7 +73,7 @@ const LoaderPostHeader = () => (
     </View>
 )
 
-const LoaderPostImage = () => (
+const LoaderPostImage = ({SkeletonCommonProps})=> (
     <Skeleton
         show
         height={450}
@@ -82,7 +84,7 @@ const LoaderPostImage = () => (
 
 )
 
-const LoaderPostFooter = () => (
+const LoaderPostFooter = ({SkeletonCommonProps}) => (
     <View style={{ flexDirection: "row" }}>
         <View style={{
             flexDirection: "row",
@@ -120,7 +122,7 @@ const LoaderPostFooter = () => (
     </View>
 )
 
-const LoaderPostLikes = () => (
+const LoaderPostLikes =({SkeletonCommonProps}) => (
     <View style={{ flexDirection: "row", marginTop: 15, }}>
         <Skeleton
             show
@@ -131,7 +133,7 @@ const LoaderPostLikes = () => (
     </View>
 )
 
-const LoaderPostCategoryAndTime = () => (
+const LoaderPostCategoryAndTime = ({SkeletonCommonProps}) => (
     <View style={{ flexDirection: "row", marginTop: 15, gap: 10 }}>
         <View
             style={{ padding: 5, borderRadius: 6, justifyContent: "center", alignItems: "center" }}
@@ -143,7 +145,7 @@ const LoaderPostCategoryAndTime = () => (
                 {...SkeletonCommonProps}
             />
         </View>
-        <View style={{ height: "100%", width: 1, borderRadius: 50, backgroundColor: colorPalette.dark.Secondary, }} />
+        <View style={{ height: "100%", width: 1, borderRadius: 50, backgroundColor: SkeletonCommonProps.backgroundColor, }} />
         <View style={{ width: "20%", padding: 5, justifyContent: "center", alignItems: "flex-start", }}>
             <Skeleton
                 show
@@ -155,7 +157,7 @@ const LoaderPostCategoryAndTime = () => (
     </View>
 )
 
-const LoaderPostCaption = () => (
+const LoaderPostCaption =({SkeletonCommonProps}) => (
     <View style={{ flexDirection: "column", marginTop: 15, gap: 10 }}>
         <Skeleton
             show
@@ -172,7 +174,7 @@ const LoaderPostCaption = () => (
     </View>
 )
 
-const LoaderPostTimeStamp = () => (
+const LoaderPostTimeStamp = ({SkeletonCommonProps}) => (
     <View style={{ marginTop: 10 }}>
         <Skeleton
             show

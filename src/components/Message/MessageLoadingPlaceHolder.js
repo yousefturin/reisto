@@ -3,10 +3,10 @@ import React from 'react'
 import { Skeleton } from 'moti/skeleton'
 import { colorPalette } from '../../Config/Theme'
 
-const MessageLoadingPlaceHolder = () => {
+const MessageLoadingPlaceHolder = ({ theme }) => {
     const SkeletonCommonProps = {
-        colorMode: 'dark',
-        backgroundColor: colorPalette.dark.Secondary,
+        colorMode: theme.Primary === '#050505' ? 'dark':'light' , // if the primary color is dark then the skeleton will be dark
+        backgroundColor: theme.Secondary,
         transition: {
             type: 'timing',
             duration: 2000,

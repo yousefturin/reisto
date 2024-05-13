@@ -7,9 +7,19 @@ import { Divider } from 'react-native-elements';
 import { useNavigation } from "@react-navigation/native";
 import { blurHash } from '../../../assets/HashBlurData';
 import { colorPalette } from '../../Config/Theme';
+import { getColorForTheme } from '../../utils/ThemeUtils';
+import { useTheme } from '../../context/ThemeContext';
 
 const NavigationStack = ({ routeName, userData }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);
+
+    const { selectedTheme } = useTheme();
+    const systemTheme = selectedTheme === "system";
+    const theme = getColorForTheme(
+        { dark: colorPalette.dark, light: colorPalette.light },
+        selectedTheme,
+        systemTheme
+    );
 
     // profile image flickering issue is related to useEffect since each time the navigation is applied
     // the useEffect will run once and that will make a problem the image must be taken and then it will be stored inside the async storage.
@@ -72,7 +82,7 @@ const NavigationStack = ({ routeName, userData }) => {
     const NavigationButtons = ({ routeName }) => {
         return (
             <>
-                <Divider width={0.5} orientation='horizontal' color={colorPalette.dark.dividerPrimary}/>
+                <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary}/>
                 <View style={{ flexDirection: "row", justifyContent: "space-around", height: 80, paddingTop: 5, }}>
                     {icons.slice(0, 4).map((icon, index) => (
                         <TouchableOpacity
@@ -89,6 +99,8 @@ const NavigationStack = ({ routeName, userData }) => {
                                 svgKey={icon.inhered.includes(routeName) ? icon.activeURL : icon.inActiveURL}
                                 width={moderateScale(25)}
                                 height={moderateScale(25)}
+                                stroke={icon.inhered.includes(routeName) ? theme.textPrimary : theme.textPrimary}
+                                fill={icon.inhered.includes(routeName) ? theme.textPrimary : "transparent"}
                             />
                         </TouchableOpacity>
                     ))}
@@ -104,7 +116,7 @@ const NavigationStack = ({ routeName, userData }) => {
                                 height: moderateScale(25),
                                 borderRadius: 50,
                                 borderWidth: icons[4].action.includes(routeName) ? 1.5 : 1,
-                                borderColor: icons[4].action.includes(routeName) ? colorPalette.dark.textPrimary : colorPalette.dark.Secondary
+                                borderColor: icons[4].action.includes(routeName) ? theme.textPrimary : theme.Secondary
                             }}
                             placeholder={blurHash}
                             cachePolicy={"memory-disk"}
@@ -118,7 +130,7 @@ const NavigationStack = ({ routeName, userData }) => {
     //#endregion
 
     return (
-        <View style={{ backgroundColor: colorPalette.dark.Primary }}>
+        <View style={{ backgroundColor: theme.Primary }}>
             <NavigationButtons routeName={routeName} />
         </View>
     )

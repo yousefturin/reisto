@@ -3,7 +3,7 @@ import React from 'react'
 import MessageMainItem from './MessageMainItem'
 import MessageLoadingPlaceHolder from './MessageLoadingPlaceHolder'
 
-const MessageMainList = ({ updateLastMessage, userData, sortedData, usersForMessaging, flag }) => {
+const MessageMainList = ({ updateLastMessage, userData, sortedData, usersForMessaging, flag, theme }) => {
     // this is the main list of messages that the user has
     if (flag === "FromMain") {
         return (
@@ -19,11 +19,12 @@ const MessageMainList = ({ updateLastMessage, userData, sortedData, usersForMess
                                 userData={userData}
                                 onUpdateLastMessage={updateLastMessage}
                                 flag={"FromMain"}
+                                theme={theme}
                             />}
                             keyExtractor={item => item.owner_uid.toString()}
                         />
                     ) : (
-                        <MessageLoadingPlaceHolder />
+                        <MessageLoadingPlaceHolder  theme={theme}/>
                     )
                 }
             </>
@@ -42,11 +43,12 @@ const MessageMainList = ({ updateLastMessage, userData, sortedData, usersForMess
                                 item={item} index={index}
                                 userData={userData}
                                 flag={"FromNewMessage"}
+                                theme={theme}
                             />}
                             keyExtractor={item => item.owner_uid.toString()}
                         />
                     ) : (
-                        <MessageLoadingPlaceHolder />
+                        <MessageLoadingPlaceHolder theme={theme} />
                     )
                 }
             </>

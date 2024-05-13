@@ -8,14 +8,14 @@ import { colorPalette } from '../../Config/Theme';
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
-const Header = () => {
+const Header = ({theme}) => {
   const navigation = useNavigation();
   const { messagesNum, loadingMessagesNum } = useContext(MessagesNumContext);
 
   return (
     <View style={styles.container}>
       <TouchableOpacity>
-        <SvgComponent svgKey="LogoSVG" width={moderateScale(60)} height={moderateScale(60)} fill={colorPalette.dark.textPrimary} />
+        <SvgComponent svgKey="LogoSVG" width={moderateScale(60)} height={moderateScale(60)} fill={theme.textPrimary} />
       </TouchableOpacity>
 
       <View style={styles.iconsContainer}>
@@ -24,7 +24,7 @@ const Header = () => {
 
             <Text style={styles.unreadBadgeText}>{messagesNum !== 0 ? messagesNum : null}</Text>
           </View>
-          <SvgComponent svgKey="ChatSVG" width={moderateScale(22)} height={moderateScale(22)} fill={colorPalette.dark.textPrimary} />
+          <SvgComponent svgKey="ChatSVG" width={moderateScale(22)} height={moderateScale(22)} fill={theme.textPrimary} stroke={theme.textPrimary} />
         </TouchableOpacity>
       </View>
     </View>

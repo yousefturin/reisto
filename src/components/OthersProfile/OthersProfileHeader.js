@@ -5,7 +5,7 @@ import initializeScalingUtils from '../../utils/NormalizeSize';
 import SvgComponent from '../../utils/SvgComponents';
 import { colorPalette } from '../../Config/Theme';
 
-const OthersProfileHeader = ({ userDataToBeNavigated }) => {
+const OthersProfileHeader = ({ userDataToBeNavigated, theme }) => {
     const navigation = useNavigation();
     const handlePressBack = () => {
         navigation.goBack()
@@ -19,13 +19,13 @@ const OthersProfileHeader = ({ userDataToBeNavigated }) => {
     return (
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10 }}>
             <TouchableOpacity style={{ margin: 10 }} onPress={() => { handlePressBack() }}>
-                <SvgComponent svgKey="ArrowBackSVG" width={moderateScale(30)} height={moderateScale(30)} />
+                <SvgComponent svgKey="ArrowBackSVG" width={moderateScale(30)} height={moderateScale(30)} stroke={theme.textPrimary} />
             </TouchableOpacity>
             <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", flex: 1 }}>
-                <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "600", fontSize: 20, }}>{userDataToBeNavigated.username}</Text>
+                <Text style={{ color: theme.textPrimary, fontWeight: "600", fontSize: 20, }}>{userDataToBeNavigated.username}</Text>
             </View>
             <TouchableOpacity onPress={() => handleNavigationToMessages()} style={{ width: moderateScale(30) }}>
-                <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "900", }}>...</Text>
+                <Text style={{ color: theme.textPrimary, fontWeight: "900", }}>...</Text>
             </TouchableOpacity>
         </View>
     )

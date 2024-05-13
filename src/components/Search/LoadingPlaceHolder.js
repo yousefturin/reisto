@@ -5,11 +5,11 @@ import { FlatList } from 'react-native';
 import { View } from 'moti';
 import { colorPalette } from '../../Config/Theme';
 
-const LoadingPlaceHolder = ({ condition }) => {
+const LoadingPlaceHolder = ({ condition, theme }) => {
 
     const SkeletonCommonProps = {
-        colorMode: 'dark',
-        backgroundColor: colorPalette.dark.Secondary,
+        colorMode: theme.Primary === '#050505' ? 'dark':'light' , // if the primary color is dark then the skeleton will be dark
+        backgroundColor: theme.Secondary,
         transition: {
             type: 'timing',
             duration: 2000,

@@ -10,7 +10,7 @@ import { db } from '../../firebase';
 import { colorPalette } from '../../Config/Theme';
 
 
-const MessagesIndividualHeader = ({ header }) => {
+const MessagesIndividualHeader = ({ header, theme }) => {
     const navigation = useNavigation();
     const handlePressBack = () => {
         navigation.goBack()
@@ -19,7 +19,7 @@ const MessagesIndividualHeader = ({ header }) => {
     const handleNavigation = () => {
         const unsubscribe = db.collection('users').where('owner_uid', '==', header.owner_uid).limit(1).onSnapshot(snapshot => {
             const data = snapshot.docs.map(doc => doc.data())[0];
-            let userDataUid=({
+            let userDataUid = ({
                 username: data.username,
                 profile_picture: data.profile_picture,
                 displayed_name: data.displayed_name,
@@ -36,7 +36,7 @@ const MessagesIndividualHeader = ({ header }) => {
         <>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10, }}>
                 <TouchableOpacity style={{ margin: 10 }} onPress={() => { handlePressBack() }}>
-                    <SvgComponent svgKey="ArrowBackSVG" width={moderateScale(30)} height={moderateScale(30)} />
+                    <SvgComponent svgKey="ArrowBackSVG" width={moderateScale(30)} height={moderateScale(30)} stroke={theme.textPrimary} />
                 </TouchableOpacity>
                 <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", flex: 1, gap: 10, }}>
                     <TouchableOpacity onPress={() => handleNavigation()}>
@@ -47,7 +47,7 @@ const MessagesIndividualHeader = ({ header }) => {
                                 height: 35,
                                 borderRadius: 50,
                                 borderWidth: 1,
-                                borderColor: colorPalette.dark.Secondary
+                                borderColor: theme.Secondary
                             }}
                             placeholder={blurHash}
                             contentFit="cover"
@@ -56,13 +56,13 @@ const MessagesIndividualHeader = ({ header }) => {
                         />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => handleNavigation()}>
-                        <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "600", fontSize: 20, }}>{header.username}</Text>
+                        <Text style={{ color: theme.textPrimary, fontWeight: "600", fontSize: 20, }}>{header.username}</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{ margin: 10, width: moderateScale(30) }}>
                 </View>
             </View>
-            <Divider width={0.5} orientation='horizontal' color={colorPalette.dark.dividerPrimary} />
+            <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} />
         </>
     )
 }

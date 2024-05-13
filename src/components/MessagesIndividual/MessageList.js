@@ -2,7 +2,7 @@ import { View, Text, ScrollView } from 'react-native'
 import React from 'react'
 import MessageItem from './MessageItem'
 
-const MessageList = ({ messages, currentUser, scrollViewRef }) => {
+const MessageList = ({ messages, currentUser, scrollViewRef,theme }) => {
     return (
         <ScrollView
             ref={scrollViewRef}
@@ -15,7 +15,7 @@ const MessageList = ({ messages, currentUser, scrollViewRef }) => {
             {
                 messages.map((message, index) => {
                     return (
-                        <MessageItem message={message} key={index} currentUser={currentUser} />
+                        <MessageItem message={message} key={index} currentUser={currentUser} theme={theme} />
                     )
                 })
             }

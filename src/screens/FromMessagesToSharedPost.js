@@ -8,6 +8,8 @@ import { useNavigation } from '@react-navigation/native';
 import SvgComponent from '../utils/SvgComponents';
 import initializeScalingUtils from '../utils/NormalizeSize';
 import { colorPalette } from '../Config/Theme';
+import { useTheme } from '../context/ThemeContext';
+import { getColorForTheme } from '../utils/ThemeUtils';
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
@@ -18,6 +20,14 @@ const FromMessagesToSharedPost = ({ route }) => {
 
 
     const [post, setPost] = useState([]) // Initialize the post state with an empty array
+
+    const { selectedTheme } = useTheme();
+    const systemTheme = selectedTheme === "system";
+    const theme = getColorForTheme(
+        { dark: colorPalette.dark, light: colorPalette.light },
+        selectedTheme,
+        systemTheme
+    );
 
     useEffect(() => {
         let unsubscribe
@@ -109,16 +119,16 @@ const FromMessagesToSharedPost = ({ route }) => {
 
     return (
         <SafeAreaView>
-            <PostHeader />
+            <PostHeader theme={theme} />
             {post.length !== 0 ? (
-                <Post post={post} userData={userData} usersForSharePosts={usersForSharePosts} />
-            ) : (<LoadingPlaceHolder fromWhere={"sharedPost"} />
+                <Post post={post} userData={userData} usersForSharePosts={usersForSharePosts} theme={theme} />
+            ) : (<LoadingPlaceHolder fromWhere={"sharedPost"} theme={theme} />
             )}
         </SafeAreaView>
     )
 }
 
-const PostHeader = () => {
+const PostHeader = ({ theme }) => {
     const navigation = useNavigation();
     const handlePressBack = () => {
         navigation.goBack()
@@ -126,10 +136,10 @@ const PostHeader = () => {
     return (
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10 }}>
             <TouchableOpacity style={{ margin: 10 }} onPress={() => { handlePressBack() }}>
-                <SvgComponent svgKey="ArrowBackSVG" width={moderateScale(30)} height={moderateScale(30)} />
+                <SvgComponent svgKey="ArrowBackSVG" width={moderateScale(30)} height={moderateScale(30)} stroke={theme.textPrimary} />
             </TouchableOpacity>
             <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", flex: 1 }}>
-                <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "600", fontSize: 20, }}>Posts</Text>
+                <Text style={{ color: theme.textPrimary, fontWeight: "600", fontSize: 20, }}>Posts</Text>
             </View>
             <View style={{ margin: 10, width: moderateScale(30) }}>
             </View>

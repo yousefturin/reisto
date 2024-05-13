@@ -10,7 +10,7 @@ import { Divider } from 'react-native-elements';
 import { db, firebase } from '../../firebase';
 import { colorPalette } from '../../Config/Theme';
 
-const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
+const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const { moderateScale } = initializeScalingUtils(Dimensions);
     const [followersAndFollowing, setFollowersAndFollowing] = useState([])
@@ -157,7 +157,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
                             borderRadius: 50,
                             margin: 10,
                             borderWidth: 1.5,
-                            borderColor: colorPalette.dark.Secondary
+                            borderColor: theme.Secondary
                         }}
                         placeholder={blurHash}
                         contentFit="cover"
@@ -165,28 +165,28 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
                 </View>
                 <View style={{ flexDirection: "row", justifyContent: "space-evenly", flex: 1, }}>
                     <View style={{ alignItems: "center", justifyContent: "center" }}>
-                        <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "600", fontSize: 18 }}>
+                        <Text style={{ color: theme.textPrimary, fontWeight: "600", fontSize: 18 }}>
                             {Object.keys(userPosts).length}
                         </Text>
-                        <Text style={{ color: colorPalette.dark.textQuaternary }}>
+                        <Text style={{ color: theme.textQuaternary }}>
                             recipes
                         </Text>
                     </View>
 
                     <View style={{ alignItems: "center", justifyContent: "center" }}>
-                        <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "600", fontSize: 18 }}>
+                        <Text style={{ color: theme.textPrimary, fontWeight: "600", fontSize: 18 }}>
                             {Object.keys(followersAndFollowingForPassedUser?.followers || 0).length}
                         </Text>
-                        <Text style={{ color: colorPalette.dark.textQuaternary }}>
+                        <Text style={{ color: theme.textQuaternary }}>
                             followers
                         </Text>
                     </View>
 
                     <View style={{ alignItems: "center", justifyContent: "center" }}>
-                        <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "600", fontSize: 18 }}>
+                        <Text style={{ color: theme.textPrimary, fontWeight: "600", fontSize: 18 }}>
                             {Object.keys(followersAndFollowingForPassedUser?.following || 0).length}
                         </Text>
-                        <Text style={{ color: colorPalette.dark.textQuaternary}}>
+                        <Text style={{ color: theme.textQuaternary }}>
                             following
                         </Text>
                     </View>
@@ -195,14 +195,14 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
             {/* Will be connected to DB soon */}
             {userDataAfterNavigation.displayed_name &&
                 <View style={{ marginHorizontal: 20, maxHeight: 50, }} >
-                    <Text style={{ color: colorPalette.dark.textPrimary, fontSize: 14, fontWeight: "700" }}>
+                    <Text style={{ color: theme.textPrimary, fontSize: 14, fontWeight: "700" }}>
                         {userDataAfterNavigation.displayed_name}
                     </Text>
                 </View>
             }
             {userDataAfterNavigation.bio &&
                 <View style={{ marginHorizontal: 20, maxHeight: 50 }} >
-                    <Text style={{ color: colorPalette.dark.textPrimary }}>
+                    <Text style={{ color: theme.textPrimary }}>
                         {userDataAfterNavigation.bio}
                     </Text>
                 </View>
@@ -210,10 +210,10 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
             {userDataAfterNavigation.link &&
                 <TouchableOpacity activeOpacity={0.8} style={{ marginHorizontal: 20, marginTop: 5, maxHeight: 50, flexDirection: "row-reverse", alignItems: "center", justifyContent: "flex-end" }}
                     onPress={() => setIsModalVisible(!isModalVisible)}>
-                    <Text style={{ color: colorPalette.dark.textURL }}>
+                    <Text style={{ color: theme.textURL }}>
                         {extractDomain(userDataAfterNavigation.link)}
                     </Text>
-                    <SvgComponent svgKey="LinkSVG" width={moderateScale(18)} height={moderateScale(18)} />
+                    <SvgComponent svgKey="LinkSVG" width={moderateScale(18)} height={moderateScale(18)} stroke={theme.textURL} />
                 </TouchableOpacity>
             }
             <View style={{
@@ -226,17 +226,18 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
                 <TouchableOpacity activeOpacity={0.8} onPress={() => handleFollowing()}>
                     <View style={{
                         marginTop: 20,
-                        backgroundColor: isUserFollowed ? colorPalette.dark.Quinary : colorPalette.dark.appPrimary,
+                        backgroundColor: isUserFollowed ? theme.Quinary : theme.appPrimary,
                         borderWidth: 1,
                         borderRadius: 8,
-                        borderColor: isUserFollowed ? colorPalette.dark.Quinary : colorPalette.dark.appPrimary,
+                        borderColor: isUserFollowed ? theme.Quinary : theme.appPrimary,
                         paddingVertical: 8,
                         width: 180,
                     }}>
                         <Text style={{
                             fontSize: 16,
                             fontWeight: "500",
-                            color: colorPalette.dark.textPrimary,
+                            // if user is following and it is white theme make text back, if user does not follow make text white
+                            color: theme.Primary === '#050505' ? theme.textPrimary : isUserFollowed ? theme.textPrimary : theme.Primary,
                             textAlign: "center"
                         }}> {isUserFollowed ? "Unfollow" : "Follow"}</Text>
                     </View>
@@ -244,17 +245,17 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
                 <TouchableOpacity activeOpacity={0.8}>
                     <View style={{
                         marginTop: 20,
-                        backgroundColor: colorPalette.dark.Quinary,
+                        backgroundColor: theme.Quinary,
                         borderWidth: 1,
                         borderRadius: 8,
-                        borderColor: colorPalette.dark.Quinary,
+                        borderColor: theme.Quinary,
                         paddingVertical: 8,
                         width: 180,
                     }}>
                         <Text style={{
                             fontSize: 16,
                             fontWeight: "500",
-                            color: colorPalette.dark.textPrimary,
+                            color: theme.textPrimary,
                             textAlign: "center"
                         }}>Share profile</Text>
                     </View>
@@ -271,12 +272,12 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
                 }}
             >
                 <View
-                    style={{ backgroundColor: colorPalette.dark.SubPrimary, flex: 1 }}
+                    style={{ backgroundColor: theme.SubPrimary, flex: 1 }}
                 >
                     <View style={{
                         height: 5,
                         width: 40,
-                        backgroundColor: colorPalette.dark.Quinary,
+                        backgroundColor: theme.Quinary,
                         borderRadius: 10,
                         marginTop: 10,
                         shadowColor: "black",
@@ -286,11 +287,11 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts }) => {
                         },
                         shadowOpacity: 0.1,
                         shadowRadius: 1,
-                        backgroundColor: colorPalette.dark.Tertiary,
+                        backgroundColor: theme.Tertiary,
                         alignSelf: "center"
                     }} />
                     <View style={{ marginTop: 10 }}></View>
-                    <Divider width={1} orientation='horizontal' color={colorPalette.dark.dividerPrimary} />
+                    <Divider width={1} orientation='horizontal' color={theme.dividerPrimary} />
                     <WebView source={{ uri: userDataAfterNavigation.link }} />
                 </View>
             </Modal>
