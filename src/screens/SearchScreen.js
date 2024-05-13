@@ -13,6 +13,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import SvgComponent from '../utils/SvgComponents';
 import LoadingPlaceHolder from '../components/Search/LoadingPlaceHolder';
 import { colorPalette } from '../Config/Theme';
+import { useTheme } from '../context/ThemeContext';
+import { getColorForTheme } from '../utils/ThemeUtils';
 
 const SearchScreen = () => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -25,6 +27,16 @@ const SearchScreen = () => {
     const [posts, setPosts] = useState([])
     const navigation = useNavigation();
     const [clickedUsers, setClickedUsers] = useState([]);
+
+    const { selectedTheme } = useTheme();
+    const systemTheme = selectedTheme === "system";
+    const theme = getColorForTheme(
+        { dark: colorPalette.dark, light: colorPalette.light },
+        selectedTheme,
+        systemTheme
+    );
+
+
     // Determine whether to display searchedItems based on searchQuery and clearedManually flag
     const shouldDisplaySearchedItems = searchQuery !== "" || !clearedManually;
 
@@ -187,22 +199,28 @@ const SearchScreen = () => {
 
     return (
         // this must be on a scrollView-<<<<<<<<<<<<<<<<
-        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary , justifyContent: "flex-start" }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary, justifyContent: "flex-start" }}>
             <SearchBar
                 placeholder={"Search..."}
                 onChangeText={handleSearch}
                 onPressIn={handleSearchBarClick}
                 value={searchQuery}
                 platform="ios"
-                containerStyle={SearchScreenStyles.searchBarContainer}
+                containerStyle={[SearchScreenStyles.searchBarContainer, { backgroundColor: theme.Primary, }]}
                 inputContainerStyle={[
                     SearchScreenStyles.searchBarInputContainer,
                     searchMode && SearchScreenStyles.searchBarInputContainerTop, // when searchMode is true
+                    { backgroundColor: theme.SubPrimary, }
                 ]}
                 rightIconContainerStyle={{ opacity: RightIconContainerStyle }}
                 inputStyle={[
                     SearchScreenStyles.searchBarInput,
-                    { textAlign: "left" },
+                    {
+                        textAlign: "left",
+                        color: theme.textQuaternary,
+                        borderColor: theme.SubPrimary,
+                        backgroundColor: theme.SubPrimary
+                    },
                 ]}
                 clearIcon={{ type: "ionicon", name: "close-circle" }}
                 onClear={handleClear}
@@ -227,7 +245,7 @@ const SearchScreen = () => {
                                             borderRadius: 50,
                                             margin: 7,
                                             borderWidth: 1.5,
-                                            borderColor: colorPalette.dark.Secondary
+                                            borderColor: theme.Secondary
                                         }}
                                         placeholder={blurHash}
                                         contentFit="cover"
@@ -236,8 +254,8 @@ const SearchScreen = () => {
                                 </View>
 
                                 <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
-                                    <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
-                                    <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
+                                    <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
+                                    <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
                                 </View>
                             </TouchableOpacity>
                         )) : (
@@ -251,7 +269,7 @@ const SearchScreen = () => {
                                                 borderRadius: 50,
                                                 margin: 7,
                                                 borderWidth: 1.5,
-                                                borderColor: colorPalette.dark.Secondary
+                                                borderColor: theme.Secondary
                                             }}
                                             placeholder={blurHash}
                                             contentFit="cover"
@@ -260,11 +278,11 @@ const SearchScreen = () => {
                                     </View>
 
                                     <View style={{ flexDirection: "column", width: "70%", justifyContent: "center", alignItems: "flex-start" }}>
-                                        <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
-                                        <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
+                                        <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
+                                        <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
                                     </View>
                                     <TouchableOpacity style={{ width: "10%", justifyContent: "center", alignItems: "center" }} onPress={() => handleRemoveFromAsync(item)}>
-                                        <SvgComponent svgKey="CloseSVG" width={moderateScale(16)} height={moderateScale(16)} stroke={colorPalette.dark.textSecondary} />
+                                        <SvgComponent svgKey="CloseSVG" width={moderateScale(16)} height={moderateScale(16)} stroke={theme.textSecondary} />
                                     </TouchableOpacity>
                                 </TouchableOpacity>
                             ))
@@ -273,7 +291,7 @@ const SearchScreen = () => {
 
                 ) : (
                     <>
-                        {posts.length === 0 && <LoadingPlaceHolder condition={posts.length} />}
+                        {posts.length === 0 && <LoadingPlaceHolder condition={posts.length} theme={theme}   />}
                         <SavedPostsGrid posts={posts} userData={userData} navigateToScreen={"SearchExplore"} />
                     </>
                 )
@@ -285,22 +303,12 @@ const SearchScreen = () => {
 
 
 const SearchScreenStyles = StyleSheet.create({
-    container: {
-        flexGrow: 1,
-        backgroundColor: colorPalette.dark.Primary ,
-        justifyContent: "center",
-        alignItems: "center",
-        paddingBottom: moderateScale(88),
-    },
     searchBarContainer: {
         paddingHorizontal: moderateScale(10),
-        backgroundColor: colorPalette.dark.Primary ,
         borderBottomColor: "transparent",
         borderTopColor: "transparent",
     },
     searchBarInputContainer: {
-        backgroundColor: colorPalette.dark.Quinary,
-        shadowColor: "black",
         shadowOffset: {
             width: 0,
             height: 2.2,
@@ -316,12 +324,9 @@ const SearchScreenStyles = StyleSheet.create({
         zIndex: 1,
     },
     searchBarInput: {
-        backgroundColor: colorPalette.dark.Quinary,
-        color: colorPalette.dark.textQuaternary,
         borderLeftColor: "transparent",
         borderRightColor: "transparent",
         borderWidth: 0.5,
-        borderColor: colorPalette.dark.Quinary
     },
 })
 export default SearchScreen

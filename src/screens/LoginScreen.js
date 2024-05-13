@@ -5,6 +5,8 @@ import SvgComponent from "../utils/SvgComponents";
 import initializeScalingUtils from "../utils/NormalizeSize"
 import LoginForm from '../components/Login/LoginForm';
 import { colorPalette } from '../Config/Theme';
+import { useTheme } from '../context/ThemeContext';
+import { getColorForTheme } from '../utils/ThemeUtils';
 
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
@@ -12,13 +14,20 @@ const { moderateScale } = initializeScalingUtils(Dimensions);
 export default function LoginScreen({ }) {
     const navigation = useNavigation();
     // const { login } = useAuth();
+    const { selectedTheme } = useTheme();
+    const systemTheme = selectedTheme === "system";
+    const theme = getColorForTheme(
+        { dark: colorPalette.dark, light: colorPalette.light },
+        selectedTheme,
+        systemTheme
+    );
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <SvgComponent svgKey="LogoSVG" width={moderateScale(80)} height={moderateScale(80)} fill={colorPalette.dark.textPrimary} />
+                    <SvgComponent svgKey="LogoSVG" width={moderateScale(80)} height={moderateScale(80)} fill={theme.textPrimary} />
                 </View>
-                <LoginForm navigation={navigation} />
+                <LoginForm navigation={navigation} theme={theme} />
             </View>
         </SafeAreaView>
     )
@@ -32,7 +41,7 @@ const styles = StyleSheet.create({
     header: {
         justifyContent: "center",
         alignItems: "center",
-        marginVertical: 50,
+        marginVertical: 30,
         marginBottom: 30
     },
 });

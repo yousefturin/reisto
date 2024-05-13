@@ -5,12 +5,23 @@ import { useNavigation } from '@react-navigation/native';
 import { Image } from 'expo-image';
 import { blurHash } from '../../assets/HashBlurData';
 import { colorPalette } from '../Config/Theme';
+import { useTheme } from '../context/ThemeContext';
+import { getColorForTheme } from '../utils/ThemeUtils';
 
 const screenWidth = Dimensions.get('window').width;
 
 
 const UserFollowingAndFollowersListScreen = ({ route }) => {
     const { userData, flag, paramFollowing, paramFollower } = route.params;
+
+    const { selectedTheme } = useTheme();
+    const systemTheme = selectedTheme === "system";
+    const theme = getColorForTheme(
+        { dark: colorPalette.dark, light: colorPalette.light },
+        selectedTheme,
+        systemTheme
+    );
+
 
     const handleNavigationToOtherUserProfile = (item) => {
         const userDataToBeNavigated = {
@@ -44,18 +55,18 @@ const UserFollowingAndFollowersListScreen = ({ route }) => {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary  }}>
-            <EditProfileHeader headerTitle={userData.username} navigation={navigation} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary  }}>
+            <EditProfileHeader headerTitle={userData.username} navigation={navigation} theme={theme} />
             <View style={{ flexDirection: "row", justifyContent: "space-around", position: "relative" }}>
                 <TouchableOpacity
                     onPress={() => { handleDataSwitch("followers") }}
                     style={{ padding: 10 }}>
-                    <Text style={{ color: paramFlag === "followers" ? colorPalette.dark.textPrimary : colorPalette.dark.textSecondary, fontSize: 16, fontWeight: paramFlag === "followers" ? "700" : "500" }}>follower</Text>
+                    <Text style={{ color: paramFlag === "followers" ? theme.textPrimary : theme.textSecondary, fontSize: 16, fontWeight: paramFlag === "followers" ? "700" : "500" }}>follower</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => { handleDataSwitch("following") }}
                     style={{ padding: 10 }}>
-                    <Text style={{ color: paramFlag === "following" ? colorPalette.dark.textPrimary : colorPalette.dark.textSecondary, fontSize: 16, fontWeight: paramFlag === "following" ? "700" : "500" }}>following</Text>
+                    <Text style={{ color: paramFlag === "following" ? theme.textPrimary : theme.textSecondary, fontSize: 16, fontWeight: paramFlag === "following" ? "700" : "500" }}>following</Text>
                 </TouchableOpacity>
 
                 <Animated.View style={{
@@ -64,7 +75,7 @@ const UserFollowingAndFollowersListScreen = ({ route }) => {
                     left: 0,
                     width: "20%",
                     height: 2,
-                    backgroundColor: colorPalette.dark.textPrimary,
+                    backgroundColor: theme.textPrimary,
                     transform: [{
                         translateX: animatedValue.interpolate({
                             inputRange: [0, 1],
@@ -87,7 +98,7 @@ const UserFollowingAndFollowersListScreen = ({ route }) => {
                                             borderRadius: 50,
                                             margin: 7,
                                             borderWidth: 1.5,
-                                            borderColor: colorPalette.dark.Secondary
+                                            borderColor: theme.Secondary
                                         }}
                                         placeholder={blurHash}
                                         contentFit="cover"
@@ -96,8 +107,8 @@ const UserFollowingAndFollowersListScreen = ({ route }) => {
                                 </View>
 
                                 <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
-                                    <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
-                                    <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
+                                    <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
+                                    <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
                                 </View>
                             </TouchableOpacity>
                         ))}
@@ -114,7 +125,7 @@ const UserFollowingAndFollowersListScreen = ({ route }) => {
                                             borderRadius: 50,
                                             margin: 7,
                                             borderWidth: 1.5,
-                                            borderColor: colorPalette.dark.Secondary
+                                            borderColor: theme.Secondary
                                         }}
                                         placeholder={blurHash}
                                         contentFit="cover"
@@ -123,8 +134,8 @@ const UserFollowingAndFollowersListScreen = ({ route }) => {
                                 </View>
 
                                 <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
-                                    <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
-                                    <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
+                                    <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
+                                    <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
                                 </View>
                             </TouchableOpacity>
                         ))}

@@ -5,6 +5,8 @@ import { db, firebase } from '../firebase';
 import SavedPostsHeader from '../components/SavedPosts/SavedPostsHeader';
 import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder';
 import { colorPalette } from '../Config/Theme';
+import { useTheme } from '../context/ThemeContext';
+import { getColorForTheme } from '../utils/ThemeUtils';
 const windowHeight = Dimensions.get('window').height;
 
 const SearchExplorePostTimeLineScreen = ({ route }) => {
@@ -13,6 +15,14 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
     const flatListRef = useRef();
     const [initialScrollIndex, setInitialScrollIndex] = useState(null);
     const [usersForSharePosts, setUsersForSharePosts] = useState([]);
+    
+    const { selectedTheme } = useTheme();
+    const systemTheme = selectedTheme === "system";
+    const theme = getColorForTheme(
+        { dark: colorPalette.dark, light: colorPalette.light },
+        selectedTheme,
+        systemTheme
+    );
 
     const handleScrollToIndexFailed = info => {
         const wait = new Promise(resolve => setTimeout(resolve, 500));
@@ -126,14 +136,14 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
 
 
     const renderItem = ({ item }) => (
-        <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} />
+        <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} theme={theme} />
     )
 
 
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary  }}>
-            <SavedPostsHeader header={"All Posts"} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary  }}>
+            <SavedPostsHeader header={"All Posts"}  theme={theme}/>
             {posts.length !== 0 ? (
                 <FlatList
                     keyboardDismissMode="on-drag"
@@ -149,7 +159,7 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
                     onScrollToIndexFailed={handleScrollToIndexFailed}
                 />
             ) : (
-                <LoadingPlaceHolder />
+                <LoadingPlaceHolder  theme={theme}/>
             )}
         </SafeAreaView>
     )

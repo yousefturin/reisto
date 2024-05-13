@@ -14,6 +14,8 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import { blurHash } from '../../assets/HashBlurData';
 import UploadImageToStorage from '../../src/utils/UploadImageToStorage';
 import { colorPalette } from '../Config/Theme';
+import { useTheme } from '../context/ThemeContext';
+import { getColorForTheme } from '../utils/ThemeUtils';
 
 // two hours of debugging and then it apparently was userDataUid.owner_id and not userDataUid.owner_uid-<<<<<<<<(fixed)
 const MessagingIndividualScreen = ({ route }) => {
@@ -26,6 +28,15 @@ const MessagingIndividualScreen = ({ route }) => {
     const scrollViewRef = useRef(null);
     const [dummyState, setDummyState] = useState({});
     const [image, setImage] = useState(null);
+
+    const { selectedTheme } = useTheme();
+    const systemTheme = selectedTheme === "system";
+    const theme = getColorForTheme(
+        { dark: colorPalette.dark, light: colorPalette.light },
+        selectedTheme,
+        systemTheme
+    );
+
 
     useEffect(() => {
         // room creation is not needed here and will be only created on send message and then it will be checked if the room exists or not
@@ -187,11 +198,11 @@ const MessagingIndividualScreen = ({ route }) => {
         }
     };
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary }}>
-            <MessagesIndividualHeader header={userDataUid} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
+            <MessagesIndividualHeader header={userDataUid} theme={theme} />
             <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
-                keyboardVerticalOffset={30}
+                keyboardVerticalOffset={10}
                 style={{ flex: 1 }}
             >
                 <ScrollView
@@ -201,27 +212,27 @@ const MessagingIndividualScreen = ({ route }) => {
                     showsVerticalScrollIndicator={false}
                     keyboardDismissMode="on-drag"
                     keyboardShouldPersistTaps={'always'}>
-                    <View style={{ flex: 1, backgroundColor: colorPalette.dark.Primary, justifyContent: "space-between" }}>
+                    <View style={{ flex: 1, backgroundColor: theme.Primary, justifyContent: "space-between" }}>
                         <View style={{ flex: 1 }}>
-                            <MessageList scrollViewRef={scrollViewRef} messages={messages} currentUser={userData} />
+                            <MessageList scrollViewRef={scrollViewRef} messages={messages} currentUser={userData} theme={theme} />
                         </View>
                         <View style={{ marginBottom: 10, paddingTop: 20, }}>
-                            <View style={{ flexDirection: "row", marginHorizontal: 10, justifyContent: "space-between", backgroundColor: colorPalette.dark.Primary, borderRadius: 50, borderWidth: 0.5, borderColor: colorPalette.dark.Secondary }}>
+                            <View style={{ flexDirection: "row", marginHorizontal: 10, justifyContent: "space-between", backgroundColor: theme.Primary, borderRadius: 50, borderWidth: 1, borderColor: theme.Secondary }}>
                                 <TextInput
                                     ref={inputRef}
                                     onChangeText={handleChangeText}
                                     placeholder={`Type message for ${userDataUid.username}...`}
-                                    placeholderTextColor={colorPalette.dark.textPlaceholder}
-                                    style={{ flex: 1, margin: 17, color: colorPalette.dark.textPrimary }}
+                                    placeholderTextColor={theme.textPlaceholder}
+                                    style={{ flex: 1, margin: 17, color: theme.textPrimary }}
                                 />
                                 {textRef.current !== "" ? (
                                     <TouchableOpacity onPress={handleSendMessage}
                                         style={{ justifyContent: "center" }}>
                                         <LinearGradient
                                             // Button Linear Gradient
-                                            colors={[colorPalette.dark.appPrimary, colorPalette.dark.appPrimary, colorPalette.dark.appPrimary]}
+                                            colors={[theme.appPrimary, theme.appPrimary, theme.appPrimary]}
                                             style={{ marginRight: 9, padding: 7, borderRadius: 50, justifyContent: "center", alignItems: "center" }}>
-                                            <SvgComponent svgKey="SubmitCommentSVG" width={moderateScale(18)} height={moderateScale(18)} fill={colorPalette.dark.textPrimary} />
+                                            <SvgComponent svgKey="SubmitCommentSVG" width={moderateScale(18)} height={moderateScale(18)} fill={theme.textPrimary} />
                                         </LinearGradient>
                                     </TouchableOpacity>
                                 ) : (
@@ -229,9 +240,9 @@ const MessagingIndividualScreen = ({ route }) => {
                                         style={{ justifyContent: "center" }}>
                                         <LinearGradient
                                             // Button Linear Gradient
-                                            colors={[colorPalette.dark.Secondary, colorPalette.dark.Secondary, colorPalette.dark.Secondary]}
+                                            colors={[theme.Secondary, theme.Secondary, theme.Secondary]}
                                             style={{ marginRight: 9, padding: 7, borderRadius: 50, justifyContent: "center", alignItems: "center" }}>
-                                            <SvgComponent svgKey="ImageSVG" width={moderateScale(18)} height={moderateScale(18)} />
+                                            <SvgComponent svgKey="ImageSVG" width={moderateScale(18)} height={moderateScale(18)} stroke={theme.textPrimary} />
                                         </LinearGradient>
                                     </TouchableOpacity>
                                 )}

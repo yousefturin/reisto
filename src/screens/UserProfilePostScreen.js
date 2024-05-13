@@ -7,6 +7,8 @@ import { db, firebase } from '../firebase';
 import { useNavigation } from "@react-navigation/native";
 import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder';
 import { colorPalette } from '../Config/Theme';
+import { useTheme } from '../context/ThemeContext';
+import { getColorForTheme } from '../utils/ThemeUtils';
 
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
@@ -18,6 +20,14 @@ const UserProfilePostScreen = ({ route }) => {
     const flatListRef = useRef();
     const [initialScrollIndex, setInitialScrollIndex] = useState(null);
     const [usersForSharePosts, setUsersForSharePosts] = useState([]);
+
+    const { selectedTheme } = useTheme();
+    const systemTheme = selectedTheme === "system";
+    const theme = getColorForTheme(
+        { dark: colorPalette.dark, light: colorPalette.light },
+        selectedTheme,
+        systemTheme
+    );
 
     const handleScrollToIndexFailed = info => {
         const wait = new Promise(resolve => setTimeout(resolve, 500));
@@ -93,7 +103,7 @@ const UserProfilePostScreen = ({ route }) => {
 
     const fetchData = async () => {
         try {
-            
+
             const querySnapshot = await db.collection('users').doc(firebase.auth().currentUser.email).collection('following_followers').limit(1).get();
             if (!querySnapshot.empty) {
                 const doc = querySnapshot.docs[0];
@@ -140,13 +150,13 @@ const UserProfilePostScreen = ({ route }) => {
 
 
     const renderItem = ({ item }) => (
-        <Post post={item} userData={userData}  usersForSharePosts={usersForSharePosts}/>
+        <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} theme={theme} />
     )
 
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary }}>
-            <OwnerProfileHeader userData={userData} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
+            <OwnerProfileHeader userData={userData} theme={theme} />
             {posts.length !== 0 ? (
                 <FlatList
                     keyboardDismissMode="on-drag"
@@ -162,12 +172,12 @@ const UserProfilePostScreen = ({ route }) => {
                     onScrollToIndexFailed={handleScrollToIndexFailed}
                 />
             ) : (
-                <LoadingPlaceHolder />
+                <LoadingPlaceHolder theme={theme} />
             )}
         </SafeAreaView>
     )
 }
-const OwnerProfileHeader = ({ userData }) => {
+const OwnerProfileHeader = ({ userData, theme }) => {
     const navigation = useNavigation();
     const handlePressBack = () => {
         navigation.goBack()
@@ -178,8 +188,8 @@ const OwnerProfileHeader = ({ userData }) => {
                 <SvgComponent svgKey="ArrowBackSVG" width={moderateScale(30)} height={moderateScale(30)} />
             </TouchableOpacity>
             <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", flex: 1 }}>
-                <Text style={{ color: colorPalette.dark.textSecondary, fontWeight: "600", fontSize: 12 }}>{userData.username.toUpperCase()}</Text>
-                <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "600", fontSize: 20, }}>Posts</Text>
+                <Text style={{ color: theme.textSecondary, fontWeight: "600", fontSize: 12 }}>{userData.username.toUpperCase()}</Text>
+                <Text style={{ color: theme.textPrimary, fontWeight: "600", fontSize: 20, }}>Posts</Text>
             </View>
             <View style={{ margin: 10, width: moderateScale(30) }}>
             </View>

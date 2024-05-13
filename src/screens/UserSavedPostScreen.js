@@ -5,11 +5,22 @@ import { db, firebase } from '../firebase';
 import SavedPostsHeader from '../components/SavedPosts/SavedPostsHeader';
 import SavedPostsGrid from '../components/SavedPosts/SavedPostsGrid';
 import { colorPalette } from '../Config/Theme';
+import { useTheme } from '../context/ThemeContext';
+import { getColorForTheme } from '../utils/ThemeUtils';
+import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder';
 
 const UserSavedPostScreen = () => {
     const userData = useContext(UserContext);
     const [savedPosts, setSavedPosts] = useState([])
     const [refreshing, setRefreshing] = useState(false);
+
+    const { selectedTheme } = useTheme();
+    const systemTheme = selectedTheme === "system";
+    const theme = getColorForTheme(
+        { dark: colorPalette.dark, light: colorPalette.light },
+        selectedTheme,
+        systemTheme
+    );
 
     useEffect(() => {
         const unsubscribe = fetchUserSavedPosts();
@@ -81,9 +92,9 @@ const UserSavedPostScreen = () => {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary  }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary  }}>
             <>
-                <SavedPostsHeader header={"Saved Posts"} />
+                <SavedPostsHeader header={"Saved Posts"} theme={theme} />
                 <ScrollView
                     keyboardDismissMode="on-drag"
                     keyboardShouldPersistTaps={'always'}
@@ -98,7 +109,7 @@ const UserSavedPostScreen = () => {
                     {savedPosts.length !== 0 || savedPosts.id?.length !== 0 ? (
                         <SavedPostsGrid posts={savedPosts} userData={userData} onPostPress={handlePostPress} navigateToScreen={"SavedPosts"} />
                     ) : (
-                        <LoadingPlaceHolder />
+                        <LoadingPlaceHolder theme={theme} />
                     )}
                 </ScrollView>
             </>

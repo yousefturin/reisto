@@ -14,6 +14,8 @@ import { SearchBar } from 'react-native-elements'
 import initializeScalingUtils from '../utils/NormalizeSize'
 import { useNavigation } from '@react-navigation/native'
 import { colorPalette } from '../Config/Theme'
+import { getColorForTheme } from '../utils/ThemeUtils'
+import { useTheme } from '../context/ThemeContext'
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
 const MessagingMainScreen = () => {
@@ -23,6 +25,13 @@ const MessagingMainScreen = () => {
     const [sortedData, setSortedData] = useState([]);
     const navigation = useNavigation();
 
+    const { selectedTheme } = useTheme();
+    const systemTheme = selectedTheme === "system";
+    const theme = getColorForTheme(
+        { dark: colorPalette.dark, light: colorPalette.light },
+        selectedTheme,
+        systemTheme
+    );
     //#region search 
     const [searchQuery, setSearchQuery] = useState("");
     const [searchMode, setSearchMode] = useState(false);
@@ -190,23 +199,29 @@ const MessagingMainScreen = () => {
     //#endregion
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary  }}>
-            <MessageMainHeader excludedUsers={excludedUsers} userData={userData} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
+            <MessageMainHeader excludedUsers={excludedUsers} userData={userData} theme={theme} />
             <SearchBar
                 placeholder={"Search..."}
                 onChangeText={handleSearch}
                 onPressIn={handleSearchBarClick}
                 value={searchQuery}
                 platform="ios"
-                containerStyle={SearchScreenStyles.searchBarContainer}
+                containerStyle={[SearchScreenStyles.searchBarContainer, { backgroundColor: theme.Primary, }]}
                 inputContainerStyle={[
                     SearchScreenStyles.searchBarInputContainer,
                     searchMode && SearchScreenStyles.searchBarInputContainerTop,
+                    { backgroundColor: theme.SubPrimary,  }
                 ]}
                 rightIconContainerStyle={{ opacity: RightIconContainerStyle }}
                 inputStyle={[
                     SearchScreenStyles.searchBarInput,
-                    { textAlign: "left" },
+                    {
+                        textAlign: "left",
+                        color: theme.textQuaternary,
+                        borderColor: theme.SubPrimary,
+                        backgroundColor: theme.SubPrimary
+                    },
                 ]}
                 clearIcon={{ type: "ionicon", name: "close-circle" }}
                 onClear={handleClear}
@@ -231,7 +246,7 @@ const MessagingMainScreen = () => {
                                             borderRadius: 50,
                                             margin: 7,
                                             borderWidth: 1.5,
-                                            borderColor: colorPalette.dark.Secondary
+                                            borderColor: theme.Secondary
                                         }}
                                         placeholder={blurHash}
                                         contentFit="cover"
@@ -240,14 +255,15 @@ const MessagingMainScreen = () => {
                                 </View>
 
                                 <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
-                                    <Text style={{ color: colorPalette.dark.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
-                                    {item.displayed_name ? <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text> : <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>Say Hi 👋</Text>}
+                                    <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
+                                    {item.displayed_name ? <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text> : <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>Say Hi 👋</Text>}
                                 </View>
                             </TouchableOpacity>
                         )) : null}
                     </>
                 ) : (
                     <MessageMainList usersForMessaging={usersForMessaging}
+                        theme={theme}
                         userData={userData} sortedData={sortedData}
                         updateLastMessage={updateLastMessage} flag={"FromMain"} />
                 )}
@@ -259,13 +275,10 @@ const MessagingMainScreen = () => {
 export const SearchScreenStyles = StyleSheet.create({
     searchBarContainer: {
         paddingHorizontal: moderateScale(10),
-        backgroundColor: colorPalette.dark.Primary,
         borderBottomColor: "transparent",
         borderTopColor: "transparent",
     },
     searchBarInputContainer: {
-        backgroundColor: colorPalette.dark.Quinary,
-        shadowColor: "black",
         shadowOffset: {
             width: 0,
             height: 2.2,
@@ -281,12 +294,9 @@ export const SearchScreenStyles = StyleSheet.create({
         zIndex: 1,
     },
     searchBarInput: {
-        backgroundColor:colorPalette.dark.Quinary,
-        color: colorPalette.dark.textQuaternary,
         borderLeftColor: "transparent",
         borderRightColor: "transparent",
         borderWidth: 0.5,
-        borderColor: colorPalette.dark.Quinary,
     },
 })
 export default MessagingMainScreen

@@ -9,6 +9,8 @@ import { SearchScreenStyles } from './MessagingMainScreen';
 import { Image } from 'expo-image';
 import { blurHash } from '../../assets/HashBlurData';
 import { colorPalette } from '../Config/Theme';
+import { useTheme } from '../context/ThemeContext';
+import { getColorForTheme } from '../utils/ThemeUtils';
 
 
 
@@ -20,6 +22,13 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
     useLayoutEffect(() => {
         fetchData();
     }, []);
+    const { selectedTheme } = useTheme();
+    const systemTheme = selectedTheme === "system";
+    const theme = getColorForTheme(
+        { dark: colorPalette.dark, light: colorPalette.light },
+        selectedTheme,
+        systemTheme
+    );
 
     const fetchData = async () => {
         try {
@@ -111,23 +120,27 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
     //#endregion
 
     return (
-        <SafeAreaView>
-            <EditProfileHeader headerTitle={"New message"} navigation={navigation} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
+            <EditProfileHeader headerTitle={"New message"} navigation={navigation} theme={theme} />
             <SearchBar
                 placeholder={"Search..."}
                 onChangeText={handleSearch}
                 onPressIn={handleSearchBarClick}
                 value={searchQuery}
                 platform="ios"
-                containerStyle={SearchScreenStyles.searchBarContainer}
-                inputContainerStyle={[
+                containerStyle={[SearchScreenStyles.searchBarContainer, { backgroundColor: theme.Primary, }]}                inputContainerStyle={[
                     SearchScreenStyles.searchBarInputContainer,
                     searchMode && SearchScreenStyles.searchBarInputContainerTop, // when searchMode is true
+                    { backgroundColor: theme.SubPrimary, }
                 ]}
                 rightIconContainerStyle={{ opacity: RightIconContainerStyle }}
                 inputStyle={[
                     SearchScreenStyles.searchBarInput,
-                    { textAlign: "left" },
+                    {
+                        textAlign: "left",
+                        borderColor: theme.SubPrimary,
+                        backgroundColor: theme.SubPrimary
+                    },
                 ]}
                 clearIcon={{ type: "ionicon", name: "close-circle" }}
                 onClear={handleClear}
@@ -153,7 +166,7 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
                                                 borderRadius: 50,
                                                 margin: 7,
                                                 borderWidth: 1.5,
-                                                borderColor: colorPalette.dark.Secondary
+                                                borderColor: theme.Secondary
                                             }}
                                             placeholder={blurHash}
                                             contentFit="cover"
@@ -162,15 +175,15 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
                                     </View>
 
                                     <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
-                                        <Text style={{ color:colorPalette.dark.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
-                                        {item.displayed_name ? <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text> : <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>Say Hi 👋</Text>}
+                                        <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
+                                        {item.displayed_name ? <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text> : <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>Say Hi 👋</Text>}
                                     </View>
                                 </TouchableOpacity>
                             ))
                         ) : null}
                     </>
                 ) : (
-                    <MessageMainList usersForMessaging={usersForMessaging} userData={userData} flag={"FromNewMessage"} />
+                    <MessageMainList usersForMessaging={usersForMessaging} userData={userData} flag={"FromNewMessage"} theme={theme} />
                 )}
             </View>
         </SafeAreaView>

@@ -6,6 +6,8 @@ import { db, firebase } from '../firebase'
 import { UserContext } from '../context/UserDataProvider'
 import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder'
 import { colorPalette } from '../Config/Theme'
+import { useTheme } from '../context/ThemeContext'
+import { getColorForTheme } from '../utils/ThemeUtils'
 
 
 const HomeScreen = () => {
@@ -13,6 +15,14 @@ const HomeScreen = () => {
     const [posts, setPosts] = useState([])
     const [usersForSharePosts, setUsersForSharePosts] = useState([]);
     const userData = useContext(UserContext);
+    const { selectedTheme } = useTheme();
+    const systemTheme = selectedTheme === "system";
+    const theme = getColorForTheme(
+        { dark: colorPalette.dark, light: colorPalette.light },
+        selectedTheme,
+        systemTheme
+    );
+
     useEffect(() => {
         // Call fetchPost when the component mounts
         const unsubscribe = fetchPost();
@@ -133,15 +143,15 @@ const HomeScreen = () => {
         }
     };
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary  }}>
-            <Header />
+        <SafeAreaView style={[{ flex: 1, backgroundColor: theme.Primary  }]}>
+            <Header theme={theme}/>
             {posts.length !== 0 ? (
                 <FlatList
                     keyboardDismissMode="on-drag"
                     keyboardShouldPersistTaps='handled'
                     data={posts}
                     renderItem={({ item, index }) => (
-                        <Post post={item} key={index} isLastPost={index === posts.length - 1} userData={userData} usersForSharePosts={usersForSharePosts} />
+                        <Post theme={theme} post={item} key={index} isLastPost={index === posts.length - 1} userData={userData} usersForSharePosts={usersForSharePosts} />
                     )}
                     keyExtractor={(item, index) => index.toString()}
                     refreshControl={
@@ -158,7 +168,7 @@ const HomeScreen = () => {
                     windowSize={7}
                 />
             ) : (
-                <LoadingPlaceHolder />
+                <LoadingPlaceHolder theme={theme} />
             )}
         </SafeAreaView>
     )

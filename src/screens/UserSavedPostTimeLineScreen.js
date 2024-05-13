@@ -5,6 +5,8 @@ import { db, firebase } from '../firebase';
 import SavedPostsHeader from '../components/SavedPosts/SavedPostsHeader';
 import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder';
 import { colorPalette } from '../Config/Theme';
+import { useTheme } from '../context/ThemeContext';
+import { getColorForTheme } from '../utils/ThemeUtils';
 const windowHeight = Dimensions.get('window').height;
 
 const UserSavedPostTimeLineScreen = ({ route }) => {
@@ -21,6 +23,13 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
         });
     };
 
+    const { selectedTheme } = useTheme();
+    const systemTheme = selectedTheme === "system";
+    const theme = getColorForTheme(
+        { dark: colorPalette.dark, light: colorPalette.light },
+        selectedTheme,
+        systemTheme
+    );
 
     useEffect(() => {
         // Calculate initialScrollIndex only when posts are fetched
@@ -166,13 +175,13 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
 
 
     const renderItem = ({ item }) => (
-        <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} />
+        <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} theme={theme} />
     )
 
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary  }}>
-            <SavedPostsHeader header={"All Posts"} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary  }}>
+            <SavedPostsHeader header={"All Posts"} theme={theme} />
             {savedPosts.length !== 0 ? (
                 <FlatList
                     keyboardDismissMode="on-drag"
@@ -188,7 +197,7 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
                     onScrollToIndexFailed={handleScrollToIndexFailed}
                 />
             ) : (
-                <LoadingPlaceHolder />
+                <LoadingPlaceHolder theme={theme} />
             )}
         </SafeAreaView>
     )

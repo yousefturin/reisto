@@ -9,11 +9,20 @@ import SvgComponent from '../utils/SvgComponents';
 import initializeScalingUtils from '../utils/NormalizeSize';
 import { formatCreatedAt } from '../utils/FormatCreateAt';
 import { colorPalette } from '../Config/Theme';
+import { useTheme } from '../context/ThemeContext';
+import { getColorForTheme } from '../utils/ThemeUtils';
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
 const AboutThisUserScreen = ({ route }) => {
     const { ownerID } = route.params;
+    const { selectedTheme } = useTheme();
+    const systemTheme = selectedTheme === "system";
+    const theme = getColorForTheme(
+        { dark: colorPalette.dark, light: colorPalette.light },
+        selectedTheme,
+        systemTheme
+    );
     // const targetTime = new Date((timestampObj.seconds * 1000) + (timestampObj.nanoseconds / 1000000));
     const [userData, setUserData] = useState([])
     useEffect(() => {
@@ -36,15 +45,15 @@ const AboutThisUserScreen = ({ route }) => {
         };
     }, [])
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary }}>
-            <SavedPostsHeader header={"About this account"} />
-            <Divider width={0.7} orientation='horizontal' color={colorPalette.dark.dividerPrimary} />
-            <AboutThisUserContent userData={userData} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: themePrimary }}>
+            <SavedPostsHeader header={"About this account"} theme={theme} />
+            <Divider width={0.7} orientation='horizontal' color={theme.dividerPrimary} />
+            <AboutThisUserContent userData={userData} theme={theme} />
         </SafeAreaView>
     )
 }
 
-const AboutThisUserContent = ({ userData }) => (
+const AboutThisUserContent = ({ userData, theme }) => (
     <>
         <View style={{ justifyContent: "flex-start", alignItems: "center", marginHorizontal: 20, margin: 10 }}>
             <Image source={{ uri: userData.profile_picture, cache: "force-cache" }}
@@ -54,33 +63,33 @@ const AboutThisUserContent = ({ userData }) => (
                     borderRadius: 50,
                     margin: 10,
                     borderWidth: 1.5,
-                    borderColor: colorPalette.dark.Secondary
+                    borderColor: themeSecondary
                 }}
                 placeholder={blurHash}
                 contentFit="cover"
                 transition={50}
                 cachePolicy={"memory-disk"} />
             <View style={{ marginHorizontal: 20, maxHeight: 50, margin: 10 }} >
-                <Text style={{ color: colorPalette.dark.textPrimary, fontSize: 14, fontWeight: "700" }}>
+                <Text style={{ color: theme.textPrimary, fontSize: 14, fontWeight: "700" }}>
                     {userData.username}
                 </Text>
             </View>
-            <Text style={{ fontSize: 12, color: colorPalette.dark.textSecondary, textAlign: "center", fontWeight: "500" }}>To help keep our community authentic, we're showing information about accounts on Reisto.</Text>
+            <Text style={{ fontSize: 12, color: theme.textSecondary, textAlign: "center", fontWeight: "500" }}>To help keep our community authentic, we're showing information about accounts on Reisto.</Text>
         </View>
         <View style={{ marginHorizontal: 10 }}>
             <View style={{ flexDirection: "row", gap: 10, marginVertical: 30, }}>
                 <SvgComponent svgKey="CalenderSVG" width={moderateScale(30)} height={moderateScale(30)} />
                 <View style={{ justifyContent: "center" }}>
-                    <Text style={{ color: colorPalette.dark.textPrimary, fontSize: 16, fontWeight: "500" }}>Date joined</Text>
-                    <Text style={{ fontSize: 12, color: colorPalette.dark.textSecondary, fontWeight: "400" }}>{userData.createdAt}</Text>
+                    <Text style={{ color: theme.textPrimary, fontSize: 16, fontWeight: "500" }}>Date joined</Text>
+                    <Text style={{ fontSize: 12, color: theme.textSecondary, fontWeight: "400" }}>{userData.createdAt}</Text>
                 </View>
             </View>
             <View style={{ flexDirection: "row", gap: 10 }}>
                 <SvgComponent svgKey="LocationSVG" width={moderateScale(30)} height={moderateScale(30)} />
                 <View style={{ justifyContent: "center" }}>
-                    <Text style={{ color: colorPalette.dark.textPrimary, fontSize: 16, fontWeight: "500" }}>Account based in</Text>
+                    <Text style={{ color: theme.textPrimary, fontSize: 16, fontWeight: "500" }}>Account based in</Text>
                     {/* temp till the db and back-end fix the issue for getting location */}
-                    <Text style={{ fontSize: 12, color: colorPalette.dark.textSecondary, fontWeight: "400" }}>{userData.location ? "undefined" : "Türkiye"}</Text>
+                    <Text style={{ fontSize: 12, color: theme.textSecondary, fontWeight: "400" }}>{userData.location ? "undefined" : "Türkiye"}</Text>
                 </View>
             </View>
         </View>

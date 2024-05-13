@@ -7,12 +7,22 @@ import OthersProfileHeader from '../components/OthersProfile/OthersProfileHeader
 import OthersProfileContent from '../components/OthersProfile/OthersProfileContent'
 import LoadingPlaceHolder from '../components/Search/LoadingPlaceHolder'
 import { colorPalette } from '../Config/Theme'
+import { useTheme } from '../context/ThemeContext'
+import { getColorForTheme } from '../utils/ThemeUtils'
 
 const OtherUsersProfileScreen = ({ route }) => {
     const { userDataToBeNavigated } = route.params
     const [userPosts, setUserPost] = useState([])
     const [refreshing, setRefreshing] = useState(false);
     const [scrollToPostId, setScrollToPostId] = useState(null)
+
+    const { selectedTheme } = useTheme();
+    const systemTheme = selectedTheme === "system";
+    const theme = getColorForTheme(
+        { dark: colorPalette.dark, light: colorPalette.light },
+        selectedTheme,
+        systemTheme
+    );
 
     useEffect(() => {
         const unsubscribe = fetchUserPosts();
@@ -58,9 +68,9 @@ const OtherUsersProfileScreen = ({ route }) => {
         setScrollToPostId(postId)
     }
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: colorPalette.dark.Primary  }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <>
-                <OthersProfileHeader userDataToBeNavigated={userDataToBeNavigated} />
+                <OthersProfileHeader userDataToBeNavigated={userDataToBeNavigated} theme={theme} />
                 <ScrollView
                     keyboardDismissMode="on-drag"
                     keyboardShouldPersistTaps={'always'}
@@ -72,12 +82,12 @@ const OtherUsersProfileScreen = ({ route }) => {
                         />
                     }
                 >
-                    <OthersProfileContent userDataToBeNavigated={userDataToBeNavigated} userPosts={userPosts} />
+                    <OthersProfileContent userDataToBeNavigated={userDataToBeNavigated} userPosts={userPosts} theme={theme}  />
                     {/* i don't understand how this is working it must be userPosts.id?.length === 0 then it must show the profile without rendering the Loader */}
                     {userPosts.length !== 0 || userPosts.id?.length !== 0 ? (
-                        <ProfilePost posts={userPosts} userDataToBeNavigated={userDataToBeNavigated} onPostPress={handlePostPress} keyValue={"NavigationToOtherProfile"} />
+                        <ProfilePost posts={userPosts} userDataToBeNavigated={userDataToBeNavigated} onPostPress={handlePostPress} keyValue={"NavigationToOtherProfile"}  />
                     ) : (
-                        <LoadingPlaceHolder condition={userPosts.length === 0} />
+                        <LoadingPlaceHolder condition={userPosts.length === 0} theme={theme} />
                     )}
                 </ScrollView>
             </>
