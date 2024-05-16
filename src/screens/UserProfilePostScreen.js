@@ -8,13 +8,16 @@ import { useNavigation } from "@react-navigation/native";
 import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder';
 import { colorPalette } from '../Config/Theme';
 import { useTheme } from '../context/ThemeContext';
-import { getColorForTheme } from '../utils/ThemeUtils';
+
+import { useTranslation } from 'react-i18next';
+import UseCustomTheme from '../utils/UseCustomTheme';
 
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
 const windowHeight = Dimensions.get('window').height;
 
 const UserProfilePostScreen = ({ route }) => {
+    const { t } = useTranslation();
     const { userData, scrollToPostId } = route.params;
     const [posts, setPost] = useState([])
     const flatListRef = useRef();
@@ -22,12 +25,8 @@ const UserProfilePostScreen = ({ route }) => {
     const [usersForSharePosts, setUsersForSharePosts] = useState([]);
 
     const { selectedTheme } = useTheme();
-    const systemTheme = selectedTheme === "system";
-    const theme = getColorForTheme(
-        { dark: colorPalette.dark, light: colorPalette.light },
-        selectedTheme,
-        systemTheme
-    );
+    const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
+
 
     const handleScrollToIndexFailed = info => {
         const wait = new Promise(resolve => setTimeout(resolve, 500));
@@ -156,7 +155,7 @@ const UserProfilePostScreen = ({ route }) => {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
-            <OwnerProfileHeader userData={userData} theme={theme} />
+            <OwnerProfileHeader userData={userData} theme={theme} t={t} />
             {posts.length !== 0 ? (
                 <FlatList
                     keyboardDismissMode="on-drag"
@@ -177,7 +176,7 @@ const UserProfilePostScreen = ({ route }) => {
         </SafeAreaView>
     )
 }
-const OwnerProfileHeader = ({ userData, theme }) => {
+const OwnerProfileHeader = ({ userData, theme, t }) => {
     const navigation = useNavigation();
     const handlePressBack = () => {
         navigation.goBack()
@@ -185,11 +184,11 @@ const OwnerProfileHeader = ({ userData, theme }) => {
     return (
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10 }}>
             <TouchableOpacity style={{ margin: 10 }} onPress={() => { handlePressBack() }}>
-                <SvgComponent svgKey="ArrowBackSVG" width={moderateScale(30)} height={moderateScale(30)} />
+                <SvgComponent svgKey="ArrowBackSVG" width={moderateScale(30)} height={moderateScale(30)} stroke={theme.textPrimary} />
             </TouchableOpacity>
             <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", flex: 1 }}>
                 <Text style={{ color: theme.textSecondary, fontWeight: "600", fontSize: 12 }}>{userData.username.toUpperCase()}</Text>
-                <Text style={{ color: theme.textPrimary, fontWeight: "600", fontSize: 20, }}>Posts</Text>
+                <Text style={{ color: theme.textPrimary, fontWeight: "600", fontSize: 20, }}>{t('screens.profile.profilePostHeader')}</Text>
             </View>
             <View style={{ margin: 10, width: moderateScale(30) }}>
             </View>
