@@ -102,11 +102,13 @@ const UserProfileScreen = () => {
                         <View style={{ minHeight: 550 }}>
                             <EmptyDataParma SvgElement={"AddPostIllustration"} theme={theme} t={t} dataMessage={"You can share posts to tell you friends about your recipes."} TitleDataMessage={"Nothing shared yet"} />
                         </View>
-
                     ) :
-                        (
+                        null}
+                    {/* null is placed instead of loadingPlaceHolder component to overcome the lag issue  */}
+
+                    {/* (
                             <LoadingPlaceHolder condition={userPosts.length === 0} theme={theme} />
-                        )}
+                        )} */}
                 </ScrollView>
             </>
         </SafeAreaView>
