@@ -7,7 +7,7 @@ const { moderateScale } = initializeScalingUtils(Dimensions);
 import { useNavigation } from "@react-navigation/native";
 import { colorPalette } from '../../Config/Theme';
 
-const AddNewPostHeader = ({ handleSubmit, isValid, theme }) => {
+const AddNewPostHeader = ({ handleSubmit, isValid, theme, t }) => {
     const navigation = useNavigation();
     return (
         <>
@@ -15,9 +15,9 @@ const AddNewPostHeader = ({ handleSubmit, isValid, theme }) => {
                 <TouchableOpacity style={{ margin: 10, }} onPress={() => navigation.goBack()}>
                     <SvgComponent svgKey="CloseSVG" width={moderateScale(30)} height={moderateScale(30)} stroke={theme.textPrimary} />
                 </TouchableOpacity>
-                <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 20, marginLeft: 15 }}>New Post</Text>
+                <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 20, marginLeft: 15 }}>{t('screens.sharePost.headerTitle')}</Text>
                 <TouchableOpacity style={{ margin: 10 }} onPress={handleSubmit} disabled={!isValid}>
-                    <Text style={{ color: !isValid ? theme.textQuaternary : theme.appPrimary, fontWeight: "600", fontSize: 20, }}>Share</Text>
+                    <Text style={{ color: !isValid ? theme.textQuaternary : theme.appPrimary, fontWeight: "600", fontSize: 20, }}>{t('screens.sharePost.share')}</Text>
                 </TouchableOpacity>
             </View>
             <Divider width={0.3} orientation='horizontal' color={theme.dividerPrimary} />
