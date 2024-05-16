@@ -78,22 +78,22 @@ const ModelLanguage = ({ isContainerVisible, setContainerVisible, moderateScale,
 
     const languageElements = [
         {
-            image: require('../../../assets/images/EnglishFlag.png'),
+            image: "EnglishFlag",
             text: t('screens.settingOption.language.english'),
             action: "en"
         },
         {
-            image: require('../../../assets/images/TurkishFlag.png'),
+            image: "TurkishFlag",
             text: t('screens.settingOption.language.turkish'),
             action: "tr"
         },
         {
-            image: require('../../../assets/images/RussianFlag.png'),
+            image: "RussianFlag",
             text: t('screens.settingOption.language.russian'),
             action: "ru"
         },
         {
-            image: require('../../../assets/images/ArabicFlag.png'),
+            image: "ArabicFlag",
             text: t('screens.settingOption.language.arabic'),
             action: "ar"
         }
@@ -131,16 +131,9 @@ const ModelLanguage = ({ isContainerVisible, setContainerVisible, moderateScale,
                                 i18n.language !== element.action ? i18n.changeLanguage(element.action) : setContainerVisible(!isContainerVisible);
                                 setContainerVisible(!isContainerVisible)
                             }}>
-                            <Image
-                                source={element.image}
-                                style={{
-                                    width: moderateScale(35),
-                                    height: moderateScale(35),
-                                    borderRadius: moderateScale(35) / 2,
-                                    resizeMode: 'cover',
-                                    margin: 15
-                                }}
-                            />
+                            <View style={{ margin: 15 }}>
+                                <SvgComponent svgKey={element.image} width={moderateScale(35)} height={moderateScale(35)} />
+                            </View>
                             <View style={{ flexDirection: "column", flex: 1, }}>
                                 <Text style={{ fontSize: 20, color: theme.textPrimary, fontWeight: "400" }}>{element.text}</Text>
                             </View>
