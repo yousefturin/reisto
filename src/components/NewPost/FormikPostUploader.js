@@ -20,31 +20,31 @@ import { colorPalette } from '../../Config/Theme';
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
-const uploadPostSchema = Yup.object().shape({
-    imageURL: Yup.string().required('Image data is required'),
-    caption: Yup.string().max(1200, 'Caption has reached the character limit.').required('Caption is required'),
-    category: Yup.string().max(50, 'Category has reached the character limit.').required('Category is required'),
-    timeOfMake: Yup.string().max(2, 'Time has reached the limit.').required('Time of Make is required'),
+const uploadPostSchema = (t) => Yup.object().shape({
+    imageURL: Yup.string().required(t('screens.sharePost.schemaWarnings.image.required')),
+    caption: Yup.string().max(1200, t('screens.sharePost.schemaWarnings.caption.maxWarning')).required(t('screens.sharePost.schemaWarnings.caption.required')),
+    category: Yup.string().max(50, t('screens.sharePost.schemaWarnings.category.maxWarning')).required(t('screens.sharePost.schemaWarnings.category.required')),
+    timeOfMake: Yup.string().max(2, t('screens.sharePost.schemaWarnings.timeOfMake.maxWarning')).required(t('screens.sharePost.schemaWarnings.timeOfMake.required')),
     captionIngredients: Yup.array()
-        .of(Yup.string().trim().max(300, 'Each ingredient should not exceed 300 characters.'))
-        .test('at-least-one', 'At least one ingredient is required', function (value) {
+        .of(Yup.string().trim().max(300, t('screens.sharePost.schemaWarnings.ingredients.maxWarning')))
+        .test('at-least-one', t('screens.sharePost.schemaWarnings.ingredients.condition1'), function (value) {
             return value && value.some(ingredient => ingredient && ingredient.trim().length > 0);
         })
-        .min(1, 'At least one ingredient is required')
-        .max(10, 'Exceeded maximum number of ingredients (10).')
-        .required('Ingredients are required'),
+        .min(1, t('screens.sharePost.schemaWarnings.ingredients.condition2'))
+        .max(10, t('screens.sharePost.schemaWarnings.ingredients.condition3'))
+        .required(t('screens.sharePost.schemaWarnings.ingredients.required')),
     captionInstructions: Yup.array()
-        .of(Yup.string().trim().max(300, 'Each instruction should not exceed 300 characters.'))
-        .test('at-least-one', 'At least one instruction is required', function (value) {
+        .of(Yup.string().trim().max(300, t('screens.sharePost.schemaWarnings.instructions.maxWarning')))
+        .test('at-least-one', t('screens.sharePost.schemaWarnings.instructions.maxWarning'), function (value) {
             return value && value.some(instruction => instruction && instruction.trim().length > 0);
         })
-        .min(1, 'At least one instruction is required')
-        .max(10, 'Exceeded maximum number of instruction (10).')
-        .required('Instructions are required'),
+        .min(1, t('screens.sharePost.schemaWarnings.instructions.maxWarning'))
+        .max(10, t('screens.sharePost.schemaWarnings.instructions.maxWarning'))
+        .required(t('screens.sharePost.schemaWarnings.instructions.maxWarning')),
 });
 
 
-const FormikPostUploader = ({ theme }) => {
+const FormikPostUploader = ({ theme, t }) => {
     const navigation = useNavigation();
     const [image, setImage] = useState(null);
     const [currentLoggedInUser, setCurrentLoggedInUser] = useState(null)
@@ -141,12 +141,12 @@ const FormikPostUploader = ({ theme }) => {
                     onSubmit={(values) => {
                         postPostToFirebase(values.caption, values.imageURL, values.category, values.timeOfMake, values.captionIngredients, values.captionInstructions)
                     }}
-                    validationSchema={uploadPostSchema}
+                    validationSchema={uploadPostSchema(t)}
                     validateOnMount={true}>
                     {({ handleBlur, setFieldValue, handleChange, handleSubmit, values, errors, touched, isValid, setFieldTouched }) => (
                         <>
                             {/* there was no other way to pass the value */}
-                            <AddNewPostHeader handleSubmit={handleSubmit} isValid={isValid} theme={theme} />
+                            <AddNewPostHeader handleSubmit={handleSubmit} isValid={isValid} theme={theme} t={t} />
                             <ScrollView
                                 // keyboardDismissMode="on-drag"
                                 keyboardShouldPersistTaps={'always'}
@@ -176,15 +176,15 @@ const FormikPostUploader = ({ theme }) => {
                                         {touched.imageURL && errors.imageURL && (
                                             <Text style={{ fontSize: 13, color: "tomato", margin: 10 }}>*{errors.imageURL}</Text>
                                         )}
-                                        <FoodCategories setFieldValue={setFieldValue} values={values} handleBlur={handleBlur} />
+                                        <FoodCategories setFieldValue={setFieldValue} values={values} handleBlur={handleBlur} t={t} />
                                         {errors.category && (
                                             <Text style={{ fontSize: 13, color: "tomato", margin: 10 }}>*{errors.category}</Text>
                                         )}
                                         <View style={{ marginHorizontal: 10 }}>
-                                            <Text style={{ color: theme.textPrimary, marginVertical: 10, paddingTop: 10, fontSize: 20, fontWeight: "700" }}>Caption</Text>
+                                            <Text style={{ color: theme.textPrimary, marginVertical: 10, paddingTop: 10, fontSize: 20, fontWeight: "700" }}>{t('screens.sharePost.caption')}</Text>
                                             <TextInput
                                                 style={{ fontSize: 18, color: theme.textPrimary, marginHorizontal: 10, marginVertical: 10 }}
-                                                placeholder='Write a caption...' placeholderTextColor={theme.textPlaceholder}
+                                                placeholder={t('screens.sharePost.captionPlaceholder')} placeholderTextColor={theme.textPlaceholder}
                                                 multiline
                                                 scrollEnabled={false}
                                                 textContentType='none'
@@ -203,12 +203,12 @@ const FormikPostUploader = ({ theme }) => {
                                             )}
                                             {/* will be change to custom picker */}
 
-                                            <Text style={{ color: theme.textPrimary, marginVertical: 10, fontSize: 20, fontWeight: "700" }}>Ingredients</Text>
+                                            <Text style={{ color: theme.textPrimary, marginVertical: 10, fontSize: 20, fontWeight: "700" }}>{t('screens.sharePost.ingredients')}</Text>
                                             <TextInput
                                                 multiline
                                                 numberOfLines={10}
                                                 scrollEnabled={false}//the issue with keyboard avoiding view since 2017 and still no fix from facebook to this issue, and the only work around is to use scrollEnabled={false}
-                                                placeholder='Enter ingredients...'
+                                                placeholder={t('screens.sharePost.ingredientsPlaceholder')}
                                                 placeholderTextColor={theme.textPlaceholder}
                                                 textContentType='none'
                                                 keyboardType='default'
@@ -227,12 +227,12 @@ const FormikPostUploader = ({ theme }) => {
                                             {touched.captionIngredients && errors.captionIngredients && (
                                                 <Text style={{ fontSize: 13, color: "tomato", margin: 10 }}>*{errors.captionIngredients}</Text>
                                             )}
-                                            <Text style={{ color: theme.textPrimary, marginVertical: 10, fontSize: 20, fontWeight: "700" }}>Instructions</Text>
+                                            <Text style={{ color: theme.textPrimary, marginVertical: 10, fontSize: 20, fontWeight: "700" }}>{t('screens.sharePost.instructions')}</Text>
                                             <TextInput
                                                 multiline
                                                 scrollEnabled={false}
                                                 numberOfLines={10}
-                                                placeholder='Enter instructions...'
+                                                placeholder={t('screens.sharePost.instructionsPlaceholder')}
                                                 placeholderTextColor={theme.textPlaceholder}
                                                 textContentType='none'
                                                 keyboardType='default'
@@ -251,10 +251,10 @@ const FormikPostUploader = ({ theme }) => {
                                             {touched.captionInstructions && errors.captionInstructions && (
                                                 <Text style={{ fontSize: 13, color: "tomato", margin: 10 }}>*{errors.captionInstructions}</Text>
                                             )}
-                                            <Text style={{ color: theme.textPrimary, marginVertical: 10, fontSize: 20, fontWeight: "700" }}>Time of making</Text>
+                                            <Text style={{ color: theme.textPrimary, marginVertical: 10, fontSize: 20, fontWeight: "700" }}>{t('screens.sharePost.timeOfMake')}</Text>
                                             <TextInput
                                                 style={{ fontSize: 18, color: theme.textPrimary, marginHorizontal: 10, marginVertical: 10 }}
-                                                placeholder='Write a time of preparation...' placeholderTextColor={theme.textPlaceholder}
+                                                placeholder={t('screens.sharePost.timeOfMakePlaceholder')} placeholderTextColor={theme.textPlaceholder}
                                                 textContentType='none'
                                                 keyboardType='numeric'
                                                 onChangeText={handleChange('timeOfMake')}
