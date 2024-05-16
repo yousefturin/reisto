@@ -10,25 +10,24 @@ import { Image } from 'expo-image';
 import { blurHash } from '../../assets/HashBlurData';
 import { colorPalette } from '../Config/Theme';
 import { useTheme } from '../context/ThemeContext';
-import { getColorForTheme } from '../utils/ThemeUtils';
+
+import { useTranslation } from 'react-i18next';
+import UseCustomTheme from '../utils/UseCustomTheme';
 
 
 
 const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
     // the users that the current user did start a chat will be excluded from the list of users that the user can start a chat with.
     const { userData, excludedUsers } = route.params;
+    const { t } = useTranslation();
     const [usersForMessaging, setUsersForMessaging] = useState([]);
+    const [loading, setLoading] = useState(true);
     const navigation = useNavigation();
     useLayoutEffect(() => {
         fetchData();
     }, []);
     const { selectedTheme } = useTheme();
-    const systemTheme = selectedTheme === "system";
-    const theme = getColorForTheme(
-        { dark: colorPalette.dark, light: colorPalette.light },
-        selectedTheme,
-        systemTheme
-    );
+    const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
 
     const fetchData = async () => {
         try {
@@ -66,8 +65,12 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
                         return true;
                     }
                 });
-
-                setUsersForMessaging(filteredUsersData);
+                if (filteredUsersData.length === 0) {
+                    setLoading(null);
+                } else {
+                    setUsersForMessaging(filteredUsersData);
+                    setLoading(false);
+                }
             } else {
                 console.log("No document found in the collection.");
             }
@@ -118,17 +121,19 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
         setClearedManually(true); // Set clearedManually flag to true when clearing manually
     }
     //#endregion
-
+    const headerTitle = t('screens.messages.headerTitle');
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
-            <EditProfileHeader headerTitle={"New message"} navigation={navigation} theme={theme} />
+            <EditProfileHeader headerTitle={headerTitle} navigation={navigation} theme={theme} />
             <SearchBar
-                placeholder={"Search..."}
+                disabled={loading === null}
+                placeholder={t('screens.messages.searchPlaceHolder') + "..."}
                 onChangeText={handleSearch}
-                onPressIn={handleSearchBarClick}
+                // had to do this since even the search is disabled, the onPressIn event is still triggered
+                onPressIn={loading === null ? null : handleSearchBarClick}
                 value={searchQuery}
                 platform="ios"
-                containerStyle={[SearchScreenStyles.searchBarContainer, { backgroundColor: theme.Primary, }]}                inputContainerStyle={[
+                containerStyle={[SearchScreenStyles.searchBarContainer, { backgroundColor: theme.Primary, }]} inputContainerStyle={[
                     SearchScreenStyles.searchBarInputContainer,
                     searchMode && SearchScreenStyles.searchBarInputContainerTop, // when searchMode is true
                     { backgroundColor: theme.SubPrimary, }
@@ -150,7 +155,8 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
                 }}
                 keyboardAppearance={"default"}
                 searchIcon={{ type: "ionicon", name: "search" }}
-                cancelButtonTitle={"Cancel"}
+                cancelButtonTitle={t('screens.messages.searchCancel')}
+
             />
             <View>
                 {searchMode ? (
@@ -176,14 +182,14 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
 
                                     <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
                                         <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
-                                        {item.displayed_name ? <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text> : <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>Say Hi 👋</Text>}
+                                        {item.displayed_name ? <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text> : <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{t('screens.messages.defaultMessage')}</Text>}
                                     </View>
                                 </TouchableOpacity>
                             ))
                         ) : null}
                     </>
                 ) : (
-                    <MessageMainList usersForMessaging={usersForMessaging} userData={userData} flag={"FromNewMessage"} theme={theme} />
+                    <MessageMainList loading={loading} usersForMessaging={usersForMessaging} userData={userData} flag={"FromNewMessage"} theme={theme} t={t} />
                 )}
             </View>
         </SafeAreaView>
