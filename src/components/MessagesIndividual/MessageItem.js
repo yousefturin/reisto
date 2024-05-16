@@ -32,7 +32,6 @@ const MessageItem = ({ message, currentUser, theme }) => {
     }
     const handleNavigationFromSharedPostToPost = (postId, userID) => {
         navigation.navigate("FromMessagesToSharedPost", { postId: postId, userID: userID });
-        // console.log(postId);
     }
     if (currentUser?.owner_uid == message.owner_id) {
         //this message is sent by me
