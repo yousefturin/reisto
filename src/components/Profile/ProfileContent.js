@@ -9,12 +9,9 @@ import { extractDomain } from '../../utils/ExtractDomainFromLink';
 import { WebView } from 'react-native-webview';
 import { Divider } from 'react-native-elements';
 import { db, firebase } from '../../firebase';
-import { colorPalette } from '../../Config/Theme';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
-
-
-const ProfileContent = ({ userData, userPosts, theme }) => {
+const ProfileContent = ({ userData, userPosts, theme, t }) => {
     const navigation = useNavigation();
     const handleEditProfileNavigation = () => {
         navigation.navigate("UserEditProfile", {
@@ -30,6 +27,10 @@ const ProfileContent = ({ userData, userPosts, theme }) => {
     useEffect(() => {
         let unsubscribe;
         const fetchData = async () => {
+            const cachedData = await AsyncStorage.getItem('followersAndFollowing');
+            if (cachedData) {
+                setFollowersAndFollowing(JSON.parse(cachedData));
+            }
             const querySnapshot = await db.collection('users')
                 .doc(firebase.auth().currentUser.email)
                 .collection('following_followers')
@@ -47,9 +48,17 @@ const ProfileContent = ({ userData, userPosts, theme }) => {
                         followers: data.followers,
                         following: data.following,
                     });
+
+                    // Update cached data
+                    AsyncStorage.setItem('followersAndFollowing', JSON.stringify({
+                        id: snapshot.id,
+                        followers: data.followers,
+                        following: data.following,
+                    }));
                 }, (error) => {
                     console.error("Error listening to document:", error);
                 });
+
             } else {
                 console.log("No document found in the collection.");
             }
@@ -150,7 +159,7 @@ const ProfileContent = ({ userData, userPosts, theme }) => {
                             {Object.keys(userPosts).length}
                         </Text>
                         <Text style={{ color: theme.textQuaternary }}>
-                            recipes
+                            {t('screens.profile.text.profileContent.recipes')}
                         </Text>
                     </View>
 
@@ -159,7 +168,7 @@ const ProfileContent = ({ userData, userPosts, theme }) => {
                             {Object.keys(followersAndFollowing?.followers).length}
                         </Text>
                         <Text style={{ color: theme.textQuaternary }}>
-                            followers
+                            {t('screens.profile.text.profileContent.followers')}
                         </Text>
                     </TouchableOpacity>
 
@@ -168,7 +177,7 @@ const ProfileContent = ({ userData, userPosts, theme }) => {
                             {Object.keys(followersAndFollowing?.following).length}
                         </Text>
                         <Text style={{ color: theme.textQuaternary }}>
-                            following
+                            {t('screens.profile.text.profileContent.following')}
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -254,7 +263,7 @@ const ProfileContent = ({ userData, userPosts, theme }) => {
                             fontWeight: "500",
                             color: theme.textPrimary,
                             textAlign: "center"
-                        }}>Edit profile</Text>
+                        }}>{t('screens.profile.text.profileContent.editProfile')}</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity activeOpacity={0.8}>
@@ -272,7 +281,7 @@ const ProfileContent = ({ userData, userPosts, theme }) => {
                             fontWeight: "500",
                             color: theme.textPrimary,
                             textAlign: "center"
-                        }}>Share profile</Text>
+                        }}>{t('screens.profile.text.profileContent.shareProfile')}</Text>
                     </View>
                 </TouchableOpacity>
             </View>
