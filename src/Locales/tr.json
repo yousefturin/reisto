@@ -1,0 +1,248 @@
+{
+    "language": "Turkish",
+    "screens": {
+        "login": {
+            "title": "Giriş Yap",
+            "text": {
+                "login": "Giriş Yap",
+                "emailAddress": "E-posta adresi",
+                "password": "Şifre",
+                "createAccount": "Hesabınız yok mu?",
+                "signup": "Kaydol",
+                "emailAddressPlaceholder": "murat@örnek.com"
+            }
+        },
+        "signup": {
+            "title": "Kaydol",
+            "text": {
+                "signup": "Kaydol",
+                "username": "Kullanıcı adı",
+                "emailAddress": "E-posta adresi",
+                "password": "Şifre",
+                "createAccount": "Zaten hesabınız var mı?",
+                "login": "Giriş yap",
+                "usernamePlaceholder": "murat",
+                "emailAddressPlaceholder": "murat@örnek.com"
+            }
+        },
+        "home": {
+            "title": "Ana Sayfa",
+            "text": {
+                "share": "Paylaş",
+                "TimeStamp": "önce",
+                "like": "Beğeniler",
+                "comments": {
+                    "view": "Görüntüle",
+                    "all": "tümü",
+                    "one": "yorum",
+                    "many": "yorumlar",
+                    "placeHolder": "Yorum ekleyin",
+                    "placeHolderExtra": "için"
+                },
+                "CategoryAndTime": "dk",
+                "CaptionExpand": "daha fazla",
+                "Ingredients": "Malzemeler",
+                "Instructions": "Tarifler",
+                "timeCalculation": {
+                    "second": "sn",
+                    "minute": "dk",
+                    "hour": "sa",
+                    "day": "g"
+                },
+                "modals": {
+                    "sameUser": {
+                        "save": "Kaydet",
+                        "unsave": "Kaydedilmemiş",
+                        "edit": "Düzenle",
+                        "turnOnComments": "Yorumları Aç",
+                        "hideLikes": "Beğeni Sayısını Gizle",
+                        "delete": "Sil",
+                        "deleteModal": {
+                            "title": "Gönderiyi sil?",
+                            "warning": "Bu gönderi kalıcı olarak silinecek. Silme işleminden sonra geri alamayacaksınız.",
+                            "delete": "Sil",
+                            "cancel": "İptal"
+                        }
+                    },
+                    "differentUser": {
+                        "save": "Kaydet",
+                        "unsave": "Kaydedilmemiş",
+                        "notInterested": "İlgilenmiyorum",
+                        "aboutThisAccount": "Bu hesap hakkında",
+                        "report": "Bildir"
+                    }
+                },
+                "aboutThisAccount": {
+                    "headerTitle": "Bu hesap hakkında",
+                    "explanation": "Topluluğumuzu otantik tutmaya yardımcı olmak için, Reisto'daki hesaplar hakkında bilgi gösteriyoruz.",
+                    "dateInfo": "Katılım Tarihi",
+                    "locationInfo": "Hesap konumu"
+                }
+            }
+        },
+        "messages": {
+            "title": "Mesajlar",
+            "headerTitle": "Yeni mesaj",
+            "searchPlaceHolder": "Ara",
+            "searchCancel": "İptal",
+            "timeRender": "önce",
+            "defaultMessage": "Merhaba de 👋",
+            "messagesMain": {
+                "messagesISent": {
+                    "title": "Gönderilenler"
+                },
+                "messagesIReceived": {
+                    "title": "1 yeni Mesaj",
+                    "action": "Görüldü"
+                }
+            },
+            "messageIndividual": {
+                "messageInputPlaceHolder": "Mesaj yaz",
+                "messageInputPlaceHolderExtra": "için"
+            }
+        },
+        "profile": {
+            "title": "Profil",
+            "profilePostHeader": "Gönderiler",
+            "profileSavedPostsTimeLineHeader": "Tüm Gönderiler",
+            "profileSavedHeader": "Kaydedilen Gönderiler",
+            "text": {
+                "profileHeader": {
+                    "profileMenu": {
+                        "settings": "Ayarlar",
+                        "activity": "Etkinliğiniz",
+                        "saved": "Kaydedilenler",
+                        "logout": "Çıkış yap"
+                    }
+                },
+                "profileContent": {
+                    "recipes": "tarifler",
+                    "followers": "takipçiler",
+                    "unfollow": "Takibi bırak",
+                    "follow": "Takip et",
+                    "following": "takip edilenler",
+                    "editProfile": "Profili düzenle",
+                    "shareProfile": "Profili paylaş"
+                },
+                "profileEdit": {
+                    "editProfile": "Profili düzenle",
+                    "profilePicture": "Resmi düzenle veya kaldır",
+                    "username": "Kullanıcı adı",
+                    "name": "Ad",
+                    "link": "Website",
+                    "bio": "Biyografi",
+                    "nameInstruction1": "İnsanların sizi bulmasına yardımcı olmak için bilinen adınızı kullanın: tam adınız, takma adınız veya işletme adınız.",
+                    "nameInstruction2": "Adınızı sadece 14 gün içinde bir kez değiştirebilirsiniz.",
+                    "usernameSchemaWarning": {
+                        "minWarning": "Ad 4 karakterden az olmalıdır.",
+                        "maxWarning": "Ad 15 karakterden uzun olmamalıdır.",
+                        "required": "Ad zorunludur."
+                    },
+                    "bioSchemaWarning": {
+                        "minWarning": "Biyografi 10 karakterden az olmalıdır.",
+                        "maxWarning": "Biyografi 160 karakterden uzun olmamalıdır."
+                    },
+                    "linkSchemaWarning": {
+                        "maxWarning": "Bu geçerli bir URL olmalıdır."
+                    },
+                    "onCancel": {
+                        "done": "Tamam",
+                        "title": "İptal etmek istiyor musunuz?",
+                        "warning": "Şu anda geri dönerseniz, değişiklikleriniz kaybolacak.",
+                        "discard": "İptal et",
+                        "keep": "Devam et"
+                    }
+                }
+            }
+        },
+        "sharePost": {
+            "headerTitle": "Yeni Gönderi",
+            "share": "Paylaş",
+            "caption": "Açıklama",
+            "category": "Kategori",
+            "captionPlaceholder": "Bir açıklama yaz...",
+            "ingredients": "Malzemeler",
+            "ingredientsPlaceholder": "Malzemeleri yaz...",
+            "instructions": "Tarifler",
+            "instructionsPlaceholder": "Tarifleri yaz...",
+            "timeOfMake": "Yapım Zamanı",
+            "timeOfMakePlaceholder": "Hazırlık zamanını yaz...",
+            "schemaWarnings": {
+                "image": {
+                    "required": "Resim gerekli."
+                },
+                "category": {
+                    "required": "Kategori gerekli.",
+                    "maxWarning": "Kategori karakter sınırına ulaştı."
+                },
+                "caption": {
+                    "maxWarning": "Açıklama 1200 karakterden uzun olmamalıdır.",
+                    "required": "Açıklama gerekli."
+                },
+                "ingredients": {
+                    "maxWarning": "Her malzeme 300 karakteri geçmemelidir.",
+                    "condition1": "En az bir malzeme gerekli.",
+                    "condition2": "En az bir malzeme gerekli.",
+                    "condition3": "Maksimum malzeme sayısı (10) aşıldı.",
+                    "required": "Malzemeler gerekli."
+                },
+                "instructions": {
+                    "maxWarning": "Her talimat 300 karakteri geçmemelidir.",
+                    "condition1": "En az bir talimat gerekli.",
+                    "condition2": "En az bir talimat gerekli.",
+                    "condition3": "Maksimum talimat sayısı (10) aşıldı.",
+                    "required": "Talimatlar gerekli."
+                },
+                "timeOfMake": {
+                    "maxWarning": "Zaman sınırına ulaşıldı.",
+                    "required": "Yapım Zamanı gerekli."
+                }
+            },
+            "categoriesValue": {
+                "chicken": "Tavuk",
+                "chineseDish": "Çin Yemeği",
+                "italianCuisine": "İtalyan Mutfağı",
+                "mexicanFood": "Meksika Yemeği",
+                "vegetarian": "Vejetaryen",
+                "seafood": "Deniz Ürünleri",
+                "indianCuisine": "Hint Mutfağı",
+                "desserts": "Tatlılar",
+                "salads": "Salatalar",
+                "pasta": "Makarna",
+                "bbq": "BBQ",
+                "soup": "Çorbalar",
+                "sandwiches": "Sandviçler",
+                "burgers": "Hamburgerler",
+                "pizza": "Pizza",
+                "sushi": "Sushi",
+                "tacos": "Tacos",
+                "curries": "Köri",
+                "wraps": "Wrapler",
+                "tapas": "Tapaslar",
+                "riceDishes": "Pilav Yemekleri",
+                "stirFry": "Wok Yemekleri",
+                "smoothies": "Smoothie'ler",
+                "cakes": "Kekler",
+                "pastries": "Pastalar",
+                "iceCream": "Dondurma",
+                "tofuDishes": "Tofu Yemekleri"
+            }
+        },
+        "settingOption": {
+            "theme": {
+                "theme": "Tema",
+                "systemTheme": "Sistem",
+                "lightTheme": "Açık",
+                "darkTheme": "Koyu"
+            },
+            "language": {
+                "language": "Dil",
+                "SelectLanguage": "Dil Seçin",
+                "russian": "Rusça",
+                "english": "İngilizce",
+                "turkish": "Türkçe",
+                "arabic": "Arapça"
+            }
+        }
+    }
+}

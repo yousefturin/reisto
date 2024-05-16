@@ -1,0 +1,248 @@
+{
+    "language": "English",
+    "screens": {
+        "login": {
+            "title": "Log in",
+            "text": {
+                "login": "Log in",
+                "emailAddress": "Email address",
+                "password": "Password",
+                "createAccount": "Don't have an account?",
+                "signup": "Sign up",
+                "emailAddressPlaceholder": "john@example.com"
+            }
+        },
+        "signup": {
+            "title": "Sign in",
+            "text": {
+                "signup": "Sign in",
+                "username": "User name",
+                "emailAddress": "Email address",
+                "password": "Password",
+                "createAccount": "Already have an account?",
+                "login": "Log in",
+                "usernamePlaceholder": "john",
+                "emailAddressPlaceholder": "john@example.com"
+            }
+        },
+        "home": {
+            "title": "Home",
+            "text": {
+                "share": "Share",
+                "TimeStamp": "ago",
+                "like": "Likes",
+                "comments": {
+                    "view": "View",
+                    "all": "all",
+                    "one": "comment",
+                    "many": "comments",
+                    "placeHolder": "Add a comment for",
+                    "placeHolderExtra": ""
+                },
+                "CategoryAndTime": "min",
+                "CaptionExpand": "more",
+                "Ingredients": "Ingredients",
+                "Instructions": "Instructions",
+                "timeCalculation": {
+                    "second": "s",
+                    "minute": "m",
+                    "hour": "h",
+                    "day": "d"
+                },
+                "modals": {
+                    "sameUser": {
+                        "save": "Save",
+                        "unsave": "Unsave",
+                        "edit": "Edit",
+                        "turnOnComments": "Turn on commenting",
+                        "hideLikes": "Hide like count",
+                        "delete": "Delete",
+                        "deleteModal": {
+                            "title": "Delete post?",
+                            "warning": "This post will be permanently deleted. You will not be able to restore it after deletion.",
+                            "delete": "Delete",
+                            "cancel": "Cancel"
+                        }
+                    },
+                    "differentUser": {
+                        "save": "Save",
+                        "unsave": "Unsave",
+                        "notInterested": "Not Interested",
+                        "aboutThisAccount": "About this account",
+                        "report": "Report"
+                    }
+                },
+                "aboutThisAccount": {
+                    "headerTitle": "About this account",
+                    "explanation": "To help keep our community authentic, we're showing information about accounts on Reisto.",
+                    "dateInfo": "Date joined",
+                    "locationInfo": "Account based in"
+                }
+            }
+        },
+        "messages": {
+            "title": "Messages",
+            "headerTitle": "New message",
+            "searchPlaceHolder": "Search",
+            "searchCancel": "Cancel",
+            "timeRender": "ago",
+            "defaultMessage": "Say Hi 👋",
+            "messagesMain": {
+                "messagesISent": {
+                    "title": "Sent"
+                },
+                "messagesIReceived": {
+                    "title": "1 new Message",
+                    "action": "Seen"
+                }
+            },
+            "messageIndividual": {
+                "messageInputPlaceHolder": "Type message for",
+                "messageInputPlaceHolderExtra": ""
+            }
+        },
+        "profile": {
+            "title": "Profile",
+            "profilePostHeader": "Posts",
+            "profileSavedHeader": "Saved Posts",
+            "profileSavedPostsTimeLineHeader": "All Posts",
+            "text": {
+                "profileHeader": {
+                    "profileMenu": {
+                        "settings": "Settings",
+                        "activity": "Your activity",
+                        "saved": "Saved",
+                        "logout": "Log out"
+                    }
+                },
+                "profileContent": {
+                    "recipes": "recipes",
+                    "followers": "followers",
+                    "unfollow": "Unfollow",
+                    "follow": "Follow",
+                    "following": "following",
+                    "editProfile": "Edit profile",
+                    "shareProfile": "Share profile"
+                },
+                "profileEdit": {
+                    "editProfile": "Edit profile",
+                    "profilePicture": "Edit or remove picture",
+                    "username": "User name",
+                    "name": "Name",
+                    "link": "Website",
+                    "bio": "Bio",
+                    "nameInstruction1": "Help people discover your account by using the name you're known by: either your full name, nickname or business name.",
+                    "nameInstruction2": "You can only change your name once withing 14 days.",
+                    "usernameSchemaWarning": {
+                        "minWarning": "Name must be less than 4 characters.",
+                        "maxWarning": "Name should not be longer than 15 characters.",
+                        "required": "Name is required."
+                    },
+                    "bioSchemaWarning": {
+                        "minWarning": "Bio must be less than 10 characters.",
+                        "maxWarning": "Bio should not be longer than 160 characters."
+                    },
+                    "linkSchemaWarning": {
+                        "maxWarning": "This must be a valid URL."
+                    },
+                    "onCancel": {
+                        "done": "Done",
+                        "title": "Discard changes?",
+                        "warning": "If you go back now, you will lose your changes.",
+                        "discard": "Discard changes",
+                        "keep": "Keep editing"
+                    }
+                }
+            }
+        },
+        "sharePost": {
+            "headerTitle": "New Post",
+            "share": "Share",
+            "caption": "Caption",
+            "category": "Category",
+            "captionPlaceholder": "Write a caption...",
+            "ingredients": "Ingredients",
+            "ingredientsPlaceholder": "Write ingredients...",
+            "instructions": "Instructions",
+            "instructionsPlaceholder": "Write instructions...",
+            "timeOfMake": "Time of make",
+            "timeOfMakePlaceholder": "Write time of preparation...",
+            "schemaWarnings": {
+                "image": {
+                    "required": "Image is required."
+                },
+                "category": {
+                    "required": "Category is required.",
+                    "maxWarning": "Category has reached the character limit."
+                },
+                "caption": {
+                    "maxWarning": "Caption should not be longer than 1200 characters.",
+                    "required": "Caption is required."
+                },
+                "ingredients": {
+                    "maxWarning": "Each ingredient should not exceed 300 characters.",
+                    "condition1": "At least one ingredient is required.",
+                    "condition2": "At least one ingredient is required.",
+                    "condition3": "Exceeded maximum number of ingredients (10).",
+                    "required": "Ingredients are required."
+                },
+                "instructions": {
+                    "maxWarning": "Each instruction should not exceed 300 characters.",
+                    "condition1": "At least one instruction is required.",
+                    "condition2": "At least one instruction is required.",
+                    "condition3": "Exceeded maximum number of instruction (10).",
+                    "required": "Instruction are required."
+                },
+                "timeOfMake": {
+                    "maxWarning": "Time has reached the limit.",
+                    "required": "Time of Make is required."
+                }
+            },
+            "categoriesValue":{
+                "chicken": "Chicken",
+                "chineseDish": "Chinese Dish",
+                "italianCuisine": "Italian Cuisine",
+                "mexicanFood": "Mexican Food",
+                "vegetarian": "Vegetarian",
+                "seafood": "Seafood",
+                "indianCuisine": "Indian Cuisine",
+                "desserts": "Desserts",
+                "salads": "Salads",
+                "pasta": "Pasta",
+                "bbq": "BBQ",
+                "soup": "Soup",
+                "sandwiches": "Sandwiches",
+                "burgers": "Burgers",
+                "pizza": "Pizza",
+                "sushi": "Sushi",
+                "tacos": "Tacos",
+                "curries": "Curries",
+                "wraps": "Wraps",
+                "tapas": "Tapas",
+                "riceDishes": "Rice Dishes",
+                "stirFry": "Stir-fry",
+                "smoothies": "Smoothies",
+                "cakes": "Cakes",
+                "pastries": "Pastries",
+                "iceCream": "Ice Cream",
+                "tofuDishes": "Tofu Dishes"
+            }
+        },
+        "settingOption":{
+            "theme":{
+                "theme":"Theme",
+                "systemTheme":"System",
+                "lightTheme":"Light",
+                "darkTheme":"Dark"
+            },
+            "language":{
+                "language":"Language",
+                "SelectLanguage":"Select Language",
+                "russian":"Russian",
+                "english":"English",
+                "turkish":"Turkish",
+                "arabic":"Arabic"
+            }
+        }
+    }
+}
