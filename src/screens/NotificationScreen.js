@@ -2,16 +2,13 @@ import { SafeAreaView } from 'react-native'
 import React, { useState } from 'react'
 import { colorPalette } from '../Config/Theme'
 import { useTheme } from '../context/ThemeContext';
-import { getColorForTheme } from '../utils/ThemeUtils';
+
+import UseCustomTheme from '../utils/UseCustomTheme';
 
 const NotificationScreen = () => {
     const { selectedTheme } = useTheme();
-    const systemTheme = selectedTheme === "system";
-    const theme = getColorForTheme(
-        { dark: colorPalette.dark, light: colorPalette.light },
-        selectedTheme,
-        systemTheme
-    );
+    const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
+
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary , justifyContent: "flex-end" }}>
