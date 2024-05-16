@@ -12,6 +12,7 @@ import { useTheme } from '../context/ThemeContext';
 
 import { useTranslation } from 'react-i18next';
 import UseCustomTheme from '../utils/UseCustomTheme';
+import EmptyDataParma from '../components/CustomComponent/EmptyDataParma';
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
@@ -20,7 +21,7 @@ const FromMessagesToSharedPost = ({ route }) => {
     const { postId, userID } = route.params; // Get the postId from the route params
     const userData = useContext(UserContext);
     const [usersForSharePosts, setUsersForSharePosts] = useState([]);
-
+    const [loading, setLoading] = useState(true)
 
     const [post, setPost] = useState([]) // Initialize the post state with an empty array
 
@@ -38,27 +39,35 @@ const FromMessagesToSharedPost = ({ route }) => {
 
                 unsubscribe = query.onSnapshot(async snapshot => {
                     const dbUserPostData = snapshot.data();
-                    try {
-                        const userDoc = await db.collection('users').doc(dbUserPostData.owner_email).get()
-                        const dbUserData = userDoc.data()
-                        const dbUserProfilePicture = dbUserData.profile_picture
-                        const postWithProfilePicture = {
-                            id: snapshot.id,
-                            profile_picture: dbUserProfilePicture,
-                            ...dbUserPostData
-                        };
-                        setPost(postWithProfilePicture);
-                    } catch (error) {
-                        console.error('Error fetching user document:', error)
-                        setPost({
-                            id: snapshot.id,
-                            ...dbUserPostData
-                        });
+                    if (!dbUserPostData) {
+                        setLoading(null);
+                        return () => { };
+                    } else {
+                        try {
+                            const userDoc = await db.collection('users').doc(dbUserPostData.owner_email).get()
+                            const dbUserData = userDoc.data()
+                            const dbUserProfilePicture = dbUserData.profile_picture
+                            const postWithProfilePicture = {
+                                id: snapshot.id,
+                                profile_picture: dbUserProfilePicture,
+                                ...dbUserPostData
+                            };
+                            setPost(postWithProfilePicture);
+                            setLoading(false);
+                        } catch (error) {
+                            console.error('Error fetching user document:', error)
+                            setLoading(false);
+                            setPost({
+                                id: snapshot.id,
+                                ...dbUserPostData
+                            });
+                        }
                     }
                 })
             }
             else {
                 console.error("No authenticated user found.");
+                setLoading(null);
                 return () => { };
             }
         };
@@ -117,12 +126,14 @@ const FromMessagesToSharedPost = ({ route }) => {
     };
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <PostHeader theme={theme} t={t} />
-            {post.length !== 0 ? (
+            {loading === false ? (
                 <Post post={post} userData={userData} usersForSharePosts={usersForSharePosts} theme={theme} />
-            ) : (<LoadingPlaceHolder fromWhere={"sharedPost"} theme={theme} />
-            )}
+            ) : loading === null ? (
+                <EmptyDataParma SvgElement={"DeletedPostIllustration"} theme={theme} t={t} TitleDataMessage={"Post No Longer Available"} dataMessage={"It seems that this post has been removed by the owner."} />
+            ) :
+                (<LoadingPlaceHolder fromWhere={"sharedPost"} theme={theme} />)}
         </SafeAreaView>
     )
 }
