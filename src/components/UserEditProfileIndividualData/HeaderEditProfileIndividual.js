@@ -6,7 +6,7 @@ import { Divider } from 'react-native-elements';
 import Modal from 'react-native-modal';
 import { colorPalette } from '../../Config/Theme';
 
-const HeaderEditProfileIndividual = ({ headerTitle, navigation, handleSubmit, isValid, theme }) => {
+const HeaderEditProfileIndividual = ({ headerTitle, navigation, handleSubmit, isValid, theme, t }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);
     const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -23,15 +23,15 @@ const HeaderEditProfileIndividual = ({ headerTitle, navigation, handleSubmit, is
                 </TouchableOpacity>
                 <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 20, marginLeft: 15 }}>{headerTitle}</Text>
                 <TouchableOpacity style={{ margin: 10 }} onPress={handleSubmit} disabled={!isValid}>
-                    <Text style={{ color: !isValid ? theme.textQuaternary : theme.appPrimary, fontWeight: "600", fontSize: 20, }}>Done</Text>
+                    <Text style={{ color: !isValid ? theme.textQuaternary : theme.appPrimary, fontWeight: "600", fontSize: 20, }}>{t('screens.profile.text.profileEdit.onCancel.done')}</Text>
                 </TouchableOpacity>
             </View>
             <Divider width={0.3} orientation='horizontal' color={theme.dividerPrimary} />
-            <ModalAlert theme={theme} navigation={navigation} handleGoingBack={handleGoingBack} isModalVisible={isModalVisible} />
+            <ModalAlert t={t} theme={theme} navigation={navigation} handleGoingBack={handleGoingBack} isModalVisible={isModalVisible} />
         </>
     )
 }
-const ModalAlert = ({ navigation, handleGoingBack, isModalVisible, theme }) => {
+const ModalAlert = ({ navigation, handleGoingBack, isModalVisible, theme, t }) => {
     const screenHeight = Dimensions.get('window').height;
 
     return (
@@ -50,8 +50,8 @@ const ModalAlert = ({ navigation, handleGoingBack, isModalVisible, theme }) => {
                 marginHorizontal: 60
             }}>
                 <View style={{ flexDirection: "column", justifyContent: "space-evenly", alignItems: "center", flex: 0.6, paddingHorizontal: 20, }}>
-                    <Text style={{ fontSize: 20, color: theme.textPrimary, fontWeight: "600", }}>Discard changes?</Text>
-                    <Text style={{ fontSize: 16, color: theme.textTertiary, fontWeight: "400", textAlign: "center", }}>If you go back now, you will lose your changes.</Text>
+                    <Text style={{ fontSize: 20, color: theme.textPrimary, fontWeight: "600", }}>{t('screens.profile.text.profileEdit.onCancel.title')}</Text>
+                    <Text style={{ fontSize: 16, color: theme.textTertiary, fontWeight: "400", textAlign: "center", }}>{t('screens.profile.text.profileEdit.onCancel.warning')}</Text>
                 </View>
 
                 <Divider width={1} orientation='horizontal' color={theme.dividerPrimary} />
@@ -61,12 +61,12 @@ const ModalAlert = ({ navigation, handleGoingBack, isModalVisible, theme }) => {
                             handleGoingBack();
                             navigation.goBack();
                         }}>
-                        <Text style={{ color: theme.appPrimary, fontWeight: "600", fontSize: 18, textAlign: "center", }}>Discard changes</Text>
+                        <Text style={{ color: theme.appPrimary, fontWeight: "600", fontSize: 18, textAlign: "center", }}>{t('screens.profile.text.profileEdit.onCancel.discard')}</Text>
                     </TouchableOpacity>
                     <Divider width={1} orientation='horizontal' color={theme.dividerPrimary} />
                     <TouchableOpacity
                         onPress={() => handleGoingBack()}>
-                        <Text style={{ color: theme.Primary === "#050505" ? theme.textQuaternary : theme.textPrimary, fontWeight: "400", fontSize: 18, textAlign: "center", }}>Keep editing</Text>
+                        <Text style={{ color: theme.Primary === "#050505" ? theme.textQuaternary : theme.textPrimary, fontWeight: "400", fontSize: 18, textAlign: "center", }}>{t('screens.profile.text.profileEdit.onCancel.keep')}</Text>
                     </TouchableOpacity>
                 </View>
 
