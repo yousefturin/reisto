@@ -275,6 +275,60 @@ const svgData = {
   <path d="M7.6,13.3l2,2l6.7-6.7" fill="none" stroke-linecap="round" stroke="#add1f7" stroke-linejoin="round" stroke-width="2"/>
   </svg>
   `,
+  ArrowDownSVG: `
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M16 10L12 14L8 10" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+  `,
+  ArrowUpSVG: `
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path  d="M8.4,14.6l4-4l4,4" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+  `,
+  // #region Illustration Vectors-------------------------------------------------------------------------------------------------
+  AddUserIllustration: `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+
+    <circle stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round" cx="12" cy="12" r="11" />
+    <path stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round" d="M10.4,17.2v-2.3c0-0.6,0.5-1.2,1.2-1.2h5.8c0.6,0,1.2,0.5,1.2,1.2v2.3 M16.8,9.1c0,1.3-1,2.3-2.3,2.3
+	c-1.3,0-2.3-1-2.3-2.3s1-2.3,2.3-2.3C15.8,6.8,16.8,7.8,16.8,9.1z" />
+
+        <line stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round" class="st1" x1="7" y1="9.5"
+            x2="7" y2="12" />
+        <line stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round" class="st1" x1="7" y1="12"
+            x2="7" y2="14.5" />
+        <line stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round" class="st1" x1="7" y1="12"
+            x2="4.4" y2="12" />
+        <line stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round" class="st1" x1="7" y1="12"
+            x2="9.5" y2="12" />
+</svg>`,
+
+  ConnectionIllustration: `
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <circle cx="12" cy="12" r="11" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  <path
+    d="M6.45,17V14.76a1.11,1.11,0,0,1,1.11-1.1h5.55a1.11,1.11,0,0,1,1.11,1.1V17m0-9.94a2.18,2.18,0,0,1,1.2.79,2.13,2.13,0,0,1,.47,1.35,2.18,2.18,0,0,1-.47,1.36,2.22,2.22,0,0,1-1.2.78m1.66,2.35h.56a1.11,1.11,0,0,1,1.11,1.1V17m-5-7.73A2.22,2.22,0,1,1,10.34,7,2.21,2.21,0,0,1,12.55,9.24Z"
+    stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round" /> 
+</svg>`,
+  AddPostIllustration: `
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path
+      d="M12 7V12M12 12V17M12 12H7M12 12H17M5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21Z"
+       fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+`,
+  EditIllustration: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M11 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V13"
+ stroke-width="1"  fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+<path
+    d="M9.5 11.5L17.5 3.5C18.3284 2.67157 19.6716 2.67157 20.5 3.5C21.3284 4.32843 21.3284 5.67157 20.5 6.5L12.5 14.5L8 16L9.5 11.5Z"
+ stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>`,
+  BookmarkIllustration: `
+<svg  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill="none"  d="M3.8,22.5V2.6c0-0.6,0.5-1,1.2-1H19c0.6,0,1.2,0.5,1.2,1v19.9L12,14.8L3.8,22.5z" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+`,
+
 
 }
 
