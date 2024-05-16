@@ -6,21 +6,17 @@ import initializeScalingUtils from "../utils/NormalizeSize"
 import LoginForm from '../components/Login/LoginForm';
 import { colorPalette } from '../Config/Theme';
 import { useTheme } from '../context/ThemeContext';
-import { getColorForTheme } from '../utils/ThemeUtils';
+
+import UseCustomTheme from '../utils/UseCustomTheme';
 
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
 export default function LoginScreen({ }) {
     const navigation = useNavigation();
-    // const { login } = useAuth();
     const { selectedTheme } = useTheme();
-    const systemTheme = selectedTheme === "system";
-    const theme = getColorForTheme(
-        { dark: colorPalette.dark, light: colorPalette.light },
-        selectedTheme,
-        systemTheme
-    );
+    const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <View style={styles.container}>
