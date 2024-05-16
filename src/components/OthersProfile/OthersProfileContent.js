@@ -10,7 +10,7 @@ import { Divider } from 'react-native-elements';
 import { db, firebase } from '../../firebase';
 import { colorPalette } from '../../Config/Theme';
 
-const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme }) => {
+const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const { moderateScale } = initializeScalingUtils(Dimensions);
     const [followersAndFollowing, setFollowersAndFollowing] = useState([])
@@ -169,7 +169,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme }) => {
                             {Object.keys(userPosts).length}
                         </Text>
                         <Text style={{ color: theme.textQuaternary }}>
-                            recipes
+                            {t('screens.profile.text.profileContent.recipes')}
                         </Text>
                     </View>
 
@@ -178,7 +178,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme }) => {
                             {Object.keys(followersAndFollowingForPassedUser?.followers || 0).length}
                         </Text>
                         <Text style={{ color: theme.textQuaternary }}>
-                            followers
+                            {t('screens.profile.text.profileContent.followers')}
                         </Text>
                     </View>
 
@@ -187,7 +187,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme }) => {
                             {Object.keys(followersAndFollowingForPassedUser?.following || 0).length}
                         </Text>
                         <Text style={{ color: theme.textQuaternary }}>
-                            following
+                            {t('screens.profile.text.profileContent.following')}
                         </Text>
                     </View>
                 </View>
@@ -239,7 +239,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme }) => {
                             // if user is following and it is white theme make text back, if user does not follow make text white
                             color: theme.Primary === '#050505' ? theme.textPrimary : isUserFollowed ? theme.textPrimary : theme.Primary,
                             textAlign: "center"
-                        }}> {isUserFollowed ? "Unfollow" : "Follow"}</Text>
+                        }}> {isUserFollowed ? t('screens.profile.text.profileContent.unfollow') : t('screens.profile.text.profileContent.follow')}</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity activeOpacity={0.8}>
@@ -257,7 +257,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme }) => {
                             fontWeight: "500",
                             color: theme.textPrimary,
                             textAlign: "center"
-                        }}>Share profile</Text>
+                        }}>{t('screens.profile.text.profileContent.shareProfile')}</Text>
                     </View>
                 </TouchableOpacity>
             </View>
