@@ -5,21 +5,35 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { colorPalette } from '../../Config/Theme';
 
 
-const FoodCategories = ({ setFieldValue, values, handleBlur }) => {
+const FoodCategories = ({ setFieldValue, values, handleBlur, t }) => {
     const categories = [
-        { name: 'Chicken' },
-        { name: 'Chinese Dish' },
-        { name: 'Italian Cuisine' },
-        { name: 'Mexican Food' },
-        { name: 'Vegetarian' },
-        { name: 'Seafood' },
-        { name: 'Indian Cuisine' },
-        { name: 'Desserts' },
-        { name: 'Salads' },
-        { name: 'Pasta' },
-        { name: 'BBQ' },
-        { name: 'Soup' },
-        { name: 'Sandwiches' },
+        { name: 'Chicken', value: t('screens.sharePost.categoriesValue.chicken') },
+        { name: 'Chinese Dish', value: t('screens.sharePost.categoriesValue.chineseDish') },
+        { name: 'Italian Cuisine', value: t('screens.sharePost.categoriesValue.italianCuisine') },
+        { name: 'Mexican Food', value: t('screens.sharePost.categoriesValue.mexicanFood') },
+        { name: 'Vegetarian', value: t('screens.sharePost.categoriesValue.vegetarian') },
+        { name: 'Seafood', value: t('screens.sharePost.categoriesValue.seafood') },
+        { name: 'Indian Cuisine', value: t('screens.sharePost.categoriesValue.indianCuisine') },
+        { name: 'Desserts', value: t('screens.sharePost.categoriesValue.desserts') },
+        { name: 'Salads', value: t('screens.sharePost.categoriesValue.salads') },
+        { name: 'Pasta', value: t('screens.sharePost.categoriesValue.pasta') },
+        { name: 'BBQ', value: t('screens.sharePost.categoriesValue.bbq') },
+        { name: 'Soup', value: t('screens.sharePost.categoriesValue.soup') },
+        { name: 'Sandwiches', value: t('screens.sharePost.categoriesValue.sandwiches') },
+        { name: 'Burgers', value: t('screens.sharePost.categoriesValue.burgers') },
+        { name: 'Pizza', value: t('screens.sharePost.categoriesValue.pizza') },
+        { name: 'Sushi', value: t('screens.sharePost.categoriesValue.sushi') },
+        { name: 'Tacos', value: t('screens.sharePost.categoriesValue.tacos') },
+        { name: 'Curries', value: t('screens.sharePost.categoriesValue.curries') },
+        { name: 'Wraps', value: t('screens.sharePost.categoriesValue.wraps') },
+        { name: 'Tapas', value: t('screens.sharePost.categoriesValue.tapas') },
+        { name: 'Rice Dishes', value: t('screens.sharePost.categoriesValue.riceDishes') },
+        { name: 'Stir-fry', value: t('screens.sharePost.categoriesValue.stirFry') },
+        { name: 'Smoothies', value: t('screens.sharePost.categoriesValue.smoothies') },
+        { name: 'Cakes', value: t('screens.sharePost.categoriesValue.cakes') },
+        { name: 'Pastries', value: t('screens.sharePost.categoriesValue.pastries') },
+        { name: 'Ice Cream', value: t('screens.sharePost.categoriesValue.iceCream') },
+        { name: 'Tofu Dishes', value: t('screens.sharePost.categoriesValue.tofuDishes') },
     ];
     const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(null);
     const handleCategoryPress = (index, categoryName) => {
@@ -28,7 +42,7 @@ const FoodCategories = ({ setFieldValue, values, handleBlur }) => {
     };
     return (
         <>
-            <Text style={{ color: colorPalette.dark.textPrimary, margin: 10, fontSize: 20, fontWeight: "700" }}>Category</Text>
+            <Text style={{ color: colorPalette.dark.textPrimary, margin: 10, fontSize: 20, fontWeight: "700" }}>{t('screens.sharePost.category')}</Text>
             <ScrollView
                 keyboardDismissMode="on-drag"
                 keyboardShouldPersistTaps={'always'}
@@ -66,7 +80,7 @@ const FoodCategories = ({ setFieldValue, values, handleBlur }) => {
                             <Text style={{
                                 color: colorPalette.dark.textPrimary,
                                 textAlign: 'center',
-                            }}>{category.name}</Text>
+                            }}>{category.value}</Text>
                         </LinearGradient>
                     </TouchableOpacity>
                 ))}
