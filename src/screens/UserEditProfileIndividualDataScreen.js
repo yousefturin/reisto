@@ -11,25 +11,24 @@ import { Formik } from 'formik'
 import { db, firebase } from '../firebase';
 import { colorPalette } from '../Config/Theme';
 import { useTheme } from '../context/ThemeContext';
-import { getColorForTheme } from '../utils/ThemeUtils';
+
+import { useTranslation } from 'react-i18next';
+import UseCustomTheme from '../utils/UseCustomTheme';
 
 const UserEditProfileIndividualDataScreen = ({ route }) => {
-    const { userData, key, value } = route.params
+    const { userData, key, value, headerTitleForScreen } = route.params
+    const { t } = useTranslation();
     const navigation = useNavigation();
     const { selectedTheme } = useTheme();
-    const systemTheme = selectedTheme === "system";
-    const theme = getColorForTheme(
-        { dark: colorPalette.dark, light: colorPalette.light },
-        selectedTheme,
-        systemTheme
-    );
+    const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
+
     return (
         <SafeAreaView style={{ backgroundColor: theme.Primary, flex: 1, justifyContent: "flex-start" }}>
-            <ContentEditProfileIndividual theme={theme} headerTitle={key} navigation={navigation} prevValue={value} />
+            <ContentEditProfileIndividual t={t} theme={theme} headerTitle={key} title={headerTitleForScreen} navigation={navigation} prevValue={value} />
         </SafeAreaView>
     )
 }
-const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue, theme }) => {
+const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue, theme, title, t }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);
 
     const PushDataToFireBase = (value, key) => {
@@ -65,16 +64,16 @@ const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue, them
                     onSubmit={(values) => {
                         PushDataToFireBase(values.DisplayedName, "Name")
                     }}
-                    validationSchema={uploadNameSchema}
+                    validationSchema={uploadNameSchema(t)}
                     validateOnMount={true}>
                     {({ handleChange, handleBlur, handleSubmit, values, isValid, errors, setFieldValue }) => (
                         <>
-                            <HeaderEditProfileIndividual theme={theme} navigation={navigation} headerTitle={headerTitle} handleSubmit={handleSubmit} isValid={isValid} />
+                            <HeaderEditProfileIndividual t={t} theme={theme} navigation={navigation} headerTitle={title} handleSubmit={handleSubmit} isValid={isValid} />
                             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                                 <TextInput
                                     multiline={false}
                                     autoFocus
-                                    placeholder={`${headerTitle}`}
+                                    placeholder={`${title}`}
                                     placeholderTextColor={theme.textTertiary}
                                     textContentType='none'
                                     keyboardType='default'
@@ -95,10 +94,10 @@ const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue, them
                             )}
                             <Text
                                 style={{ marginHorizontal: 10, marginVertical: 20, marginLeft: 20, fontSize: 14, fontWeight: "400", color: theme.textTertiary, }}
-                            >Help people discover your account by using the name you're known by: either your full name, nickname or business name.</Text>
+                            >{t('screens.profile.text.profileEdit.nameInstruction1')}</Text>
                             <Text
                                 style={{ marginHorizontal: 10, marginLeft: 20, fontSize: 14, fontWeight: "400", color: theme.textTertiary, }}
-                            >You can only change your name once withing 14 days.</Text>
+                            >{t('screens.profile.text.profileEdit.nameInstruction2')}</Text>
                         </>
                     )}
                 </Formik>
@@ -111,16 +110,16 @@ const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue, them
                     onSubmit={(values) => {
                         PushDataToFireBase(values.Bio, "Bio")
                     }}
-                    validationSchema={uploadBioSchema}
+                    validationSchema={uploadBioSchema(t)}
                     validateOnMount={true}>
                     {({ handleChange, handleBlur, handleSubmit, values, isValid, errors, setFieldValue }) => (
                         <>
-                            <HeaderEditProfileIndividual theme={theme}  navigation={navigation} headerTitle={headerTitle} handleSubmit={handleSubmit} isValid={isValid} />
+                            <HeaderEditProfileIndividual t={t} theme={theme} navigation={navigation} headerTitle={title} handleSubmit={handleSubmit} isValid={isValid} />
                             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                                 <TextInput
                                     multiline={false}
                                     autoFocus
-                                    placeholder={`${headerTitle}`}
+                                    placeholder={`${title}`}
                                     placeholderTextColor={theme.textTertiary}
                                     textContentType='none'
                                     keyboardType='default'
@@ -151,16 +150,16 @@ const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue, them
                     onSubmit={(values) => {
                         PushDataToFireBase(values.Link, "Link")
                     }}
-                    validationSchema={uploadLinkSchema}
+                    validationSchema={uploadLinkSchema(t)}
                     validateOnMount={true}>
                     {({ handleChange, handleBlur, handleSubmit, values, isValid, errors, setFieldValue }) => (
                         <>
-                            <HeaderEditProfileIndividual  theme={theme} navigation={navigation} headerTitle={headerTitle} handleSubmit={handleSubmit} isValid={isValid} />
+                            <HeaderEditProfileIndividual  t={t} theme={theme} navigation={navigation} headerTitle={title} handleSubmit={handleSubmit} isValid={isValid} />
                             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                                 <TextInput
                                     multiline={false}
                                     autoFocus
-                                    placeholder={`${headerTitle}`}
+                                    placeholder={`${title}`}
                                     placeholderTextColor={theme.textTertiary}
                                     textContentType='none'
                                     keyboardType='default'
@@ -188,13 +187,13 @@ const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue, them
             break;
     }
 }
-const uploadNameSchema = Yup.object().shape({
-    DisplayedName: Yup.string().required().min(4, 'Name must be less than 4 characters.').max(15, 'Name should not be longer than 15 characters.')
+const uploadNameSchema = (t) => Yup.object().shape({
+    DisplayedName: Yup.string().required(t('screens.profile.text.profileEdit.usernameSchemaWarning.required')).min(4, t('screens.profile.text.profileEdit.usernameSchemaWarning.minWarning')).max(15, t('screens.profile.text.profileEdit.usernameSchemaWarning.maxWarning'))
 })
-const uploadBioSchema = Yup.object().shape({
-    Bio: Yup.string().min(10, 'Bio must be less than 10 characters.').max(160, 'Bio should not be longer than 160 characters.')
+const uploadBioSchema = (t) => Yup.object().shape({
+    Bio: Yup.string().min(10, t('screens.profile.text.profileEdit.bioSchemaWarning.minWarning')).max(160, t('screens.profile.text.profileEdit.bioSchemaWarning.maxWarning'))
 })
-const uploadLinkSchema = Yup.object().shape({
-    Link: Yup.string().url('This must be a valid URL.')
+const uploadLinkSchema = (t) => Yup.object().shape({
+    Link: Yup.string().url(t('screens.profile.text.profileEdit.linkSchemaWarning.maxWarning'))
 })
 export default UserEditProfileIndividualDataScreen
