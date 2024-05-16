@@ -26,7 +26,7 @@ const MessageMainList = ({ updateLastMessage, userData, sortedData, usersForMess
                         />
                     ) : (
                         loading === null ? (
-                            <EmptyDataParma SvgElement={"EditIllustration"} theme={theme} t={t} TitleDataMessage={"Start new chat"} dataMessage={"Send your friend message. You can always come back and check new messages."} />
+                            <EmptyDataParma SvgElement={"EditIllustration"} theme={theme} t={t} TitleDataMessage={"Start a new chat"} dataMessage={"Send your friend a message. You can always come back and check for new messages."} />
                         ) : (
                             <MessageLoadingPlaceHolder theme={theme} />
                         )
@@ -53,7 +53,7 @@ const MessageMainList = ({ updateLastMessage, userData, sortedData, usersForMess
                             keyExtractor={item => item.owner_uid.toString()}
                         />
                     ) : loading === null ? (
-                        <EmptyDataParma SvgElement={"AddUserIllustration"} theme={theme} t={t} TitleDataMessage={"Make new connections"} dataMessage={"Connect with new people to start messaging. All new following will appear here."} />
+                        <EmptyDataParma SvgElement={"AddUserIllustration"} theme={theme} t={t} TitleDataMessage={"Make new connections"} dataMessage={"Connect with new people to start messaging. All new followings will appear here."} />
                     ) : (
                         <MessageLoadingPlaceHolder theme={theme} />
                     )
