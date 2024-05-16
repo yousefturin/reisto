@@ -6,10 +6,13 @@ import SavedPostsHeader from '../components/SavedPosts/SavedPostsHeader';
 import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder';
 import { colorPalette } from '../Config/Theme';
 import { useTheme } from '../context/ThemeContext';
-import { getColorForTheme } from '../utils/ThemeUtils';
+
+import { useTranslation } from 'react-i18next';
+import UseCustomTheme from '../utils/UseCustomTheme';
 const windowHeight = Dimensions.get('window').height;
 
 const UserSavedPostTimeLineScreen = ({ route }) => {
+    const { t } = useTranslation();
     const { userData, scrollToPostId } = route.params;
     const [savedPosts, setSavedPosts] = useState([])
     const flatListRef = useRef();
@@ -24,12 +27,8 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
     };
 
     const { selectedTheme } = useTheme();
-    const systemTheme = selectedTheme === "system";
-    const theme = getColorForTheme(
-        { dark: colorPalette.dark, light: colorPalette.light },
-        selectedTheme,
-        systemTheme
-    );
+    const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
+
 
     useEffect(() => {
         // Calculate initialScrollIndex only when posts are fetched
@@ -178,10 +177,10 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
         <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} theme={theme} />
     )
 
-
+    const profileSavedPostsTimeLineHeader = t('screens.profile.profileSavedPostsTimeLineHeader')
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary  }}>
-            <SavedPostsHeader header={"All Posts"} theme={theme} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
+            <SavedPostsHeader header={profileSavedPostsTimeLineHeader} theme={theme} />
             {savedPosts.length !== 0 ? (
                 <FlatList
                     keyboardDismissMode="on-drag"
