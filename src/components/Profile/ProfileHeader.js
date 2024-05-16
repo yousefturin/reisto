@@ -5,27 +5,9 @@ import initializeScalingUtils from '../../utils/NormalizeSize';
 import { Divider } from 'react-native-elements';
 import SvgComponent from '../../utils/SvgComponents';
 import Modal from 'react-native-modal';
-import { colorPalette } from '../../Config/Theme';
 
-const Icons = [
-    {
-        name: 'Settings',
-        iconTitle: 'SettingSVG',
-    },
-    {
-        name: 'your activity',
-        iconTitle: 'ActivitySVG',
-    },
-    {
-        name: 'Saved',
-        iconTitle: 'BookmarkNotActiveSVG',
-    },
-    {
-        name: 'Log out',
-        iconTitle: 'LogoutSVG',
-    },
-]
-const ProfileHeader = ({ handleLogout, userData, theme }) => {
+
+const ProfileHeader = ({ handleLogout, userData, theme, t }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);
     // const navigation = useNavigation();
     const [isContainerVisible, setContainerVisible] = useState(false);
@@ -41,14 +23,32 @@ const ProfileHeader = ({ handleLogout, userData, theme }) => {
                 <TouchableOpacity style={{ margin: 10 }} onPress={toggleContainer} >
                     <SvgComponent svgKey="MenuSVG" width={moderateScale(30)} height={moderateScale(30)} stroke={theme.textPrimary} />
                 </TouchableOpacity>
-                <ProfileMenu theme={theme} setContainerVisible={setContainerVisible} isContainerVisible={isContainerVisible} handleLogout={handleLogout} moderateScale={moderateScale} />
+                <ProfileMenu t={t} theme={theme} setContainerVisible={setContainerVisible} isContainerVisible={isContainerVisible} handleLogout={handleLogout} moderateScale={moderateScale} />
             </View>
         </>
     )
 }
 
-const ProfileMenu = ({ isContainerVisible, setContainerVisible, handleLogout, moderateScale, theme }) => {
+const ProfileMenu = ({ isContainerVisible, setContainerVisible, handleLogout, moderateScale, theme, t }) => {
     const screenHeight = Dimensions.get('window').height;
+    const Icons = [
+        {
+            name: t('screens.profile.text.profileHeader.profileMenu.settings'),
+            iconTitle: 'SettingSVG',
+        },
+        {
+            name: t('screens.profile.text.profileHeader.profileMenu.activity'),
+            iconTitle: 'ActivitySVG',
+        },
+        {
+            name: t('screens.profile.text.profileHeader.profileMenu.saved'),
+            iconTitle: 'BookmarkNotActiveSVG',
+        },
+        {
+            name: t('screens.profile.text.profileHeader.profileMenu.logout'),
+            iconTitle: 'LogoutSVG',
+        },
+    ]
     const navigation = useNavigation();
     const handleSettings = () => {
         setContainerVisible(false)
@@ -93,7 +93,7 @@ const ProfileMenu = ({ isContainerVisible, setContainerVisible, handleLogout, mo
                 </View>
                 {/* Activities button */}
                 <TouchableOpacity style={{ margin: 10, marginLeft: 20, marginTop: 15, marginBottom: 15, flexDirection: "row", justifyContent: "flex-start", gap: 20, alignItems: "center" }} onPress={() => handleActivity()} >
-                    <SvgComponent svgKey={Icons[1].iconTitle} width={moderateScale(22)} height={moderateScale(22)}  stroke={theme.textPrimary}/>
+                    <SvgComponent svgKey={Icons[1].iconTitle} width={moderateScale(22)} height={moderateScale(22)} stroke={theme.textPrimary} />
                     <View style={{ flexDirection: "column", flex: 1, }}>
                         <Text style={{ fontSize: 20, color: theme.textPrimary, fontWeight: "400" }}>{Icons[1].name}</Text>
                     </View>
@@ -103,7 +103,7 @@ const ProfileMenu = ({ isContainerVisible, setContainerVisible, handleLogout, mo
                 </View>
                 {/* Saved button */}
                 <TouchableOpacity style={{ margin: 10, marginLeft: 20, marginTop: 15, marginBottom: 15, flexDirection: "row", justifyContent: "flex-start", gap: 20, alignItems: "center" }} onPress={() => handleSaved()} >
-                    <SvgComponent svgKey={Icons[2].iconTitle} width={moderateScale(22)} height={moderateScale(22)}  stroke={theme.textPrimary}/>
+                    <SvgComponent svgKey={Icons[2].iconTitle} width={moderateScale(22)} height={moderateScale(22)} stroke={theme.textPrimary} />
                     <View style={{ flexDirection: "column", flex: 1, }}>
                         <Text style={{ fontSize: 20, color: theme.textPrimary, fontWeight: "400" }}>{Icons[2].name}</Text>
                     </View>
