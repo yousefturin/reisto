@@ -328,6 +328,12 @@ const svgData = {
 <svg  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill="none"  d="M3.8,22.5V2.6c0-0.6,0.5-1,1.2-1H19c0.6,0,1.2,0.5,1.2,1v19.9L12,14.8L3.8,22.5z" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path></svg>
 `,
+  DeletedPostIllustration: `
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+        d="M20 10V19.5C20 20.3284 19.3284 21 18.5 21H5.5C4.67157 21 4 20.3284 4 19.5V10M10 13H14M3 3H21C21.5523 3 22 3.44772 22 4V9C22 9.55228 21.5523 10 21 10H3C2.44772 10 2 9.55228 2 9V4C2 3.44772 2.44772 3 3 3Z"
+        fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>`,
   //#region flags----------------------------------------------------------------------------------
   RussianFlag: `
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
