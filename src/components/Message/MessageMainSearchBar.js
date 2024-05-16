@@ -4,6 +4,7 @@ import { SearchBar } from 'react-native-elements'
 import { StyleSheet } from 'react-native'
 import initializeScalingUtils from '../../utils/NormalizeSize'
 import { colorPalette } from '../../Config/Theme'
+import { useTranslation } from 'react-i18next'
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
 const MessageMainSearchBar = ({ RightIconContainerStyle,
@@ -16,6 +17,7 @@ const MessageMainSearchBar = ({ RightIconContainerStyle,
     searchQuery,
     setSearchQuery
 }) => {
+    const { t } = useTranslation();
     const handleSearch = (query) => {
         setSearchQuery(query);
         setRightIconContainerStyle(1);
@@ -47,7 +49,7 @@ const MessageMainSearchBar = ({ RightIconContainerStyle,
     }
     return (
         <SearchBar
-            placeholder={"Search..."}
+            placeholder={t('screens.messages.searchPlaceHolder') + "..."}
             onChangeText={handleSearch}
             onPressIn={handleSearchBarClick}
             value={searchQuery}
@@ -70,21 +72,21 @@ const MessageMainSearchBar = ({ RightIconContainerStyle,
             }}
             keyboardAppearance={"default"}
             searchIcon={{ type: "ionicon", name: "search" }}
-            cancelButtonTitle={"Cancel"}
+            cancelButtonTitle={t('screens.messages.searchCancel')}
         />
     )
 }
 const SearchScreenStyles = StyleSheet.create({
     container: {
         flexGrow: 1,
-        backgroundColor: colorPalette.dark.Primary ,
+        backgroundColor: colorPalette.dark.Primary,
         justifyContent: "center",
         alignItems: "center",
         paddingBottom: moderateScale(88),
     },
     searchBarContainer: {
         paddingHorizontal: moderateScale(10),
-        backgroundColor: colorPalette.dark.Primary ,
+        backgroundColor: colorPalette.dark.Primary,
         borderBottomColor: "transparent",
         borderTopColor: "transparent",
     },
