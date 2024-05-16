@@ -7,22 +7,23 @@ import ProfileContent from '../components/Profile/ProfileContent'
 import ProfilePost from '../components/Profile/ProfilePost'
 import LoadingPlaceHolder from '../components/Search/LoadingPlaceHolder'
 import { colorPalette } from '../Config/Theme'
-import { getColorForTheme } from '../utils/ThemeUtils'
+
 import { useTheme } from '../context/ThemeContext'
+import { useTranslation } from 'react-i18next'
+import UseCustomTheme from '../utils/UseCustomTheme'
+import EmptyDataParma from '../components/CustomComponent/EmptyDataParma'
+import { View } from 'moti'
 
 const UserProfileScreen = () => {
+    const { t } = useTranslation();
     const userData = useContext(UserContext);
     const [userPosts, setUserPost] = useState([])
     const [refreshing, setRefreshing] = useState(false);
     const [scrollToPostId, setScrollToPostId] = useState(null)
-
+    const [loading, setLoading] = useState(true);
     const { selectedTheme } = useTheme();
-    const systemTheme = selectedTheme === "system";
-    const theme = getColorForTheme(
-        { dark: colorPalette.dark, light: colorPalette.light },
-        selectedTheme,
-        systemTheme
-    );
+    const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
+
     const handleLogout = async () => {
         try {
             await firebase.auth().signOut()
@@ -45,10 +46,17 @@ const UserProfileScreen = () => {
         if (user) {
             const query = db.collection('users').doc(user.email).collection('posts').orderBy('createdAt', 'desc');
             return query.onSnapshot(snapshot => {
-                setUserPost(snapshot.docs.map(post => ({
+                const userPostData = snapshot.docs.map(post => ({
                     id: post.id,
                     ...post.data()
-                })))
+                }))
+                if (userPostData.length === 0) {
+                    setLoading(null);
+                } else {
+                    console.log("User posts fetched successfully");
+                    setUserPost(userPostData)
+                    setLoading(false);
+                }
             }, error => {
                 console.error("Error fetching posts:", error);
             });
@@ -75,7 +83,7 @@ const UserProfileScreen = () => {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <>
-                <ProfileHeader handleLogout={handleLogout} userData={userData} theme={theme} />
+                <ProfileHeader handleLogout={handleLogout} userData={userData} theme={theme} t={t} />
                 <ScrollView
                     keyboardDismissMode="on-drag"
                     keyboardShouldPersistTaps={'always'}
@@ -87,12 +95,18 @@ const UserProfileScreen = () => {
                         />
                     }
                 >
-                    <ProfileContent userData={userData} userPosts={userPosts} theme={theme} />
-                    {userPosts.length !== 0 || userPosts.id?.length !== 0 ? (
-                        <ProfilePost posts={userPosts} userData={userData} onPostPress={handlePostPress} keyValue={"NavigationToMyProfile"} />
-                    ) : (
-                        <LoadingPlaceHolder condition={userPosts.length === 0} theme={theme} />
-                    )}
+                    <ProfileContent userData={userData} userPosts={userPosts} theme={theme} t={t} />
+                    {loading === false ? (
+                        <ProfilePost posts={userPosts} userData={userData} onPostPress={handlePostPress} keyValue={"NavigationToMyProfile"} t={t} />
+                    ) : loading === null ? (
+                        <View style={{ minHeight: 550 }}>
+                            <EmptyDataParma SvgElement={"AddPostIllustration"} theme={theme} t={t} dataMessage={"You can share posts to tell you friends about your recipes."} TitleDataMessage={"Nothing shared yet"} />
+                        </View>
+
+                    ) :
+                        (
+                            <LoadingPlaceHolder condition={userPosts.length === 0} theme={theme} />
+                        )}
                 </ScrollView>
             </>
         </SafeAreaView>
@@ -100,3 +114,6 @@ const UserProfileScreen = () => {
 }
 
 export default UserProfileScreen
+
+
+
