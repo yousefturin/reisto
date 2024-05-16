@@ -2,21 +2,20 @@ import { SafeAreaView } from 'react-native'
 import React from 'react'
 import FormikPostUploader from '../components/NewPost/FormikPostUploader'
 import { colorPalette } from '../Config/Theme'
-import { getColorForTheme } from '../utils/ThemeUtils'
+
 import { useTheme } from '../context/ThemeContext'
+import { useTranslation } from 'react-i18next'
+import UseCustomTheme from '../utils/UseCustomTheme'
 
 const AddPostScreen = () => {
+    const { t } = useTranslation();
     const { selectedTheme } = useTheme();
-    const systemTheme = selectedTheme === "system";
-    const theme = getColorForTheme(
-        { dark: colorPalette.dark, light: colorPalette.light },
-        selectedTheme,
-        systemTheme
-    );
+    const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
+
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
-            <FormikPostUploader theme={theme} />
+            <FormikPostUploader theme={theme} t={t} />
         </SafeAreaView>
     )
 }
