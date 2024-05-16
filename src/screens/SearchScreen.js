@@ -14,9 +14,12 @@ import SvgComponent from '../utils/SvgComponents';
 import LoadingPlaceHolder from '../components/Search/LoadingPlaceHolder';
 import { colorPalette } from '../Config/Theme';
 import { useTheme } from '../context/ThemeContext';
-import { getColorForTheme } from '../utils/ThemeUtils';
+
+import { useTranslation } from 'react-i18next';
+import UseCustomTheme from '../utils/UseCustomTheme';
 
 const SearchScreen = () => {
+    const { t } = useTranslation()
     const [searchQuery, setSearchQuery] = useState("");
     const [searchMode, setSearchMode] = useState(false);
     const [searchedItems, setSearchedItems] = useState([]);
@@ -29,12 +32,8 @@ const SearchScreen = () => {
     const [clickedUsers, setClickedUsers] = useState([]);
 
     const { selectedTheme } = useTheme();
-    const systemTheme = selectedTheme === "system";
-    const theme = getColorForTheme(
-        { dark: colorPalette.dark, light: colorPalette.light },
-        selectedTheme,
-        systemTheme
-    );
+    const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
+
 
 
     // Determine whether to display searchedItems based on searchQuery and clearedManually flag
@@ -201,7 +200,7 @@ const SearchScreen = () => {
         // this must be on a scrollView-<<<<<<<<<<<<<<<<
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary, justifyContent: "flex-start" }}>
             <SearchBar
-                placeholder={"Search..."}
+                placeholder={t('screens.messages.searchPlaceHolder') + "..."}
                 onChangeText={handleSearch}
                 onPressIn={handleSearchBarClick}
                 value={searchQuery}
@@ -230,7 +229,8 @@ const SearchScreen = () => {
                 }}
                 keyboardAppearance={"default"}
                 searchIcon={{ type: "ionicon", name: "search" }}
-                cancelButtonTitle={"Cancel"}
+                cancelButtonTitle={t('screens.messages.searchCancel')}
+
             />
             <View>
                 {searchMode ? (
@@ -291,7 +291,7 @@ const SearchScreen = () => {
 
                 ) : (
                     <>
-                        {posts.length === 0 && <LoadingPlaceHolder condition={posts.length} theme={theme}   />}
+                        {posts.length === 0 && <LoadingPlaceHolder condition={posts.length} theme={theme} />}
                         <SavedPostsGrid posts={posts} userData={userData} navigateToScreen={"SearchExplore"} />
                     </>
                 )
