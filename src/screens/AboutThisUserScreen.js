@@ -10,19 +10,18 @@ import initializeScalingUtils from '../utils/NormalizeSize';
 import { formatCreatedAt } from '../utils/FormatCreateAt';
 import { colorPalette } from '../Config/Theme';
 import { useTheme } from '../context/ThemeContext';
-import { getColorForTheme } from '../utils/ThemeUtils';
+
+import { useTranslation } from 'react-i18next';
+import UseCustomTheme from '../utils/UseCustomTheme';
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
 const AboutThisUserScreen = ({ route }) => {
+    const { t } = useTranslation();
     const { ownerID } = route.params;
     const { selectedTheme } = useTheme();
-    const systemTheme = selectedTheme === "system";
-    const theme = getColorForTheme(
-        { dark: colorPalette.dark, light: colorPalette.light },
-        selectedTheme,
-        systemTheme
-    );
+    const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
+
     // const targetTime = new Date((timestampObj.seconds * 1000) + (timestampObj.nanoseconds / 1000000));
     const [userData, setUserData] = useState([])
     useEffect(() => {
@@ -44,16 +43,17 @@ const AboutThisUserScreen = ({ route }) => {
             unsubscribe && unsubscribe();
         };
     }, [])
+    const headerTitle = t("screens.home.text.aboutThisAccount.headerTitle")
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: themePrimary }}>
-            <SavedPostsHeader header={"About this account"} theme={theme} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
+            <SavedPostsHeader header={headerTitle} theme={theme} />
             <Divider width={0.7} orientation='horizontal' color={theme.dividerPrimary} />
-            <AboutThisUserContent userData={userData} theme={theme} />
+            <AboutThisUserContent userData={userData} theme={theme} t={t} />
         </SafeAreaView>
     )
 }
 
-const AboutThisUserContent = ({ userData, theme }) => (
+const AboutThisUserContent = ({ userData, theme, t }) => (
     <>
         <View style={{ justifyContent: "flex-start", alignItems: "center", marginHorizontal: 20, margin: 10 }}>
             <Image source={{ uri: userData.profile_picture, cache: "force-cache" }}
@@ -63,7 +63,7 @@ const AboutThisUserContent = ({ userData, theme }) => (
                     borderRadius: 50,
                     margin: 10,
                     borderWidth: 1.5,
-                    borderColor: themeSecondary
+                    borderColor: theme.Secondary
                 }}
                 placeholder={blurHash}
                 contentFit="cover"
@@ -74,20 +74,20 @@ const AboutThisUserContent = ({ userData, theme }) => (
                     {userData.username}
                 </Text>
             </View>
-            <Text style={{ fontSize: 12, color: theme.textSecondary, textAlign: "center", fontWeight: "500" }}>To help keep our community authentic, we're showing information about accounts on Reisto.</Text>
+            <Text style={{ fontSize: 12, color: theme.textSecondary, textAlign: "center", fontWeight: "500" }}>{t("screens.home.text.aboutThisAccount.explanation")}</Text>
         </View>
         <View style={{ marginHorizontal: 10 }}>
             <View style={{ flexDirection: "row", gap: 10, marginVertical: 30, }}>
                 <SvgComponent svgKey="CalenderSVG" width={moderateScale(30)} height={moderateScale(30)} />
                 <View style={{ justifyContent: "center" }}>
-                    <Text style={{ color: theme.textPrimary, fontSize: 16, fontWeight: "500" }}>Date joined</Text>
+                    <Text style={{ color: theme.textPrimary, fontSize: 16, fontWeight: "500" }}>{t("screens.home.text.aboutThisAccount.dateInfo")}</Text>
                     <Text style={{ fontSize: 12, color: theme.textSecondary, fontWeight: "400" }}>{userData.createdAt}</Text>
                 </View>
             </View>
             <View style={{ flexDirection: "row", gap: 10 }}>
                 <SvgComponent svgKey="LocationSVG" width={moderateScale(30)} height={moderateScale(30)} />
                 <View style={{ justifyContent: "center" }}>
-                    <Text style={{ color: theme.textPrimary, fontSize: 16, fontWeight: "500" }}>Account based in</Text>
+                    <Text style={{ color: theme.textPrimary, fontSize: 16, fontWeight: "500" }}>{t("screens.home.text.aboutThisAccount.locationInfo")}</Text>
                     {/* temp till the db and back-end fix the issue for getting location */}
                     <Text style={{ fontSize: 12, color: theme.textSecondary, fontWeight: "400" }}>{userData.location ? "undefined" : "Türkiye"}</Text>
                 </View>
