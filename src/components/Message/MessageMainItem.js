@@ -14,14 +14,14 @@ import { MessagesNumContext } from '../../context/MessagesNumProvider';
 import { colorPalette } from '../../Config/Theme';
 
 
-const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag, theme }) => {
+const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag, theme, t }) => {
     const navigation = useNavigation();
     const { setMessagesNum } = useContext(MessagesNumContext);
     const [lastMessage, setLastMessage] = useState(null);
     const [loading, setLoading] = useState(true);
     const { moderateScale } = initializeScalingUtils(Dimensions);
     const SkeletonCommonProps = {
-        colorMode:  theme.Primary === '#050505' ? 'dark':'light',
+        colorMode: theme.Primary === '#050505' ? 'dark' : 'light',
         backgroundColor: theme.Secondary,
         transition: {
             type: 'timing',
@@ -73,7 +73,7 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag, theme }) =
                             <View style={{ flexDirection: "row-reverse", gap: 2, }}>
                                 <>
                                     {lastMessage.text === null ? (
-                                        <Text style={{ color: theme.textSecondary, fontSize: 15, fontWeight: "500", }} numberOfLines={1} ellipsizeMode="tail">Sent</Text>
+                                        <Text style={{ color: theme.textSecondary, fontSize: 15, fontWeight: "500", }} numberOfLines={1} ellipsizeMode="tail">{t('screens.messages.messagesMain.messagesISent.title')}</Text>
 
                                     ) : (
                                         <Text style={{ color: theme.textSecondary, fontSize: 15, fontWeight: "500", }} numberOfLines={1} ellipsizeMode="tail">{lastMessage?.text}</Text>
@@ -95,9 +95,9 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag, theme }) =
             // if not me the just show it normally
             return <View style={{ flexDirection: "row-reverse", gap: 2, }}>
                 {!lastMessage.seenBy.includes(userData.owner_uid) ? (
-                    <Text style={{ color: !lastMessage.seenBy.includes(userData.owner_uid) ? theme.textPrimary : theme.textSecondary, fontSize: 15, fontWeight: !lastMessage.seenBy.includes(userData.owner_uid) ? "700" : "500", }} numberOfLines={1} ellipsizeMode="tail"  >1 new Message</Text>
+                    <Text style={{ color: !lastMessage.seenBy.includes(userData.owner_uid) ? theme.textPrimary : theme.textSecondary, fontSize: 15, fontWeight: !lastMessage.seenBy.includes(userData.owner_uid) ? "700" : "500", }} numberOfLines={1} ellipsizeMode="tail"  >{t('screens.messages.messagesMain.messagesIReceived.title')}</Text>
                 ) : (
-                    <Text style={{ color: !lastMessage.seenBy.includes(userData.owner_uid) ? theme.textPrimary : theme.textSecondary, fontSize: 15, fontWeight: !lastMessage.seenBy.includes(userData.owner_uid) ? "700" : "500", }} numberOfLines={1} ellipsizeMode="tail"  >Seen</Text>
+                    <Text style={{ color: !lastMessage.seenBy.includes(userData.owner_uid) ? theme.textPrimary : theme.textSecondary, fontSize: 15, fontWeight: !lastMessage.seenBy.includes(userData.owner_uid) ? "700" : "500", }} numberOfLines={1} ellipsizeMode="tail"  >{t('screens.messages.messagesMain.messagesIReceived.action')}</Text>
                 )}
                 {/* // if the user did not fetch the last message then show the dot as it indicate that the message is not seen yet by the user */}
                 <View style={{ alignSelf: "center" }}>
@@ -125,8 +125,8 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag, theme }) =
     const renderTime = () => {
         if (lastMessage && lastMessage.createdAt) {
             let date = lastMessage.createdAt;
-            const dataFormatted = calculateTimeDifference(date);
-            return dataFormatted + " ago";
+            const dataFormatted = calculateTimeDifference(date, t);
+            return dataFormatted + " " +`${t('screens.messages.timeRender')}`;
         } else {
             return '';
         }
@@ -163,7 +163,7 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag, theme }) =
                         />
                     ) : (
                         <>
-                            {lastMessage ? renderLastMessage() : <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>Say Hi 👋</Text>}
+                            {lastMessage ? renderLastMessage() : <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{t('screens.messages.defaultMessage')}</Text>}
                         </>
                     )}
                 </View>
@@ -211,7 +211,7 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag, theme }) =
                 <View style={{ flexDirection: "column", width: "60%", justifyContent: "center", alignItems: "flex-start" }}>
                     <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
                     {/* just to style the username in the center if there is no display_name to be shown */}
-                    {item.displayed_name ? <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text> : <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>Say Hi 👋</Text>}
+                    {item.displayed_name ? <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text> : <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{t('screens.messages.defaultMessage')}</Text>}
                 </View>
             </TouchableOpacity>
         )
