@@ -26,6 +26,7 @@ import ReactNativeModal from 'react-native-modal';
 import { ModalContentForUserWithDifferentSameId, ModalContentForUserWithSameId, ModalHeader } from './Modals';
 import { GenerateRoomId } from '../../utils/GenerateChatId';
 import { addDoc, collection } from 'firebase/firestore';
+import { useTranslation } from 'react-i18next';
 
 const screenHeight = Dimensions.get('window').height;
 const { moderateScale } = initializeScalingUtils(Dimensions);
@@ -47,6 +48,7 @@ const Icons = [
 ]
 //#region Post
 const Post = ({ post, userData, isLastPost, usersForSharePosts, theme }) => {
+    const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
     const [isContainerVisible, setContainerVisible] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -243,19 +245,19 @@ const Post = ({ post, userData, isLastPost, usersForSharePosts, theme }) => {
                 <PostFooter toggleContainer={toggleContainer} post={post} handleLike={handleLike} handleSavedPost={handleSavedPost}
                     savedPosts={savedPosts} handleSharePostToggle={handleSharePostToggle}
                     setSharePostModal={setSharePostModal} sharePostModal={sharePostModal} theme={theme} />
-                <Likes post={post} theme={theme} />
-                <CategoryAndTime post={post} theme={theme} />
-                <Caption post={post} isExpanded={isExpanded} toggleCaption={toggleCaption} theme={theme} />
+                <Likes post={post} theme={theme} t={t} />
+                <CategoryAndTime post={post} theme={theme} t={t} />
+                <Caption post={post} isExpanded={isExpanded} toggleCaption={toggleCaption} theme={theme} t={t} />
                 {!!post.comments.length ?
                     <TouchableOpacity onPress={toggleContainer}>
-                        <CommentSection post={post} theme={theme} />
+                        <CommentSection post={post} theme={theme} t={t} />
                     </TouchableOpacity> : null
                 }
 
                 <Comments post={post} setContainerVisible={setContainerVisible} handleComment={handleComment}
                     setCommentText={setCommentText} commentText={commentText} theme={theme}
-                    isContainerVisible={isContainerVisible} userData={userData} />
-                <TimeStamp post={post} theme={theme} />
+                    isContainerVisible={isContainerVisible} userData={userData} t={t} />
+                <TimeStamp post={post} theme={theme} t={t} />
                 {/* Default name is Modal but since i have another Modal imported i used the parent name  */}
                 <ReactNativeModal
                     isVisible={isModalVisible}
@@ -281,10 +283,10 @@ const Post = ({ post, userData, isLastPost, usersForSharePosts, theme }) => {
                         {userData.owner_uid === post.owner_uid ? (
                             <ModalContentForUserWithSameId handleSavedPost={handleSavedPost} theme={theme}
                                 savedPosts={savedPosts} post={post} setIsModalVisible={setIsModalVisible}
-                                isAlertModaVisible={isAlertModaVisible} setIsAlertModaVisible={setIsAlertModaVisible} />
+                                isAlertModaVisible={isAlertModaVisible} setIsAlertModaVisible={setIsAlertModaVisible} t={t} />
                         ) : (
                             <ModalContentForUserWithDifferentSameId handleSavedPost={handleSavedPost} savedPosts={savedPosts}
-                                post={post} setIsModalVisible={setIsModalVisible} theme={theme} />
+                                post={post} setIsModalVisible={setIsModalVisible} theme={theme} t={t} />
                         )
                         }
                     </View>
@@ -351,7 +353,7 @@ const Post = ({ post, userData, isLastPost, usersForSharePosts, theme }) => {
                                             <Text style={{
                                                 color: theme.textPrimary,
                                                 textAlign: 'center',
-                                            }}>Share</Text>
+                                            }}>{t('screens.home.text.share')}</Text>
                                         </LinearGradient>
                                     </TouchableOpacity>
                                 )}
@@ -366,11 +368,11 @@ const Post = ({ post, userData, isLastPost, usersForSharePosts, theme }) => {
 //#endregion
 
 //#region  Time display
-const TimeStamp = ({ post, theme }) => (
+const TimeStamp = ({ post, theme, t }) => (
     post.createdAt && (
         <View style={{ marginTop: 5 }}>
             <Text style={{ color: theme.textSecondary }}>
-                {calculateTimeDifference(post.createdAt)} ago
+                {calculateTimeDifference(post.createdAt, t)}{' '}{t('screens.home.text.TimeStamp')}
             </Text>
         </View>
     )
@@ -538,52 +540,52 @@ const Icon = ({ svgKey, theme }) => (
 //#endregion
 
 //#region Likes Display
-const Likes = ({ post, theme }) => (
+const Likes = ({ post, theme, t }) => (
     <View style={{ flexDirection: "row", marginTop: 4, }}>
-        <Text style={{ color: theme.textPrimary, fontWeight: "700" }}>{post.likes_by_users.length.toLocaleString('en')} Likes</Text>
+        <Text style={{ color: theme.textPrimary, fontWeight: "700" }}>{post.likes_by_users.length.toLocaleString('en')} {t('screens.home.text.like')}</Text>
     </View>
 )
 //#endregion
 
 //#region Category and Time Display
-const CategoryAndTime = ({ post, theme }) => (
+const CategoryAndTime = ({ post, theme, t }) => (
     <View style={{ flexDirection: "row", marginTop: 5, gap: 10 }}>
         <LinearGradient
             colors={[theme.appGradientPrimary, theme.appGradientSecondary, theme.appGradientTertiary]}
             style={{ minWidth: "20%", maxWidth: "30%", padding: 5, borderRadius: 50, justifyContent: "center", alignItems: "center" }}>
-            <Text style={{ color:  theme.Primary === "#050505" ? theme.textPrimary : theme.Primary, fontWeight: "600" }}>{post.category}</Text>
+            <Text style={{ color: theme.Primary === "#050505" ? theme.textPrimary : theme.Primary, fontWeight: "600" }}>{post.category}</Text>
         </LinearGradient>
         <View style={{ height: "100%", width: 1, borderRadius: 50, backgroundColor: theme.textPrimary }}></View>
         <View style={{ width: "20%", padding: 5, justifyContent: "center", alignItems: "flex-start" }}>
-            <Text style={{ color: theme.textPrimary, fontWeight: "600" }}>{post.timeOfMake} min</Text>
+            <Text style={{ color: theme.textPrimary, fontWeight: "600" }}>{post.timeOfMake} {t('screens.home.text.CategoryAndTime')}</Text>
         </View>
     </View>
 )
 //#endregion
 
 //#region Caption Display
-const Caption = ({ post, isExpanded, toggleCaption, theme }) => (
+const Caption = ({ post, isExpanded, toggleCaption, theme, t }) => (
     <>
         <View style={{ flexDirection: "row", marginTop: 5 }}>
             <Text style={{ color: theme.textPrimary }} onPress={toggleCaption}>
                 <Text style={{ fontWeight: "700" }}>{post.user} </Text>
                 {isExpanded ? post.caption : post.caption.slice(0, 100) + '... '}
                 <Text style={{ color: theme.textSecondary }}>
-                    {isExpanded ? '' : 'more'}
+                    {isExpanded ? '' : t('screens.home.text.CaptionExpand')}
                 </Text>
             </Text>
         </View>
-        {isExpanded ? <CaptionIngredient post={post} theme={theme} /> : null}
-        {isExpanded ? <CaptionInstruction post={post} theme={theme} /> : null}
+        {isExpanded ? <CaptionIngredient post={post} theme={theme} t={t} /> : null}
+        {isExpanded ? <CaptionInstruction post={post} theme={theme} t={t} /> : null}
     </>
 
 )
 //#endregion
 
 //#region Caption Ingredient
-const CaptionIngredient = ({ post, theme }) => (
+const CaptionIngredient = ({ post, theme, t }) => (
     <>
-        <Text style={{ fontWeight: "700", fontSize: 18, color: theme.textPrimary, marginBottom: 5, marginTop: 10 }}>Ingredients</Text>
+        <Text style={{ fontWeight: "700", fontSize: 18, color: theme.textPrimary, marginBottom: 5, marginTop: 10 }}>{t('screens.home.text.Ingredients')}</Text>
         <Text style={{ color: theme.textPrimary }}>
             {(
                 post.captionIngredients.map((ingredient, index) => (
@@ -599,9 +601,9 @@ const CaptionIngredient = ({ post, theme }) => (
 //#endregion
 
 //#region Caption Instruction
-const CaptionInstruction = ({ post, theme }) => (
+const CaptionInstruction = ({ post, theme, t }) => (
     <>
-        <Text style={{ fontWeight: "700", fontSize: 18, color: theme.textPrimary, marginBottom: 5, marginTop: 0 }}>Instructions</Text>
+        <Text style={{ fontWeight: "700", fontSize: 18, color: theme.textPrimary, marginBottom: 5, marginTop: 0 }}>{t('screens.home.text.Instructions')}</Text>
         <Text style={{ color: theme.textPrimary }}>
             {(
                 post.captionInstructions.map((instruction, index) => (
@@ -617,15 +619,15 @@ const CaptionInstruction = ({ post, theme }) => (
 //#endregion
 
 //#region CommentSection text count Display
-const CommentSection = ({ post, theme }) => (
+const CommentSection = ({ post, theme, t }) => (
     <View style={{ marginTop: 5 }}>
         {/* If the is no !! tha application will crash over the .length function since it will return a 0 value if it
     does not have any comments and by that the React will not render teh 0 value because it is not wrapped 
     in text component, and to return teh value of true or false from that line condition it must use the "!!" */}
         {!!post.comments.length && (
             <Text style={{ color: theme.textSecondary }}>
-                View{post.comments.length > 1 ? ' all' : ''} {post.comments.length}{' '}
-                {post.comments.length > 1 ? 'comments' : 'comment'}
+                {t('screens.home.text.comments.view')}{post.comments.length > 1 ? ' ' + t('screens.home.text.comments.all') : ''} {post.comments.length}{' '}
+                {post.comments.length > 1 ? t('screens.home.text.comments.many') : t('screens.home.text.comments.one')}
             </Text>
         )}
     </View>
@@ -633,7 +635,7 @@ const CommentSection = ({ post, theme }) => (
 //#endregion
 
 //#region Comments Modal
-const Comments = ({ post, isContainerVisible, setContainerVisible, userData, handleComment, commentText, setCommentText, theme }) => {
+const Comments = ({ post, isContainerVisible, setContainerVisible, userData, handleComment, commentText, setCommentText, theme, t }) => {
     const [btnStat, setBtnStat] = useState(false)
 
     const handleDisableBtn = (value) => {
@@ -654,15 +656,13 @@ const Comments = ({ post, isContainerVisible, setContainerVisible, userData, han
             onRequestClose={() => {
                 setContainerVisible(!isContainerVisible);
             }}
-            on
-
         >
             <View
                 style={{ backgroundColor: theme.SubPrimary, flex: 1 }}
             >
 
-                <CommentsHeader theme={theme} />
-                <CommentsContent post={post} theme={theme} />
+                <CommentsHeader theme={theme} t={t} />
+                <CommentsContent post={post} theme={theme} t={t} />
 
                 {/* this cant be refactored due to the data passing issue, the post must be as post=(post) and the userData={userData} handleComment={handleComment}
                 and due to this they cant be compound together, it has to stay like this avoiding nesting the prams */}
@@ -701,7 +701,7 @@ const Comments = ({ post, isContainerVisible, setContainerVisible, userData, han
                                     paddingTop: Platform.OS === 'ios' ? 15 : 0,
                                     paddingBottom: 15,
                                 }]}
-                                placeholder={`Add a Comment for ${post.user}...`}
+                                placeholder={`${t('screens.home.text.comments.placeHolder')} ${post.user} ${t('screens.home.text.comments.placeHolderExtra')}...`}
                                 placeholderTextColor={theme.placeholder}
                                 value={commentText}
                                 textContentType='none'
@@ -736,7 +736,7 @@ const Comments = ({ post, isContainerVisible, setContainerVisible, userData, han
 //#endregion
 
 //#region Comment Data inside Modal
-const CommentsContent = ({ post, theme }) => {
+const CommentsContent = ({ post, theme, t }) => {
     return (
         <ScrollView
             keyboardDismissMode="on-drag"
@@ -764,7 +764,7 @@ const CommentsContent = ({ post, theme }) => {
                         </View>
 
                         <View>
-                            <Text style={{ color: theme.textSecondary, marginRight: 6, }}> {calculateTimeDifference(comment.createdAt)}</Text>
+                            <Text style={{ color: theme.textSecondary, marginRight: 6, }}> {calculateTimeDifference(comment.createdAt, t)}</Text>
                         </View>
                     </View>
                 </View>
@@ -777,10 +777,10 @@ const CommentsContent = ({ post, theme }) => {
 //#endregion
 
 //#region Comments Header in Modal
-const CommentsHeader = ({ theme }) => (
+const CommentsHeader = ({ theme, t }) => (
     <>
         <View style={[styles.ModalTopNotch, { backgroundColor: theme.notch, }]} />
-        <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 20, alignSelf: "center", padding: 20, marginTop: 5 }}>Comments</Text>
+        <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 20, alignSelf: "center", padding: 20, marginTop: 5 }}>{t('screens.home.text.comments.many')}</Text>
         <Divider width={1} orientation='horizontal' color={theme.dividerPrimary} />
     </>
 )
