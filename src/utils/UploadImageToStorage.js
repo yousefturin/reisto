@@ -1,5 +1,10 @@
 import { firebase } from "../firebase";
 
+/**
+ * Uploads an image to Firebase Storage and returns the download URL of the uploaded image.
+ * @param {string} uri - The URI of the image to be uploaded.
+ * @returns {Promise<string|null>} - A promise that resolves to the download URL of the uploaded image, or null if there was an error.
+ */
 export default UploadImageToStorage = async (uri) => {
     try {
         // Fetch the blob directly from the uri
