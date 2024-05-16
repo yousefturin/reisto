@@ -7,7 +7,7 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import { db, firebase } from '../../firebase';
 import { Image } from 'expo-image';
 import { colorPalette } from '../../Config/Theme';
-const EditProfileImage = ({ userData, theme }) => {
+const EditProfileImage = ({ userData, theme, t }) => {
     const [image, setImage] = useState(null);
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -74,7 +74,7 @@ const EditProfileImage = ({ userData, theme }) => {
 
             </TouchableOpacity>
             <TouchableOpacity onPress={() => pickImage()} activeOpacity={0.9}>
-                <Text style={{ color: theme.appPrimary, fontWeight: "600", fontSize: 16, textAlign: "center", marginBottom: 18 }}>Edit or remove picture</Text>
+                <Text style={{ color: theme.appPrimary, fontWeight: "600", fontSize: 16, textAlign: "center", marginBottom: 18 }}>{t('screens.profile.text.profileEdit.profilePicture')}</Text>
             </TouchableOpacity>
         </View>
     )
