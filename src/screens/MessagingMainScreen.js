@@ -14,24 +14,26 @@ import { SearchBar } from 'react-native-elements'
 import initializeScalingUtils from '../utils/NormalizeSize'
 import { useNavigation } from '@react-navigation/native'
 import { colorPalette } from '../Config/Theme'
-import { getColorForTheme } from '../utils/ThemeUtils'
+
 import { useTheme } from '../context/ThemeContext'
+import { useTranslation } from 'react-i18next'
+import UseCustomTheme from '../utils/UseCustomTheme'
+import { use } from 'i18next'
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
 const MessagingMainScreen = () => {
+    const { t } = useTranslation();
+
     const userData = useContext(UserContext);
     const [usersForMessaging, setUsersForMessaging] = useState([]);
     const [excludedUsers, setExcludedUsers] = useState([])
     const [sortedData, setSortedData] = useState([]);
+    const [loading, setLoading] = useState(true);
     const navigation = useNavigation();
 
     const { selectedTheme } = useTheme();
-    const systemTheme = selectedTheme === "system";
-    const theme = getColorForTheme(
-        { dark: colorPalette.dark, light: colorPalette.light },
-        selectedTheme,
-        systemTheme
-    );
+    const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
+
     //#region search 
     const [searchQuery, setSearchQuery] = useState("");
     const [searchMode, setSearchMode] = useState(false);
@@ -139,8 +141,14 @@ const MessagingMainScreen = () => {
 
                             // set the excluded users to the matchingPrivateMessages array
                             setExcludedUsers(matchingPrivateMessages);
+
                             // set the users data to the state
-                            setUsersForMessaging(userDataDb);
+                            if (userDataDb.length === 0) {
+                                setLoading(null);
+                            } else {
+                                setUsersForMessaging(userDataDb);
+                                setLoading(false);
+                            }
                         })
                         .catch((error) => {
                             console.error("Error fetching user data:", error);
@@ -202,16 +210,17 @@ const MessagingMainScreen = () => {
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <MessageMainHeader excludedUsers={excludedUsers} userData={userData} theme={theme} />
             <SearchBar
-                placeholder={"Search..."}
+                disabled={loading === null}
+                placeholder={t('screens.messages.searchPlaceHolder') + "..."}
                 onChangeText={handleSearch}
-                onPressIn={handleSearchBarClick}
+                onPressIn={loading === null ? null : handleSearchBarClick}
                 value={searchQuery}
                 platform="ios"
                 containerStyle={[SearchScreenStyles.searchBarContainer, { backgroundColor: theme.Primary, }]}
                 inputContainerStyle={[
                     SearchScreenStyles.searchBarInputContainer,
                     searchMode && SearchScreenStyles.searchBarInputContainerTop,
-                    { backgroundColor: theme.SubPrimary,  }
+                    { backgroundColor: theme.SubPrimary, }
                 ]}
                 rightIconContainerStyle={{ opacity: RightIconContainerStyle }}
                 inputStyle={[
@@ -231,7 +240,8 @@ const MessagingMainScreen = () => {
                 }}
                 keyboardAppearance={"default"}
                 searchIcon={{ type: "ionicon", name: "search" }}
-                cancelButtonTitle={"Cancel"}
+                cancelButtonTitle={t('screens.messages.searchCancel')}
+
             />
             <View>
                 {searchMode ? (
@@ -256,14 +266,15 @@ const MessagingMainScreen = () => {
 
                                 <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
                                     <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
-                                    {item.displayed_name ? <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text> : <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>Say Hi 👋</Text>}
+                                    {item.displayed_name ? <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text> : <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>{t('screens.messages.defaultMessage')}</Text>}
                                 </View>
                             </TouchableOpacity>
                         )) : null}
                     </>
                 ) : (
                     <MessageMainList usersForMessaging={usersForMessaging}
-                        theme={theme}
+                    loading={loading}
+                        theme={theme} t={t}
                         userData={userData} sortedData={sortedData}
                         updateLastMessage={updateLastMessage} flag={"FromMain"} />
                 )}
