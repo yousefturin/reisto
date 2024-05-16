@@ -4,18 +4,18 @@ import { firebase } from '../firebase'
 import { NavigationContainer } from "@react-navigation/native";
 import { UserProvider } from '../context/UserDataProvider';
 import LottieView from 'lottie-react-native';
-import { Dimensions, StatusBar, View, useColorScheme } from 'react-native';
+import { Dimensions, View, useColorScheme } from 'react-native';
 import SvgComponent from '../utils/SvgComponents';
 import initializeScalingUtils from '../utils/NormalizeSize';
 import { MessagesNumProvider } from '../context/MessagesNumProvider';
-import { colorPalette } from '../Config/Theme';
-import { ThemeProvider, useTheme } from '../context/ThemeContext';
-import { getColorForTheme } from '../utils/ThemeUtils';
+import { ThemeProvider } from '../context/ThemeContext';
+import '../Service/i18n';
 
 const AuthNavigation = () => {
     const [currentUser, setCurrentUser] = useState(null)
     const [loading, setLoading] = useState(true);
     const theme = useColorScheme();
+
     const DarkThemeNavigator = {
         colors: {
             primary: 'rgb(10, 132, 255)',
@@ -71,9 +71,6 @@ const AuthNavigation = () => {
                     <UserProvider>
                         <MessagesNumProvider>
                             <AuthAppNavigator />
-                            <StatusBar
-                                barStyle={theme === 'dark' ? "light-content" : "dark-content"} // for now it is like that till the theme is  integrated and implemented
-                            />
                         </MessagesNumProvider>
                     </UserProvider>
                     : <UnAuthAppNavigator />}

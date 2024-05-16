@@ -1,4 +1,4 @@
-import { SafeAreaView, RefreshControl, FlatList, View, Text } from 'react-native'
+import { SafeAreaView, RefreshControl, FlatList } from 'react-native'
 import React, { useEffect, useState, useCallback, useContext, useLayoutEffect } from 'react'
 import Header from '../components/Home/Header'
 import Post from '../components/Home/Post'
@@ -7,22 +7,25 @@ import { UserContext } from '../context/UserDataProvider'
 import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder'
 import { colorPalette } from '../Config/Theme'
 import { useTheme } from '../context/ThemeContext'
-import { getColorForTheme } from '../utils/ThemeUtils'
+
+import { StatusBar } from 'react-native'
+import UseCustomTheme from '../utils/UseCustomTheme'
 
 
 const HomeScreen = () => {
     const [refreshing, setRefreshing] = useState(false);
-    const [posts, setPosts] = useState([])
+    const [posts, setPostFYP] = useState([])
+    const [postFollowing, setPostFollowing] = useState([])
     const [usersForSharePosts, setUsersForSharePosts] = useState([]);
+    const [followingUsers, setFollowingUsers] = useState([]);
+
     const userData = useContext(UserContext);
     const { selectedTheme } = useTheme();
-    const systemTheme = selectedTheme === "system";
-    const theme = getColorForTheme(
-        { dark: colorPalette.dark, light: colorPalette.light },
-        selectedTheme,
-        systemTheme
-    );
+    const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
+    // statusBarColorTheme is move from auth to give access to the theme values and based on that the status bar color will be changed
+    const statusBarColorTheme = UseCustomTheme(selectedTheme, { colorPaletteDark: "light-content", colorPaletteLight: "dark-content" })
 
+    //#region Fetching Posts
     useEffect(() => {
         // Call fetchPost when the component mounts
         const unsubscribe = fetchPost();
@@ -61,7 +64,7 @@ const HomeScreen = () => {
                     }
                 })
                 Promise.all(postsWithProfilePictures).then(posts => {
-                    setPosts(posts)
+                    setPostFYP(posts)
                 }).catch(error => {
                     console.error('Error fetching posts with profile pictures:', error);
                 })
@@ -71,6 +74,56 @@ const HomeScreen = () => {
             return null; // Return null if user is not authenticated
         }
     }, []);
+    //#endregion
+
+    // does not work as expected
+    //#region Fetching Following Posts
+    useEffect(() => {
+        // Call fetchPost when the component mounts
+        const unsubscribe = fetchContent();
+        console.log("Subscribed to following posts.");
+        // Return a cleanup function to unsubscribe when the component unmounts
+        return () => {
+            if (unsubscribe) {
+                unsubscribe();
+                console.log("Unsubscribed from following posts.");
+            }
+        };
+    }, [fetchContent]);
+
+    const fetchContent = useCallback(() => {
+        if (followingUsers.length !== 0) {
+            const uIds = followingUsers.map(user => user.owner_uid);
+            return db.collectionGroup('posts').where('owner_uid', '==', uIds).orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                const postsWithProfilePictures = snapshot.docs.map(async post => {
+                    const dbPostData = post.data();
+                    try {
+                        const userDoc = await db.collection('users').doc(dbPostData.owner_email).get()
+                        const dbUserData = userDoc.data()
+                        const dbProfilePicture = dbUserData.profile_picture
+                        return {
+                            id: post.id,
+                            profile_picture: dbProfilePicture,
+                            ...dbPostData
+                        }
+                    } catch (error) {
+                        console.error('Error fetching user document:', error)
+                        return {
+                            id: post.id,
+                            ...dbPostData // Fallback to original post data if user document fetch fails
+                        }
+                    }
+                })
+                Promise.all(postsWithProfilePictures).then(posts => {
+                    setPostFollowing(posts)
+                }).catch(error => {
+                    console.error('Error fetching posts with profile pictures:', error);
+                })
+            })
+        }
+    });
+    //#endregion
+
     // this function need a fix for cleanup after mount
     // Function to handle scroll event
     const onRefresh = useCallback(() => {
@@ -94,6 +147,7 @@ const HomeScreen = () => {
         }
     }, [fetchPost]);
 
+    //#region Fetching Messages
     useLayoutEffect(() => {
         fetchData();
     }, []);
@@ -133,7 +187,7 @@ const HomeScreen = () => {
                         return true;
                     }
                 });
-
+                setFollowingUsers(followingData);
                 setUsersForSharePosts(filteredUsersData);
             } else {
                 console.log("No document found in the collection.");
@@ -142,9 +196,11 @@ const HomeScreen = () => {
             console.error("Error fetching data:", error);
         }
     };
+    //#endregion
+
     return (
-        <SafeAreaView style={[{ flex: 1, backgroundColor: theme.Primary  }]}>
-            <Header theme={theme}/>
+        <SafeAreaView style={[{ flex: 1, backgroundColor: theme.Primary }]}>
+            <Header theme={theme} />
             {posts.length !== 0 ? (
                 <FlatList
                     keyboardDismissMode="on-drag"
@@ -170,6 +226,9 @@ const HomeScreen = () => {
             ) : (
                 <LoadingPlaceHolder theme={theme} />
             )}
+            <StatusBar
+                barStyle={statusBarColorTheme} // for now it is like that till the theme is  integrated and implemented
+            />
         </SafeAreaView>
     )
 }
