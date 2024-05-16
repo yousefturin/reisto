@@ -6,23 +6,22 @@ import SavedPostsHeader from '../components/SavedPosts/SavedPostsHeader';
 import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder';
 import { colorPalette } from '../Config/Theme';
 import { useTheme } from '../context/ThemeContext';
-import { getColorForTheme } from '../utils/ThemeUtils';
+
+import { useTranslation } from 'react-i18next';
+import UseCustomTheme from '../utils/UseCustomTheme';
 const windowHeight = Dimensions.get('window').height;
 
 const SearchExplorePostTimeLineScreen = ({ route }) => {
+    const { t } = useTranslation();
     const { userData, scrollToPostId } = route.params;
     const [posts, setPosts] = useState([])
     const flatListRef = useRef();
     const [initialScrollIndex, setInitialScrollIndex] = useState(null);
     const [usersForSharePosts, setUsersForSharePosts] = useState([]);
-    
+
     const { selectedTheme } = useTheme();
-    const systemTheme = selectedTheme === "system";
-    const theme = getColorForTheme(
-        { dark: colorPalette.dark, light: colorPalette.light },
-        selectedTheme,
-        systemTheme
-    );
+    const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
+
 
     const handleScrollToIndexFailed = info => {
         const wait = new Promise(resolve => setTimeout(resolve, 500));
@@ -88,9 +87,8 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
 
     const fetchData = async () => {
         try {
-            
+
             const querySnapshot = await db.collection('users').doc(firebase.auth().currentUser.email).collection('following_followers').limit(1).get();
-            console.log(querySnapshot)
             if (!querySnapshot.empty) {
                 const doc = querySnapshot.docs[0];
                 const data = doc.data();
@@ -140,10 +138,10 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
     )
 
 
-
+    const searchHeader = t('screens.profile.profileSavedPostsTimeLineHeader')
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary  }}>
-            <SavedPostsHeader header={"All Posts"}  theme={theme}/>
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
+            <SavedPostsHeader header={searchHeader} theme={theme} />
             {posts.length !== 0 ? (
                 <FlatList
                     keyboardDismissMode="on-drag"
@@ -159,7 +157,7 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
                     onScrollToIndexFailed={handleScrollToIndexFailed}
                 />
             ) : (
-                <LoadingPlaceHolder  theme={theme}/>
+                <LoadingPlaceHolder theme={theme} />
             )}
         </SafeAreaView>
     )
