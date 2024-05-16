@@ -9,11 +9,14 @@ import SvgComponent from '../utils/SvgComponents';
 import initializeScalingUtils from '../utils/NormalizeSize';
 import { colorPalette } from '../Config/Theme';
 import { useTheme } from '../context/ThemeContext';
-import { getColorForTheme } from '../utils/ThemeUtils';
+
+import { useTranslation } from 'react-i18next';
+import UseCustomTheme from '../utils/UseCustomTheme';
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
 const FromMessagesToSharedPost = ({ route }) => {
+    const { t } = useTranslation();
     const { postId, userID } = route.params; // Get the postId from the route params
     const userData = useContext(UserContext);
     const [usersForSharePosts, setUsersForSharePosts] = useState([]);
@@ -22,12 +25,8 @@ const FromMessagesToSharedPost = ({ route }) => {
     const [post, setPost] = useState([]) // Initialize the post state with an empty array
 
     const { selectedTheme } = useTheme();
-    const systemTheme = selectedTheme === "system";
-    const theme = getColorForTheme(
-        { dark: colorPalette.dark, light: colorPalette.light },
-        selectedTheme,
-        systemTheme
-    );
+    const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
+
 
     useEffect(() => {
         let unsubscribe
@@ -119,7 +118,7 @@ const FromMessagesToSharedPost = ({ route }) => {
 
     return (
         <SafeAreaView>
-            <PostHeader theme={theme} />
+            <PostHeader theme={theme} t={t} />
             {post.length !== 0 ? (
                 <Post post={post} userData={userData} usersForSharePosts={usersForSharePosts} theme={theme} />
             ) : (<LoadingPlaceHolder fromWhere={"sharedPost"} theme={theme} />
@@ -128,7 +127,7 @@ const FromMessagesToSharedPost = ({ route }) => {
     )
 }
 
-const PostHeader = ({ theme }) => {
+const PostHeader = ({ theme, t }) => {
     const navigation = useNavigation();
     const handlePressBack = () => {
         navigation.goBack()
@@ -139,7 +138,7 @@ const PostHeader = ({ theme }) => {
                 <SvgComponent svgKey="ArrowBackSVG" width={moderateScale(30)} height={moderateScale(30)} stroke={theme.textPrimary} />
             </TouchableOpacity>
             <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", flex: 1 }}>
-                <Text style={{ color: theme.textPrimary, fontWeight: "600", fontSize: 20, }}>Posts</Text>
+                <Text style={{ color: theme.textPrimary, fontWeight: "600", fontSize: 20, }}>{t('screens.profile.profilePostHeader')}</Text>
             </View>
             <View style={{ margin: 10, width: moderateScale(30) }}>
             </View>
