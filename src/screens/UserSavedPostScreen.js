@@ -1,4 +1,4 @@
-import { ScrollView, RefreshControl, SafeAreaView } from 'react-native'
+import { ScrollView, RefreshControl, SafeAreaView, View } from 'react-native'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { UserContext } from '../context/UserDataProvider';
 import { db, firebase } from '../firebase';
@@ -6,21 +6,22 @@ import SavedPostsHeader from '../components/SavedPosts/SavedPostsHeader';
 import SavedPostsGrid from '../components/SavedPosts/SavedPostsGrid';
 import { colorPalette } from '../Config/Theme';
 import { useTheme } from '../context/ThemeContext';
-import { getColorForTheme } from '../utils/ThemeUtils';
+
 import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder';
+import { useTranslation } from 'react-i18next';
+import UseCustomTheme from '../utils/UseCustomTheme';
+import EmptyDataParma from '../components/CustomComponent/EmptyDataParma';
 
 const UserSavedPostScreen = () => {
+    const { t } = useTranslation();
     const userData = useContext(UserContext);
     const [savedPosts, setSavedPosts] = useState([])
     const [refreshing, setRefreshing] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const { selectedTheme } = useTheme();
-    const systemTheme = selectedTheme === "system";
-    const theme = getColorForTheme(
-        { dark: colorPalette.dark, light: colorPalette.light },
-        selectedTheme,
-        systemTheme
-    );
+    const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
+
 
     useEffect(() => {
         const unsubscribe = fetchUserSavedPosts();
@@ -59,7 +60,13 @@ const UserSavedPostScreen = () => {
                         if (postIds && Array.isArray(postIds)) {
                             // filter from the posts array the once that has the same stored id 
                             const savedPostsData = allPosts.filter(post => postIds.includes(post.id));
-                            setSavedPosts(savedPostsData);
+                            if (savedPostsData.length === 0) {
+                                setLoading(null);
+                            } else {
+                                console.log("Saved posts fetched successfully");
+                                setSavedPosts(savedPostsData);
+                                setLoading(false);
+                            }
                         } else {
                             console.error('Invalid or empty post IDs array');
                         }
@@ -90,11 +97,11 @@ const UserSavedPostScreen = () => {
     const handlePostPress = (postId) => {
         setScrollToPostId(postId)
     }
-
+    const savedPostHeader = t('screens.profile.profileSavedHeader')
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary  }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <>
-                <SavedPostsHeader header={"Saved Posts"} theme={theme} />
+                <SavedPostsHeader header={savedPostHeader} theme={theme} />
                 <ScrollView
                     keyboardDismissMode="on-drag"
                     keyboardShouldPersistTaps={'always'}
@@ -106,11 +113,15 @@ const UserSavedPostScreen = () => {
                         />
                     }
                 >
-                    {savedPosts.length !== 0 || savedPosts.id?.length !== 0 ? (
+                    {loading === false ? (
                         <SavedPostsGrid posts={savedPosts} userData={userData} onPostPress={handlePostPress} navigateToScreen={"SavedPosts"} />
+                    ) : loading === null ? (
+                        <View style={{ minHeight: 800 }}>
+                            <EmptyDataParma SvgElement={"BookmarkIllustration"} theme={theme} t={t} dataMessage={"You can save posts across Reisto and organize them into collections."} TitleDataMessage={"Nothing saved yet"} />
+                        </View>
+
                     ) : (
-                        <LoadingPlaceHolder theme={theme} />
-                    )}
+                        <LoadingPlaceHolder theme={theme} />)}
                 </ScrollView>
             </>
 
