@@ -15,10 +15,13 @@ import { blurHash } from '../../assets/HashBlurData';
 import UploadImageToStorage from '../../src/utils/UploadImageToStorage';
 import { colorPalette } from '../Config/Theme';
 import { useTheme } from '../context/ThemeContext';
-import { getColorForTheme } from '../utils/ThemeUtils';
+
+import { useTranslation } from 'react-i18next';
+import UseCustomTheme from '../utils/UseCustomTheme';
 
 // two hours of debugging and then it apparently was userDataUid.owner_id and not userDataUid.owner_uid-<<<<<<<<(fixed)
 const MessagingIndividualScreen = ({ route }) => {
+    const { t } = useTranslation();
     const { userDataUid } = route.params
     const userData = useContext(UserContext);
     const [messages, setMessages] = useState([]);
@@ -30,12 +33,7 @@ const MessagingIndividualScreen = ({ route }) => {
     const [image, setImage] = useState(null);
 
     const { selectedTheme } = useTheme();
-    const systemTheme = selectedTheme === "system";
-    const theme = getColorForTheme(
-        { dark: colorPalette.dark, light: colorPalette.light },
-        selectedTheme,
-        systemTheme
-    );
+    const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
 
 
     useEffect(() => {
@@ -221,7 +219,7 @@ const MessagingIndividualScreen = ({ route }) => {
                                 <TextInput
                                     ref={inputRef}
                                     onChangeText={handleChangeText}
-                                    placeholder={`Type message for ${userDataUid.username}...`}
+                                    placeholder={`${t('screens.messages.messageIndividual.messageInputPlaceHolder')} ${userDataUid.username} ${t('screens.messages.messageIndividual.messageInputPlaceHolderExtra')}...`}
                                     placeholderTextColor={theme.textPlaceholder}
                                     style={{ flex: 1, margin: 17, color: theme.textPrimary }}
                                 />
