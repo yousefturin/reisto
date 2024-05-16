@@ -5,12 +5,14 @@ import { Formik } from 'formik'
 import Validator from 'email-validator'
 import { firebase, db } from '../../firebase';
 import { colorPalette } from '../../Config/Theme'
+import { useTranslation } from 'react-i18next'
 
 const SinginForm = ({ navigation, theme }) => {
+    const { t } = useTranslation();
     const SinginFormSchema = Yup.object().shape({
         name: Yup.string()
             .matches(/^\S*$/, 'Username cannot contain spaces')
-            .matches(/^[a-zA-Z]+$/, 'Username can only contain letters')
+            .matches(/^[a-zA-Z0-9]+$/, 'Username can only contain letters and numbers')
             .required('Username is required').min(3, 'Username must be more than 3 letters'),
         email: Yup.string().email().required('An email is required'),
         password: Yup.string()
@@ -84,7 +86,7 @@ const SinginForm = ({ navigation, theme }) => {
         >{({ handleChange, handleBlur, handleSubmit, values, isValid, errors, touched, setFieldTouched }) => (
             <View style={styles.form}>
                 <View style={styles.input} >
-                    <Text style={styles.inputLabel(theme)}>User name</Text>
+                    <Text style={styles.inputLabel(theme)}>{t('screens.signup.text.username')}</Text>
                     <TextInput
                         style={[
                             styles.inputControl,
@@ -93,7 +95,7 @@ const SinginForm = ({ navigation, theme }) => {
                                 : styles.errorShadow(theme), // Apply error shadow if input is invalid
                             touched.name && errors.name && styles.errorShadow(theme)
                         ]}
-                        placeholder='john'
+                        placeholder={t('screens.signup.text.usernamePlaceholder')}
                         placeholderTextColor={colorPalette.dark.textPlaceholderSecondary}
                         value={values.name}
                         textContentType='name'
@@ -113,7 +115,7 @@ const SinginForm = ({ navigation, theme }) => {
                     />
                 </View>
                 <View style={styles.input} >
-                    <Text style={styles.inputLabel(theme)}>Email address</Text>
+                    <Text style={styles.inputLabel(theme)}>{t('screens.signup.text.emailAddress')}</Text>
                     <TextInput
                         autoCapitalize='none'
                         autoCorrect={false}
@@ -123,7 +125,7 @@ const SinginForm = ({ navigation, theme }) => {
                                 ? null // No error style if input is empty or valid
                                 : styles.errorShadow(theme) // Apply error shadow if input is invalid
                         ]}
-                        placeholder='john@example.com'
+                        placeholder={t('screens.signup.text.emailAddressPlaceholder')}
                         placeholderTextColor={colorPalette.dark.textPlaceholderSecondary}
                         value={values.email}
                         textContentType='emailAddress'
@@ -136,7 +138,7 @@ const SinginForm = ({ navigation, theme }) => {
                 </View>
 
                 <View style={styles.input} >
-                    <Text style={styles.inputLabel(theme)}>Password</Text>
+                    <Text style={styles.inputLabel(theme)}>{t('screens.signup.text.password')}</Text>
                     <TextInput
                         style={[
                             styles.inputControl,
@@ -144,7 +146,7 @@ const SinginForm = ({ navigation, theme }) => {
                                 ? null // No error style if input is empty or valid
                                 : styles.errorShadow(theme) // Apply error shadow if input is invalid
                         ]}
-                        placeholder='password'
+                        placeholder={t('screens.signup.text.password')}
                         placeholderTextColor={colorPalette.dark.textPlaceholderSecondary}
                         secureTextEntry={true}
                         value={values.password}
@@ -168,7 +170,7 @@ const SinginForm = ({ navigation, theme }) => {
                 <View style={styles.formAction}>
                     <TouchableOpacity onPress={handleSubmit} disabled={!isValid && Validator.validate(values.email)} activeOpacity={0.8}>
                         <View style={styles.btn(isValid, Validator, values, theme)}>
-                            <Text style={styles.btnText}>Sign in</Text>
+                            <Text style={styles.btnText}>{t('screens.signup.text.signup')}</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -178,7 +180,7 @@ const SinginForm = ({ navigation, theme }) => {
                     onPress={() => {
                         navigation.navigate("Login");
                     }}>
-                    <Text style={styles.formFooter(theme)}>Already have an account? <Text style={{ textDecorationLine: "underline" }}>Log in</Text> </Text>
+                    <Text style={styles.formFooter(theme)}>{t('screens.signup.text.createAccount')}{' '}<Text style={{ textDecorationLine: "underline" }}>{t('screens.signup.text.login')}</Text> </Text>
                 </TouchableOpacity>
 
             </View>
