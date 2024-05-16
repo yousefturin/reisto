@@ -47,7 +47,7 @@ const Icons = [
     },
 ]
 //#region Post
-const Post = ({ post, userData, isLastPost, usersForSharePosts, theme }) => {
+const Post = ({ post, userData, isLastPost, usersForSharePosts, theme, shouldAddOffSet }) => {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
     const [isContainerVisible, setContainerVisible] = useState(false);
@@ -479,6 +479,7 @@ const PostImage = ({ post, handleLike, theme }) => {
             activeOpacity={1}
             style={{ width: '100%', height: 450 }}
             onPress={(event) => handleDoubleTapImage(post, event)}>
+            <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} />
             <Image
                 source={{ uri: post.imageURL, cache: 'force-cache' }}
                 style={{ height: '100%' }}
@@ -487,6 +488,7 @@ const PostImage = ({ post, handleLike, theme }) => {
                 cachePolicy={'memory-disk'}
                 transition={50}
             />
+            <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} />
             {showHeart && (
                 <Animated.View
                     style={{
