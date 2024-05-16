@@ -1,3 +1,9 @@
+/**
+ * Extracts the domain from a given URL.
+ *
+ * @param {string} url - The URL from which to extract the domain.
+ * @returns {string} The extracted domain.
+ */
 export const extractDomain = (url) => {
     let domain = '';
     // Find & remove protocol (http, ftp, etc.) and get domain
