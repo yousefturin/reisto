@@ -9,12 +9,15 @@ import { UserContext } from '../context/UserDataProvider';
 import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder';
 import { colorPalette } from '../Config/Theme';
 import { useTheme } from '../context/ThemeContext';
-import { getColorForTheme } from '../utils/ThemeUtils';
+
+import { useTranslation } from 'react-i18next';
+import UseCustomTheme from '../utils/UseCustomTheme';
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
 const windowHeight = Dimensions.get('window').height;
 
 const OthersProfilePostScreen = ({ route }) => {
+    const { t } = useTranslation();
     const { userDataToBeNavigated, scrollToPostId } = route.params;
     const [posts, setPost] = useState([])
     const flatListRef = useRef();
@@ -23,12 +26,7 @@ const OthersProfilePostScreen = ({ route }) => {
     const [usersForSharePosts, setUsersForSharePosts] = useState([]);
 
     const { selectedTheme } = useTheme();
-    const systemTheme = selectedTheme === "system";
-    const theme = getColorForTheme(
-        { dark: colorPalette.dark, light: colorPalette.light },
-        selectedTheme,
-        systemTheme
-    );
+    const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
 
     const handleScrollToIndexFailed = info => {
         const wait = new Promise(resolve => setTimeout(resolve, 500));
@@ -151,13 +149,13 @@ const OthersProfilePostScreen = ({ route }) => {
 
 
     const renderItem = ({ item }) => (
-        <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} />
+        <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} theme={theme} />
     )
 
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
-            <OwnerProfileHeader userDataToBeNavigated={userDataToBeNavigated} theme={theme} />
+            <OwnerProfileHeader t={t} userDataToBeNavigated={userDataToBeNavigated} theme={theme} />
             {posts.length !== 0 ? (
                 <FlatList
                     keyboardDismissMode="on-drag"
@@ -178,7 +176,7 @@ const OthersProfilePostScreen = ({ route }) => {
         </SafeAreaView>
     )
 }
-const OwnerProfileHeader = ({ userDataToBeNavigated, theme }) => {
+const OwnerProfileHeader = ({ userDataToBeNavigated, theme, t }) => {
     const navigation = useNavigation();
     const handlePressBack = () => {
         navigation.goBack()
@@ -190,7 +188,7 @@ const OwnerProfileHeader = ({ userDataToBeNavigated, theme }) => {
             </TouchableOpacity>
             <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", flex: 1 }}>
                 <Text style={{ color: theme.textSecondary, fontWeight: "600", fontSize: 12 }}>{userDataToBeNavigated.username.toUpperCase()}</Text>
-                <Text style={{ color: theme.textPrimary, fontWeight: "600", fontSize: 20, }}>Posts</Text>
+                <Text style={{ color: theme.textPrimary, fontWeight: "600", fontSize: 20, }}>{t('screens.profile.profilePostHeader')}</Text>
             </View>
             <View style={{ margin: 10, width: moderateScale(30) }}>
             </View>
