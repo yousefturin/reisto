@@ -100,7 +100,7 @@ const UserProfileScreen = () => {
                         <ProfilePost posts={userPosts} userData={userData} onPostPress={handlePostPress} keyValue={"NavigationToMyProfile"} t={t} />
                     ) : loading === null ? (
                         <View style={{ minHeight: 550 }}>
-                            <EmptyDataParma SvgElement={"AddPostIllustration"} theme={theme} t={t} dataMessage={"You can share posts to tell you friends about your recipes."} TitleDataMessage={"Nothing shared yet"} />
+                            <EmptyDataParma SvgElement={"AddPostIllustration"} theme={theme} t={t} dataMessage={"You can share posts to tell your friends about your recipes."} TitleDataMessage={"Nothing shared yet"} />
                         </View>
                     ) :
                         null}
