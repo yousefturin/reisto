@@ -7,7 +7,7 @@ import SavedPostsGrid from '../components/SavedPosts/SavedPostsGrid';
 import { colorPalette } from '../Config/Theme';
 import { useTheme } from '../context/ThemeContext';
 
-import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder';
+import LoadingPlaceHolder from '../components/Search/LoadingPlaceHolder';
 import { useTranslation } from 'react-i18next';
 import UseCustomTheme from '../utils/UseCustomTheme';
 import EmptyDataParma from '../components/CustomComponent/EmptyDataParma';
