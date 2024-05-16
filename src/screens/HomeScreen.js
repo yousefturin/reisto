@@ -1,5 +1,5 @@
-import { SafeAreaView, RefreshControl, FlatList } from 'react-native'
-import React, { useEffect, useState, useCallback, useContext, useLayoutEffect } from 'react'
+import { SafeAreaView, RefreshControl, FlatList, View, Text, Dimensions, Animated } from 'react-native'
+import React, { useEffect, useState, useCallback, useContext, useLayoutEffect, useRef } from 'react'
 import Header from '../components/Home/Header'
 import Post from '../components/Home/Post'
 import { db, firebase } from '../firebase'
@@ -10,7 +10,11 @@ import { useTheme } from '../context/ThemeContext'
 
 import { StatusBar } from 'react-native'
 import UseCustomTheme from '../utils/UseCustomTheme'
+import SvgComponent from '../utils/SvgComponents'
+import initializeScalingUtils from '../utils/NormalizeSize'
+import { Divider } from 'react-native-elements'
 
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const HomeScreen = () => {
     const [refreshing, setRefreshing] = useState(false);
@@ -18,6 +22,7 @@ const HomeScreen = () => {
     const [postFollowing, setPostFollowing] = useState([])
     const [usersForSharePosts, setUsersForSharePosts] = useState([]);
     const [followingUsers, setFollowingUsers] = useState([]);
+    const { moderateScale } = initializeScalingUtils(Dimensions);
 
     const userData = useContext(UserContext);
     const { selectedTheme } = useTheme();
@@ -76,52 +81,52 @@ const HomeScreen = () => {
     }, []);
     //#endregion
 
-    // does not work as expected
     //#region Fetching Following Posts
     useEffect(() => {
         // Call fetchPost when the component mounts
-        const unsubscribe = fetchContent();
-        console.log("Subscribed to following posts.");
-        // Return a cleanup function to unsubscribe when the component unmounts
-        return () => {
-            if (unsubscribe) {
-                unsubscribe();
-                console.log("Unsubscribed from following posts.");
-            }
-        };
-    }, [fetchContent]);
-
-    const fetchContent = useCallback(() => {
         if (followingUsers.length !== 0) {
-            const uIds = followingUsers.map(user => user.owner_uid);
-            return db.collectionGroup('posts').where('owner_uid', '==', uIds).orderBy('createdAt', 'desc').onSnapshot(snapshot => {
-                const postsWithProfilePictures = snapshot.docs.map(async post => {
-                    const dbPostData = post.data();
-                    try {
-                        const userDoc = await db.collection('users').doc(dbPostData.owner_email).get()
-                        const dbUserData = userDoc.data()
-                        const dbProfilePicture = dbUserData.profile_picture
-                        return {
-                            id: post.id,
-                            profile_picture: dbProfilePicture,
-                            ...dbPostData
-                        }
-                    } catch (error) {
-                        console.error('Error fetching user document:', error)
-                        return {
-                            id: post.id,
-                            ...dbPostData // Fallback to original post data if user document fetch fails
-                        }
-                    }
-                })
-                Promise.all(postsWithProfilePictures).then(posts => {
-                    setPostFollowing(posts)
-                }).catch(error => {
-                    console.error('Error fetching posts with profile pictures:', error);
-                })
-            })
+            const unsubscribe = fetchContent();
+            console.log("Subscribed to following posts.");
+            // Return a cleanup function to unsubscribe when the component unmounts
+            return () => {
+                if (unsubscribe) {
+                    unsubscribe();
+                    console.log("Unsubscribed from following posts.");
+                }
+            };
         }
-    });
+    }, [fetchContent, followingUsers]);
+
+    const fetchContent = () => {
+        const uIds = followingUsers.map(user => user.email);
+        // since the uIds is an array of emails, we need to use 'in' instead of '=='
+        return db.collectionGroup('posts').where('owner_email', 'in', uIds).orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+            const postsWithProfilePictures = snapshot.docs.map(async post => {
+                const dbPostData = post.data();
+                try {
+                    const userDoc = await db.collection('users').doc(dbPostData.owner_email).get()
+                    const dbUserData = userDoc.data()
+                    const dbProfilePicture = dbUserData.profile_picture
+                    return {
+                        id: post.id,
+                        profile_picture: dbProfilePicture,
+                        ...dbPostData
+                    }
+                } catch (error) {
+                    console.error('Error fetching user document:', error)
+                    return {
+                        id: post.id,
+                        ...dbPostData // Fallback to original post data if user document fetch fails
+                    }
+                }
+            })
+            Promise.all(postsWithProfilePictures).then(posts => {
+                setPostFollowing(posts)
+            }).catch(error => {
+                console.error('Error fetching posts with profile pictures:', error);
+            })
+        })
+    };
     //#endregion
 
     // this function need a fix for cleanup after mount
@@ -198,16 +203,108 @@ const HomeScreen = () => {
     };
     //#endregion
 
+    const [postOptionModal, setPostOptionModal] = useState(false)
+    const handleShowPostOptions = () => {
+        setPostOptionModal(!postOptionModal)
+    }
+
+    //#region  animated header
+    const scrollY = new Animated.Value(0);
+    const offsetAnimation = new Animated.Value(0);
+    const clampedScroll = Animated.diffClamp(
+        Animated.add(
+            scrollY.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 1],
+                extrapolateLeft: 'clamp',
+            }),
+            offsetAnimation,
+        ),
+        0,
+        65,
+    );
+    var _clampedScrollValue = 0;
+    var _offsetValue = 0;
+    var _scrollValue = 0;
+    useEffect(() => {
+        scrollY.addListener(({ value }) => {
+            const diff = value - _scrollValue;
+            _scrollValue = value;
+            _clampedScrollValue = Math.min(
+                Math.max(_clampedScrollValue + diff, 0),
+                65,
+            );
+        })
+        offsetAnimation.addListener(({ value }) => {
+            _offsetValue = value;
+        });
+    }, [])
+    const headerTranslate = clampedScroll.interpolate({
+        inputRange: [0, 65],
+        outputRange: [0, -65],
+        extrapolate: 'clamp',
+    });
+    const opacity = clampedScroll.interpolate({
+        inputRange: [0, 45, 65],
+        outputRange: [1, 0.01, 0],
+        extrapolate: 'clamp',
+    });
+
+    var scrollEndTimer = null
+    const onMomentumScrollBegin = () => {
+        clearTimeout(scrollEndTimer)
+    }
+    const onMomentumScrollEnd = () => {
+        const toValue = _scrollValue > 65 && _clampedScrollValue > 65 / 2 ? _offsetValue + 65 : _offsetValue - 60;
+        Animated.timing(offsetAnimation, {
+            toValue,
+            duration: 500,
+            useNativeDriver: true,
+        }).start();
+    }
+
+    const onScrollEndDrag = () => {
+        scrollEndTimer = setTimeout(onMomentumScrollEnd, 250)
+    }
+    //#endregion
+
     return (
-        <SafeAreaView style={[{ flex: 1, backgroundColor: theme.Primary }]}>
-            <Header theme={theme} />
+        <SafeAreaView style={[{ flex: 1, backgroundColor: theme.Primary, }]}>
+            <View style={{ position: "absolute", top: 0, left: 0, width: "100%", backgroundColor: theme.Primary, height: 48, zIndex: 2, }}></View>
+            <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} />
+            <Animated.View style={{
+                //for animation
+                backgroundColor: theme.Primary,
+                transform: [{ translateY: headerTranslate }],
+                position: 'absolute',
+                top: 30,
+                right: 0,
+                left: 0,
+                zIndex: 1,
+                opacity: opacity,
+            }}>
+                <Header theme={theme} onButtonClick={handleShowPostOptions} />
+            </Animated.View>
+
+            {postOptionModal && <View style={{
+                position: "absolute",
+                top: 110, left: 20, backgroundColor: theme.Secondary,
+                width: 150, zIndex: 9999, justifyContent: "space-around",
+                alignItems: "center", borderRadius: 10, flexDirection: "row", paddingVertical: 10, shadowColor: theme.modalBackgroundPrimary, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.25, shadowRadius: 12.84, elevation: 5
+            }}>
+                <Text style={{ color: theme.textPrimary, fontSize: 18 }}>Following</Text>
+                <SvgComponent svgKey="followingSVG" width={moderateScale(24)} height={moderateScale(24)} stroke={theme.textPrimary} />
+            </View>}
+
             {posts.length !== 0 ? (
-                <FlatList
+                <AnimatedFlatList
+                    style={{ paddingTop: 40 }}
+                    onScrollBeginDrag={() => postOptionModal === true && setPostOptionModal(false)}
                     keyboardDismissMode="on-drag"
                     keyboardShouldPersistTaps='handled'
                     data={posts}
                     renderItem={({ item, index }) => (
-                        <Post theme={theme} post={item} key={index} isLastPost={index === posts.length - 1} userData={userData} usersForSharePosts={usersForSharePosts} />
+                        <Post shouldAddOffSet={true} theme={theme} post={item} key={index} isLastPost={index === posts.length - 1} userData={userData} usersForSharePosts={usersForSharePosts} />
                     )}
                     keyExtractor={(item, index) => index.toString()}
                     refreshControl={
@@ -222,12 +319,20 @@ const HomeScreen = () => {
                     maxToRenderPerBatch={1}
                     updateCellsBatchingPeriod={100}
                     windowSize={7}
+                    onScroll={Animated.event(
+                        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                        { useNativeDriver: true }
+                    )}
+                    onMomentumScrollBegin={onMomentumScrollBegin}
+                    onMomentumScrollEnd={onMomentumScrollEnd}
+                    onScrollEndDrag={onScrollEndDrag}
+                    scrollEventThrottle={1}
                 />
             ) : (
-                <LoadingPlaceHolder theme={theme} />
+                <LoadingPlaceHolder theme={theme} isPaddingNeeded={true} />
             )}
             <StatusBar
-                barStyle={statusBarColorTheme} // for now it is like that till the theme is  integrated and implemented
+                barStyle={statusBarColorTheme}
             />
         </SafeAreaView>
     )
