@@ -5,8 +5,10 @@ import { Formik } from 'formik'
 import Validator from 'email-validator'
 import { firebase } from '../../firebase';
 import { colorPalette } from '../../Config/Theme'
+import { useTranslation } from 'react-i18next';
 
 const LoginForm = ({ navigation, theme }) => {
+    const { t } = useTranslation();
     const LoginFormSchema = Yup.object().shape({
         email: Yup.string().email().required('An email is required'),
         password: Yup.string()
@@ -50,7 +52,7 @@ const LoginForm = ({ navigation, theme }) => {
         >{({ handleChange, handleBlur, handleSubmit, values, isValid, errors, touched, setFieldTouched }) => (
             <View style={styles.form}>
                 <View style={styles.input} >
-                    <Text style={styles.inputLabel(theme)}>Email address</Text>
+                    <Text style={styles.inputLabel(theme)}>{t('screens.login.text.emailAddress')}</Text>
                     <TextInput
                         autoCapitalize='none'
                         autoCorrect={false}
@@ -60,7 +62,7 @@ const LoginForm = ({ navigation, theme }) => {
                                 ? null // No error style if input is empty or valid
                                 : styles.errorShadow(theme) // Apply error shadow if input is invalid
                         ]}
-                        placeholder='john@example.com'
+                        placeholder={t('screens.login.text.emailAddressPlaceholder')}
                         placeholderTextColor={colorPalette.dark.textPlaceholderSecondary}
                         value={values.email}
                         textContentType='emailAddress'
@@ -74,7 +76,7 @@ const LoginForm = ({ navigation, theme }) => {
                 </View>
 
                 <View style={styles.input} >
-                    <Text style={styles.inputLabel(theme)}>Password</Text>
+                    <Text style={styles.inputLabel(theme)}>{t('screens.login.text.password')}</Text>
                     <TextInput
                         style={[
                             styles.inputControl,
@@ -82,7 +84,7 @@ const LoginForm = ({ navigation, theme }) => {
                                 ? null // No error style if input is empty or valid
                                 :styles.errorShadow(theme), // Apply error shadow if input is invalid
                         ]}
-                    placeholder='password'
+                    placeholder={t('screens.login.text.password')}
                     placeholderTextColor={colorPalette.dark.textPlaceholderSecondary}
                     secureTextEntry={true}
                     value={values.password}
@@ -106,7 +108,7 @@ const LoginForm = ({ navigation, theme }) => {
                 <View style={styles.formAction}>
                     <TouchableOpacity onPress={handleSubmit} disabled={!isValid && Validator.validate(values.email)} activeOpacity={0.8}>
                         <View style={styles.btn(isValid, Validator, values, theme)}>
-                            <Text style={styles.btnText}>Log in</Text>
+                            <Text style={styles.btnText}>{t('screens.login.text.login')}</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -116,7 +118,7 @@ const LoginForm = ({ navigation, theme }) => {
                     onPress={() => {
                         navigation.navigate("Signup");
                     }}>
-                    <Text style={styles.formFooter(theme)}>Don't have an account? <Text style={{ textDecorationLine: "underline" }}>Sign up</Text> </Text>
+                    <Text style={styles.formFooter(theme)}>{t('screens.login.text.createAccount')}{' '}<Text style={{ textDecorationLine: "underline" }}>{t('screens.login.text.signup')}</Text> </Text>
                 </TouchableOpacity>
 
             </View>
