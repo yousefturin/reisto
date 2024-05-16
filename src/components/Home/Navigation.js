@@ -1,25 +1,21 @@
-import { View, TouchableOpacity, Dimensions } from 'react-native'
-import { Image } from 'expo-image';
 import React from 'react'
+import { View, TouchableOpacity, Dimensions } from 'react-native'
+import { useTheme } from '../../context/ThemeContext';
+import { useNavigation } from "@react-navigation/native";
+import { Image } from 'expo-image';
 import SvgComponent from '../../utils/SvgComponents'
 import initializeScalingUtils from '../../utils/NormalizeSize';
 import { Divider } from 'react-native-elements';
-import { useNavigation } from "@react-navigation/native";
 import { blurHash } from '../../../assets/HashBlurData';
 import { colorPalette } from '../../Config/Theme';
-import { getColorForTheme } from '../../utils/ThemeUtils';
-import { useTheme } from '../../context/ThemeContext';
+import UseCustomTheme from '../../utils/UseCustomTheme';
+
 
 const NavigationStack = ({ routeName, userData }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);
-
     const { selectedTheme } = useTheme();
-    const systemTheme = selectedTheme === "system";
-    const theme = getColorForTheme(
-        { dark: colorPalette.dark, light: colorPalette.light },
-        selectedTheme,
-        systemTheme
-    );
+    const navigation = useNavigation();
+    const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
 
     // profile image flickering issue is related to useEffect since each time the navigation is applied
     // the useEffect will run once and that will make a problem the image must be taken and then it will be stored inside the async storage.
@@ -31,7 +27,6 @@ const NavigationStack = ({ routeName, userData }) => {
     if (!userData || !userData.profile_picture) {
         return null; // Or any loading indicator
     }
-    const navigation = useNavigation();
 
     // still needs fixing this issue where there are 
     // common screens that are used in the navigation stack and based on that 
