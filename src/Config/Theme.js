@@ -37,6 +37,7 @@ export const colorPalette = {
         // colors related to divider
         dividerPrimary: "rgba(198, 198, 200, 0.45)",
         dividerSecondary: "rgba(198, 198, 200, 0.45)",
+        dividerTertiary: '#e3e3e3',
 
         // colors related to app main colors
         appPrimary: '#007AFF',
@@ -91,6 +92,7 @@ export const colorPalette = {
         // colors related to divider
         dividerPrimary: '#2b2b2b',
         dividerSecondary: '#383838',
+        dividerTertiary: '#383838',
 
         // colors related to app main colors
         appPrimary: '#007AFF',
