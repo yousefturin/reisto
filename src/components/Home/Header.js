@@ -8,13 +8,13 @@ import { colorPalette } from '../../Config/Theme';
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
-const Header = ({theme}) => {
+const Header = ({ theme, onButtonClick }) => {
   const navigation = useNavigation();
   const { messagesNum, loadingMessagesNum } = useContext(MessagesNumContext);
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => onButtonClick()} >
         <SvgComponent svgKey="LogoSVG" width={moderateScale(60)} height={moderateScale(60)} fill={theme.textPrimary} />
       </TouchableOpacity>
 
@@ -30,6 +30,7 @@ const Header = ({theme}) => {
     </View>
   )
 }
+
 const styles = StyleSheet.create({
   container: {
     justifyContent: "space-between",
@@ -43,10 +44,10 @@ const styles = StyleSheet.create({
   unreadBadge: {
     position: "absolute",
     left: 10,
-    bottom: 14,
+    bottom: 11,
     width: 20,
     height: 15,
-    borderRadius: 25,
+    borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
     zIndex: 9999,

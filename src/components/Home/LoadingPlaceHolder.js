@@ -4,9 +4,9 @@ import { Skeleton } from 'moti/skeleton'
 
 
 // the implementation of theme is not yet done
-const LoadingPlaceHolder = ({ fromWhere, theme }) => {
+const LoadingPlaceHolder = ({ fromWhere, theme, isPaddingNeeded }) => {
     const SkeletonCommonProps = {
-        colorMode: theme.Primary === '#050505' ? 'dark':'light' , // if the primary color is dark then the skeleton will be dark
+        colorMode: theme.Primary === '#050505' ? 'dark' : 'light', // if the primary color is dark then the skeleton will be dark
         backgroundColor: theme.Secondary,
         transition: {
             type: 'timing',
@@ -14,9 +14,9 @@ const LoadingPlaceHolder = ({ fromWhere, theme }) => {
         }
     }
     return (
-        <>
+        <View style={{ paddingTop: isPaddingNeeded ? 40 : 0 }}>
             <LoaderPostHeader SkeletonCommonProps={SkeletonCommonProps} />
-            <LoaderPostImage  SkeletonCommonProps={SkeletonCommonProps}/>
+            <LoaderPostImage SkeletonCommonProps={SkeletonCommonProps} />
             <View style={{ marginHorizontal: 15, marginTop: 10, }}>
                 <LoaderPostFooter SkeletonCommonProps={SkeletonCommonProps} />
                 <LoaderPostLikes SkeletonCommonProps={SkeletonCommonProps} />
@@ -31,11 +31,11 @@ const LoadingPlaceHolder = ({ fromWhere, theme }) => {
                     <LoaderPostImage SkeletonCommonProps={SkeletonCommonProps} />
                 </View>
             }
-        </>
+        </View>
     )
 }
 
-const LoaderPostHeader = ({SkeletonCommonProps}) => (
+const LoaderPostHeader = ({ SkeletonCommonProps }) => (
 
     <View style={{
         flexDirection: "row",
@@ -72,7 +72,7 @@ const LoaderPostHeader = ({SkeletonCommonProps}) => (
     </View>
 )
 
-const LoaderPostImage = ({SkeletonCommonProps})=> (
+const LoaderPostImage = ({ SkeletonCommonProps }) => (
     <Skeleton
         show
         height={450}
@@ -83,7 +83,7 @@ const LoaderPostImage = ({SkeletonCommonProps})=> (
 
 )
 
-const LoaderPostFooter = ({SkeletonCommonProps}) => (
+const LoaderPostFooter = ({ SkeletonCommonProps }) => (
     <View style={{ flexDirection: "row" }}>
         <View style={{
             flexDirection: "row",
@@ -121,7 +121,7 @@ const LoaderPostFooter = ({SkeletonCommonProps}) => (
     </View>
 )
 
-const LoaderPostLikes =({SkeletonCommonProps}) => (
+const LoaderPostLikes = ({ SkeletonCommonProps }) => (
     <View style={{ flexDirection: "row", marginTop: 15, }}>
         <Skeleton
             show
@@ -132,7 +132,7 @@ const LoaderPostLikes =({SkeletonCommonProps}) => (
     </View>
 )
 
-const LoaderPostCategoryAndTime = ({SkeletonCommonProps}) => (
+const LoaderPostCategoryAndTime = ({ SkeletonCommonProps }) => (
     <View style={{ flexDirection: "row", marginTop: 15, gap: 10 }}>
         <View
             style={{ padding: 5, borderRadius: 6, justifyContent: "center", alignItems: "center" }}
@@ -156,7 +156,7 @@ const LoaderPostCategoryAndTime = ({SkeletonCommonProps}) => (
     </View>
 )
 
-const LoaderPostCaption =({SkeletonCommonProps}) => (
+const LoaderPostCaption = ({ SkeletonCommonProps }) => (
     <View style={{ flexDirection: "column", marginTop: 15, gap: 10 }}>
         <Skeleton
             show
@@ -173,7 +173,7 @@ const LoaderPostCaption =({SkeletonCommonProps}) => (
     </View>
 )
 
-const LoaderPostTimeStamp = ({SkeletonCommonProps}) => (
+const LoaderPostTimeStamp = ({ SkeletonCommonProps }) => (
     <View style={{ marginTop: 10 }}>
         <Skeleton
             show
