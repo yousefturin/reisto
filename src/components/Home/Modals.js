@@ -16,7 +16,7 @@ import { colorPalette } from '../../Config/Theme';
 const screenHeight = Dimensions.get('window').height;
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
-export const ModalContentForUserWithSameId = ({ handleSavedPost, savedPosts, post, setIsModalVisible, setIsAlertModaVisible, isAlertModaVisible, theme }) => {
+export const ModalContentForUserWithSameId = ({ handleSavedPost, savedPosts, post, setIsModalVisible, setIsAlertModaVisible, isAlertModaVisible, theme, t }) => {
     const [postToBeDeleted, setPostToBeDeleted] = useState([])
     const isPostSaved = savedPosts?.saved_post_id?.includes(post.id) || false;
     const handleBeforeSavePost = (post) => {
@@ -50,41 +50,41 @@ export const ModalContentForUserWithSameId = ({ handleSavedPost, savedPosts, pos
                     <TouchableOpacity onPress={() => handleBeforeSavePost(post)}
                         activeOpacity={0.7} style={{ flex: 0.45, alignItems: "center", backgroundColor: theme.modalBtn, gap: 7, borderRadius: 10, paddingVertical: 10 }} >
                         <SvgComponent svgKey={isPostSaved ? "BookMarkSavedSVG" : "BookmarkNotActiveSVG"} width={moderateScale(20)} height={moderateScale(20)} stroke={theme.textPrimary} />
-                        <Text style={{ fontSize: 13, color: theme.textPrimary, fontWeight: "400" }}>{isPostSaved ? "Unsave" : "Save"}</Text>
+                        <Text style={{ fontSize: 13, color: theme.textPrimary, fontWeight: "400" }}>{isPostSaved ? t('screens.home.text.modals.sameUser.unsave') : t('screens.home.text.modals.sameUser.save')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity activeOpacity={0.7} style={{ flex: 0.45, alignItems: "center", backgroundColor: theme.modalBtn, gap: 7, borderRadius: 10, paddingVertical: 10 }} >
                         <SvgComponent svgKey="EditSVG" width={moderateScale(20)} height={moderateScale(20)} stroke={theme.textPrimary} />
-                        <Text style={{ fontSize: 13, color: theme.textPrimary, fontWeight: "400" }}>Edit</Text>
+                        <Text style={{ fontSize: 13, color: theme.textPrimary, fontWeight: "400" }}>{t('screens.home.text.modals.sameUser.edit')}</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{ marginHorizontal: 15, margin: 10, }}>
                     <TouchableOpacity activeOpacity={0.7} style={{ flexDirection: "row", justifyContent: "flex-start", gap: 10, alignItems: "center", backgroundColor: theme.modalBtn, borderTopLeftRadius: 10, borderTopRightRadius: 10, paddingHorizontal: 20 }} >
                         <SvgComponent svgKey="CommentSVG" width={moderateScale(22)} height={moderateScale(22)} stroke={theme.textPrimary} />
-                        <Text style={{ fontSize: 18, color: theme.textPrimary, fontWeight: "400", padding: 20 }}>Turn on commenting</Text>
+                        <Text style={{ fontSize: 18, color: theme.textPrimary, fontWeight: "400", padding: 20 }}>{t('screens.home.text.modals.sameUser.turnOnComments')}</Text>
                     </TouchableOpacity>
                     <View style={{}}>
                         <Divider width={0.5} orientation='horizontal' color={theme.modalDivider} />
                     </View>
                     <TouchableOpacity activeOpacity={0.7} style={{ flexDirection: "row", justifyContent: "flex-start", gap: 10, alignItems: "center", backgroundColor: theme.modalBtn, paddingHorizontal: 20 }} >
                         <SvgComponent svgKey="LikeNotActiveSVG" width={moderateScale(22)} height={moderateScale(22)} stroke={theme.textPrimary} />
-                        <Text style={{ fontSize: 18, color: theme.textPrimary, fontWeight: "400", padding: 20 }}>Hide like count</Text>
+                        <Text style={{ fontSize: 18, color: theme.textPrimary, fontWeight: "400", padding: 20 }}>{t('screens.home.text.modals.sameUser.hideLikes')}</Text>
                     </TouchableOpacity>
                     <View style={{}}>
                         <Divider width={0.5} orientation='horizontal' color={theme.modalDivider} />
                     </View>
                     <TouchableOpacity onPress={() => handelBeforeDeletePost(post)}
                         activeOpacity={0.7} style={{ flexDirection: "row", justifyContent: "flex-start", gap: 10, alignItems: "center", backgroundColor: theme.modalBtn, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, paddingHorizontal: 20 }} >
-                        <SvgComponent svgKey="DeleteSVG" width={moderateScale(22)} height={moderateScale(22)}  stroke={theme.textPrimary}/>
-                        <Text style={{ fontSize: 18, color: theme.textError, fontWeight: "400", padding: 20 }}>Delete</Text>
+                        <SvgComponent svgKey="DeleteSVG" width={moderateScale(22)} height={moderateScale(22)} stroke={theme.textPrimary} />
+                        <Text style={{ fontSize: 18, color: theme.textError, fontWeight: "400", padding: 20 }}>{t('screens.home.text.modals.sameUser.delete')}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
-            <ModalAlertForDelete isAlertModaVisible={isAlertModaVisible} theme={theme} setIsAlertModaVisible={setIsAlertModaVisible} setIsModalVisible={setIsModalVisible} onPostDeleteConfirmed={handlePostDeleteConfirmed} />
+            <ModalAlertForDelete t={t} isAlertModaVisible={isAlertModaVisible} theme={theme} setIsAlertModaVisible={setIsAlertModaVisible} setIsModalVisible={setIsModalVisible} onPostDeleteConfirmed={handlePostDeleteConfirmed} />
         </>
     )
 }
 
-export const ModalContentForUserWithDifferentSameId = ({ handleSavedPost, savedPosts, post, setIsModalVisible, theme }) => {
+export const ModalContentForUserWithDifferentSameId = ({ handleSavedPost, savedPosts, post, setIsModalVisible, theme, t }) => {
     const navigation = useNavigation();
     const isPostSaved = savedPosts?.saved_post_id?.includes(post.id) || false;
     const handleBeforeSavePost = (post) => {
@@ -105,11 +105,11 @@ export const ModalContentForUserWithDifferentSameId = ({ handleSavedPost, savedP
                     <TouchableOpacity onPress={() => handleBeforeSavePost(post)}
                         activeOpacity={0.7} style={{ flex: 0.45, alignItems: "center", backgroundColor: theme.modalBtn, gap: 7, borderRadius: 10, paddingVertical: 10 }} >
                         <SvgComponent svgKey={isPostSaved ? "BookMarkSavedSVG" : "BookmarkNotActiveSVG"} width={moderateScale(20)} height={moderateScale(20)} stroke={theme.textPrimary} />
-                        <Text style={{ fontSize: 13, color: theme.textPrimary, fontWeight: "400" }}>{isPostSaved ? "Unsave" : "Save"}</Text>
+                        <Text style={{ fontSize: 13, color: theme.textPrimary, fontWeight: "400" }}>{isPostSaved ? t('screens.home.text.modals.differentUser.unsave') : t('screens.home.text.modals.differentUser.save')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity activeOpacity={0.7} style={{ flex: 0.45, alignItems: "center", backgroundColor: theme.modalBtn, gap: 7, borderRadius: 10, paddingVertical: 10 }} >
                         <SvgComponent svgKey="EyePasswordSVG" width={moderateScale(20)} height={moderateScale(20)} stroke={theme.textPrimary} />
-                        <Text style={{ fontSize: 13, color: theme.textPrimary, fontWeight: "400" }}>Not Interested</Text>
+                        <Text style={{ fontSize: 13, color: theme.textPrimary, fontWeight: "400" }}>{t('screens.home.text.modals.differentUser.notInterested')}</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{ marginHorizontal: 15, margin: 10, }}>
@@ -117,7 +117,7 @@ export const ModalContentForUserWithDifferentSameId = ({ handleSavedPost, savedP
                         onPress={() => handleAboutThisUser(post)}
                         activeOpacity={0.7} style={{ flexDirection: "row", justifyContent: "flex-start", gap: 10, alignItems: "center", backgroundColor: theme.modalBtn, borderTopLeftRadius: 10, borderTopRightRadius: 10, paddingHorizontal: 20 }} >
                         <SvgComponent svgKey="UserIllustrationSVG" width={moderateScale(22)} height={moderateScale(22)} stroke={theme.textPrimary} />
-                        <Text style={{ fontSize: 18, color: theme.textPrimary, fontWeight: "400", padding: 20 }}>About this account</Text>
+                        <Text style={{ fontSize: 18, color: theme.textPrimary, fontWeight: "400", padding: 20 }}>{t('screens.home.text.modals.differentUser.aboutThisAccount')}</Text>
                     </TouchableOpacity>
                     <View style={{}}>
                         <Divider width={0.5} orientation='horizontal' color={theme.modalDivider} />
@@ -125,7 +125,7 @@ export const ModalContentForUserWithDifferentSameId = ({ handleSavedPost, savedP
                     <TouchableOpacity
                         activeOpacity={0.7} style={{ flexDirection: "row", justifyContent: "flex-start", gap: 10, alignItems: "center", backgroundColor: theme.modalBtn, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, paddingHorizontal: 20 }} >
                         <SvgComponent svgKey="ReportIssueSVG" width={moderateScale(22)} height={moderateScale(22)} stroke={theme.textPrimary} />
-                        <Text style={{ fontSize: 18, color: theme.textError, fontWeight: "400", padding: 20 }}>Report</Text>
+                        <Text style={{ fontSize: 18, color: theme.textError, fontWeight: "400", padding: 20 }}>{t('screens.home.text.modals.differentUser.report')}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -156,7 +156,7 @@ export const ModalHeader = ({ theme }) => (
 //#endregion
 
 //#region Modal Delete confirmation
-const ModalAlertForDelete = ({ isAlertModaVisible, setIsAlertModaVisible, setIsModalVisible, onPostDeleteConfirmed, theme }) => {
+const ModalAlertForDelete = ({ isAlertModaVisible, setIsAlertModaVisible, setIsModalVisible, onPostDeleteConfirmed, theme, t }) => {
     const handelDeletingPost = () => {
         onPostDeleteConfirmed()
     }
@@ -176,8 +176,8 @@ const ModalAlertForDelete = ({ isAlertModaVisible, setIsAlertModaVisible, setIsM
                 marginHorizontal: 60
             }}>
                 <View style={{ flexDirection: "column", justifyContent: "space-evenly", alignItems: "center", flex: 0.6, paddingHorizontal: 20, }}>
-                    <Text style={{ fontSize: 20, color: theme.textPrimary, fontWeight: "600", }}>Delete post?</Text>
-                    <Text style={{ fontSize: 16, color: theme.textTertiary, fontWeight: "400", textAlign: "center", }}>This post will be permanently deleted. You will not be able to restore it after deletion.</Text>
+                    <Text style={{ fontSize: 20, color: theme.textPrimary, fontWeight: "600", }}>{t('screens.home.text.modals.sameUser.deleteModal.title')}</Text>
+                    <Text style={{ fontSize: 16, color: theme.textTertiary, fontWeight: "400", textAlign: "center", }}>{t('screens.home.text.modals.sameUser.deleteModal.warning')}</Text>
                 </View>
 
                 <Divider width={1} orientation='horizontal' color={theme.dividerPrimary} />
@@ -187,7 +187,7 @@ const ModalAlertForDelete = ({ isAlertModaVisible, setIsAlertModaVisible, setIsM
                             handelDeletingPost()
                         }}
                     >
-                        <Text style={{ color: theme.textError, fontWeight: "600", fontSize: 18, textAlign: "center", }}>Delete</Text>
+                        <Text style={{ color: theme.textError, fontWeight: "600", fontSize: 18, textAlign: "center", }}>{t('screens.home.text.modals.sameUser.deleteModal.delete')}</Text>
                     </TouchableOpacity>
                     <Divider width={1} orientation='horizontal' color={theme.dividerPrimary} />
                     <TouchableOpacity
@@ -197,7 +197,7 @@ const ModalAlertForDelete = ({ isAlertModaVisible, setIsAlertModaVisible, setIsM
                                 setIsAlertModaVisible(false)
                             }, 250);
                         }}>
-                        <Text style={{ color: theme.textQuaternary, fontWeight: "400", fontSize: 18, textAlign: "center", }}>Cancel</Text>
+                        <Text style={{ color: theme.textQuaternary, fontWeight: "400", fontSize: 18, textAlign: "center", }}>{t('screens.home.text.modals.sameUser.deleteModal.cancel')}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
