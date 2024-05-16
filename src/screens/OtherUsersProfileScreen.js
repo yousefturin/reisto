@@ -8,21 +8,20 @@ import OthersProfileContent from '../components/OthersProfile/OthersProfileConte
 import LoadingPlaceHolder from '../components/Search/LoadingPlaceHolder'
 import { colorPalette } from '../Config/Theme'
 import { useTheme } from '../context/ThemeContext'
-import { getColorForTheme } from '../utils/ThemeUtils'
+
+import { useTranslation } from 'react-i18next'
+import UseCustomTheme from '../utils/UseCustomTheme'
 
 const OtherUsersProfileScreen = ({ route }) => {
     const { userDataToBeNavigated } = route.params
+    const { t } = useTranslation()
     const [userPosts, setUserPost] = useState([])
     const [refreshing, setRefreshing] = useState(false);
     const [scrollToPostId, setScrollToPostId] = useState(null)
 
     const { selectedTheme } = useTheme();
-    const systemTheme = selectedTheme === "system";
-    const theme = getColorForTheme(
-        { dark: colorPalette.dark, light: colorPalette.light },
-        selectedTheme,
-        systemTheme
-    );
+    const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
+
 
     useEffect(() => {
         const unsubscribe = fetchUserPosts();
@@ -82,10 +81,10 @@ const OtherUsersProfileScreen = ({ route }) => {
                         />
                     }
                 >
-                    <OthersProfileContent userDataToBeNavigated={userDataToBeNavigated} userPosts={userPosts} theme={theme}  />
+                    <OthersProfileContent t={t} userDataToBeNavigated={userDataToBeNavigated} userPosts={userPosts} theme={theme} />
                     {/* i don't understand how this is working it must be userPosts.id?.length === 0 then it must show the profile without rendering the Loader */}
                     {userPosts.length !== 0 || userPosts.id?.length !== 0 ? (
-                        <ProfilePost posts={userPosts} userDataToBeNavigated={userDataToBeNavigated} onPostPress={handlePostPress} keyValue={"NavigationToOtherProfile"}  />
+                        <ProfilePost t={t} posts={userPosts} userDataToBeNavigated={userDataToBeNavigated} onPostPress={handlePostPress} keyValue={"NavigationToOtherProfile"} />
                     ) : (
                         <LoadingPlaceHolder condition={userPosts.length === 0} theme={theme} />
                     )}
