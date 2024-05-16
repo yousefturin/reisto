@@ -5,7 +5,6 @@ import ProfileHeader from '../components/Profile/ProfileHeader'
 import { UserContext } from '../context/UserDataProvider'
 import ProfileContent from '../components/Profile/ProfileContent'
 import ProfilePost from '../components/Profile/ProfilePost'
-import LoadingPlaceHolder from '../components/Search/LoadingPlaceHolder'
 import { colorPalette } from '../Config/Theme'
 
 import { useTheme } from '../context/ThemeContext'

@@ -1,7 +1,6 @@
 import { View } from 'react-native'
 import React from 'react'
 import { Skeleton } from 'moti/skeleton'
-import { colorPalette } from '../../Config/Theme'
 
 const MessageLoadingPlaceHolder = ({ theme }) => {
     const SkeletonCommonProps = {

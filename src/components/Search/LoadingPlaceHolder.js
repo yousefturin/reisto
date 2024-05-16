@@ -3,7 +3,6 @@ import React from 'react'
 import { Skeleton } from 'moti/skeleton';
 import { FlatList } from 'react-native';
 import { View } from 'moti';
-import { colorPalette } from '../../Config/Theme';
 
 const LoadingPlaceHolder = ({ condition, theme }) => {
 

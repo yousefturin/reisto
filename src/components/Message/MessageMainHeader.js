@@ -3,7 +3,6 @@ import React from 'react'
 import SvgComponent from '../../utils/SvgComponents'
 import initializeScalingUtils from '../../utils/NormalizeSize';
 import { useNavigation } from "@react-navigation/native";
-import { colorPalette } from '../../Config/Theme';
 
 const MessageMainHeader = ({ userData, excludedUsers, theme }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);

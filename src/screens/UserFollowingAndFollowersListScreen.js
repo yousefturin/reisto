@@ -8,7 +8,6 @@ import { colorPalette } from '../Config/Theme';
 import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import UseCustomTheme from '../utils/UseCustomTheme';
-import { Divider } from 'react-native-elements';
 import EmptyDataParma from '../components/CustomComponent/EmptyDataParma';
 
 const screenWidth = Dimensions.get('window').width;

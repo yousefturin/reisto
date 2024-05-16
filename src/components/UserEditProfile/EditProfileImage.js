@@ -6,7 +6,8 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { db, firebase } from '../../firebase';
 import { Image } from 'expo-image';
-import { colorPalette } from '../../Config/Theme';
+
+
 const EditProfileImage = ({ userData, theme, t }) => {
     const [image, setImage] = useState(null);
     const pickImage = async () => {

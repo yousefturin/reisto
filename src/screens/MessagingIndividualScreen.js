@@ -11,7 +11,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { addDoc, collection, doc, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
-import { blurHash } from '../../assets/HashBlurData';
 import UploadImageToStorage from '../../src/utils/UploadImageToStorage';
 import { colorPalette } from '../Config/Theme';
 import { useTheme } from '../context/ThemeContext';

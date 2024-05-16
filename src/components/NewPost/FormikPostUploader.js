@@ -13,7 +13,6 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import AddNewPostHeader from './AddNewPost';
 import UploadImageToStorage from '../../utils/UploadImageToStorage';
 import { Image } from 'expo-image';
-import { colorPalette } from '../../Config/Theme';
 
 
 

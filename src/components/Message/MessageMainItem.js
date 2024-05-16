@@ -11,7 +11,6 @@ import calculateTimeDifference from '../../utils/TimeDifferenceCalculator';
 import SvgComponent from '../../utils/SvgComponents';
 import initializeScalingUtils from '../../utils/NormalizeSize';
 import { MessagesNumContext } from '../../context/MessagesNumProvider';
-import { colorPalette } from '../../Config/Theme';
 
 
 const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag, theme, t }) => {

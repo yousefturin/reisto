@@ -1,7 +1,6 @@
 import { View } from 'react-native'
 import React from 'react'
 import { Skeleton } from 'moti/skeleton'
-import { colorPalette } from '../../Config/Theme'
 
 
 // the implementation of theme is not yet done

@@ -3,7 +3,6 @@ import React from 'react'
 import { useNavigation } from '@react-navigation/native';
 import initializeScalingUtils from '../../utils/NormalizeSize';
 import SvgComponent from '../../utils/SvgComponents';
-import { colorPalette } from '../../Config/Theme';
 
 const OthersProfileHeader = ({ userDataToBeNavigated, theme }) => {
     const navigation = useNavigation();

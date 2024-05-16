@@ -3,7 +3,6 @@ import React from 'react'
 import initializeScalingUtils from '../../utils/NormalizeSize'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import SvgComponent from '../../utils/SvgComponents'
-import { colorPalette } from '../../Config/Theme'
 
 const EditProfileHeader = ({ navigation, headerTitle, theme }) => {
     const handlePressBack = () => {

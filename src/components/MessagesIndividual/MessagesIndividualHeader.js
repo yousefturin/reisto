@@ -7,7 +7,6 @@ import { Image } from 'expo-image';
 import { blurHash } from '../../../assets/HashBlurData';
 import { Divider } from 'react-native-elements';
 import { db } from '../../firebase';
-import { colorPalette } from '../../Config/Theme';
 
 
 const MessagesIndividualHeader = ({ header, theme }) => {

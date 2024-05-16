@@ -11,7 +11,6 @@ import { Divider } from 'react-native-elements';
 import { firebase, db } from '../../firebase'
 import ReactNativeModal from 'react-native-modal';
 import { useNavigation } from "@react-navigation/native";
-import { colorPalette } from '../../Config/Theme';
 
 const screenHeight = Dimensions.get('window').height;
 const { moderateScale } = initializeScalingUtils(Dimensions);

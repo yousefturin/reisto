@@ -3,7 +3,6 @@ import React from 'react'
 import { useNavigation } from "@react-navigation/native";
 import SvgComponent from '../../utils/SvgComponents';
 import initializeScalingUtils from '../../utils/NormalizeSize';
-import { colorPalette } from '../../Config/Theme';
 
 
 const SavedPostsHeader = ({ header, theme }) => {

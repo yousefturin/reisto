@@ -3,9 +3,7 @@ import React, { useCallback, useContext, useEffect, useLayoutEffect, useState } 
 import MessageMainHeader from '../components/Message/MessageMainHeader'
 import { UserContext } from '../context/UserDataProvider'
 import { db } from '../firebase'
-import MessageLoadingPlaceHolder from '../components/Message/MessageLoadingPlaceHolder'
 import MessageMainList from '../components/Message/MessageMainList'
-import MessageMainSearchBar from '../components/Message/MessageMainSearchBar'
 import { View } from 'moti'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Image } from 'expo-image'
@@ -14,11 +12,10 @@ import { SearchBar } from 'react-native-elements'
 import initializeScalingUtils from '../utils/NormalizeSize'
 import { useNavigation } from '@react-navigation/native'
 import { colorPalette } from '../Config/Theme'
-
 import { useTheme } from '../context/ThemeContext'
 import { useTranslation } from 'react-i18next'
 import UseCustomTheme from '../utils/UseCustomTheme'
-import { use } from 'i18next'
+
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
 const MessagingMainScreen = () => {

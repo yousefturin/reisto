@@ -5,7 +5,6 @@ import SvgComponent from '../../utils/SvgComponents'
 import initializeScalingUtils from '../../utils/NormalizeSize';
 const { moderateScale } = initializeScalingUtils(Dimensions);
 import { useNavigation } from "@react-navigation/native";
-import { colorPalette } from '../../Config/Theme';
 
 const AddNewPostHeader = ({ handleSubmit, isValid, theme, t }) => {
     const navigation = useNavigation();

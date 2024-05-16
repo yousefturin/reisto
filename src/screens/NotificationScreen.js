@@ -1,5 +1,5 @@
 import { SafeAreaView } from 'react-native'
-import React, { useState } from 'react'
+import React from 'react'
 import { colorPalette } from '../Config/Theme'
 import { useTheme } from '../context/ThemeContext';
 

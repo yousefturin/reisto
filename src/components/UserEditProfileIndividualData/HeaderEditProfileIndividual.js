@@ -4,7 +4,6 @@ import SvgComponent from '../../utils/SvgComponents';
 import initializeScalingUtils from '../../utils/NormalizeSize';
 import { Divider } from 'react-native-elements';
 import Modal from 'react-native-modal';
-import { colorPalette } from '../../Config/Theme';
 
 const HeaderEditProfileIndividual = ({ headerTitle, navigation, handleSubmit, isValid, theme, t }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);

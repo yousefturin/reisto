@@ -8,7 +8,6 @@ import { blurHash } from '../../../assets/HashBlurData';
 import { TouchableOpacity } from 'react-native';
 import { firebase } from '../../firebase'
 import { useNavigation } from '@react-navigation/native';
-import { colorPalette } from '../../Config/Theme';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const MessageItem = ({ message, currentUser, theme }) => {

@@ -8,7 +8,6 @@ import { extractDomain } from '../../utils/ExtractDomainFromLink';
 import { WebView } from 'react-native-webview';
 import { Divider } from 'react-native-elements';
 import { db, firebase } from '../../firebase';
-import { colorPalette } from '../../Config/Theme';
 
 const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
