@@ -1,5 +1,5 @@
-import { SafeAreaView, RefreshControl, FlatList, View, Text, Dimensions, Animated } from 'react-native'
-import React, { useEffect, useState, useCallback, useContext, useLayoutEffect, useRef } from 'react'
+import { SafeAreaView, RefreshControl, FlatList, View, Text, Dimensions, Animated, TouchableOpacity } from 'react-native'
+import React, { useEffect, useState, useCallback, useContext, useLayoutEffect } from 'react'
 import Header from '../components/Home/Header'
 import Post from '../components/Home/Post'
 import { db, firebase } from '../firebase'
@@ -202,12 +202,24 @@ const HomeScreen = () => {
         }
     };
     //#endregion
-
+    const [isFollowingData, setIsFollowingData] = useState(false)
     const [postOptionModal, setPostOptionModal] = useState(false)
+    const [textForPostOption, setTextForPostOption] = useState("Following")
+    const [SvgForPostOption, setSvgForPostOption] = useState("followingSVG")
     const handleShowPostOptions = () => {
         setPostOptionModal(!postOptionModal)
     }
-
+    const handleDataToBeShown = () => {
+        setIsFollowingData(!isFollowingData)
+        setPostOptionModal(false)
+        if (isFollowingData === false) {
+            setTextForPostOption("For you")
+            setSvgForPostOption("forYouSVG")
+        } else {
+            setTextForPostOption("Following")
+            setSvgForPostOption("followingSVG")
+        }
+    }
     //#region  animated header
     const scrollY = new Animated.Value(0);
     const offsetAnimation = new Animated.Value(0);
@@ -245,8 +257,8 @@ const HomeScreen = () => {
         extrapolate: 'clamp',
     });
     const opacity = clampedScroll.interpolate({
-        inputRange: [0, 45, 65],
-        outputRange: [1, 0.01, 0],
+        inputRange: [0, 40, 65],
+        outputRange: [1, 0.1, 0],
         extrapolate: 'clamp',
     });
 
@@ -271,66 +283,99 @@ const HomeScreen = () => {
     return (
         <SafeAreaView style={[{ flex: 1, backgroundColor: theme.Primary, }]}>
             <View style={{ position: "absolute", top: 0, left: 0, width: "100%", backgroundColor: theme.Primary, height: 48, zIndex: 2, }}></View>
-            <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} />
             <Animated.View style={{
-                //for animation
                 backgroundColor: theme.Primary,
                 transform: [{ translateY: headerTranslate }],
                 position: 'absolute',
-                top: 30,
+                top: 40,
                 right: 0,
                 left: 0,
                 zIndex: 1,
-                opacity: opacity,
             }}>
-                <Header theme={theme} onButtonClick={handleShowPostOptions} />
+                <Header theme={theme} onButtonClick={handleShowPostOptions} opacity={opacity} />
             </Animated.View>
 
-            {postOptionModal && <View style={{
+            {headerTranslate !== -65 && <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} />}
+            {postOptionModal && <TouchableOpacity activeOpacity={0.8} onPress={() => handleDataToBeShown()} style={{
                 position: "absolute",
-                top: 110, left: 20, backgroundColor: theme.Secondary,
+                top: 100, left: 20, backgroundColor: theme.Secondary,
                 width: 150, zIndex: 9999, justifyContent: "space-around",
                 alignItems: "center", borderRadius: 10, flexDirection: "row", paddingVertical: 10, shadowColor: theme.modalBackgroundPrimary, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.25, shadowRadius: 12.84, elevation: 5
             }}>
-                <Text style={{ color: theme.textPrimary, fontSize: 18 }}>Following</Text>
-                <SvgComponent svgKey="followingSVG" width={moderateScale(24)} height={moderateScale(24)} stroke={theme.textPrimary} />
-            </View>}
+                <Text style={{ color: theme.textPrimary, fontSize: 18, fontWeight: "500" }}>{textForPostOption}</Text>
+                <SvgComponent svgKey={SvgForPostOption} width={moderateScale(24)} height={moderateScale(24)} stroke={theme.textPrimary} />
+            </TouchableOpacity>}
 
-            {posts.length !== 0 ? (
-                <AnimatedFlatList
-                    style={{ paddingTop: 40 }}
-                    onScrollBeginDrag={() => postOptionModal === true && setPostOptionModal(false)}
-                    keyboardDismissMode="on-drag"
-                    keyboardShouldPersistTaps='handled'
-                    data={posts}
-                    renderItem={({ item, index }) => (
-                        <Post shouldAddOffSet={true} theme={theme} post={item} key={index} isLastPost={index === posts.length - 1} userData={userData} usersForSharePosts={usersForSharePosts} />
-                    )}
-                    keyExtractor={(item, index) => index.toString()}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={onRefresh}
-                        />
-                    }
-                    showsVerticalScrollIndicator={false}
-                    removeClippedSubviews={true}
-                    initialNumToRender={2}
-                    maxToRenderPerBatch={1}
-                    updateCellsBatchingPeriod={100}
-                    windowSize={7}
-                    onScroll={Animated.event(
-                        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-                        { useNativeDriver: true }
-                    )}
-                    onMomentumScrollBegin={onMomentumScrollBegin}
-                    onMomentumScrollEnd={onMomentumScrollEnd}
-                    onScrollEndDrag={onScrollEndDrag}
-                    scrollEventThrottle={1}
-                />
-            ) : (
-                <LoadingPlaceHolder theme={theme} isPaddingNeeded={true} />
-            )}
+            {isFollowingData === false ?
+                posts.length !== 0 ? (
+                    <AnimatedFlatList
+                        style={{ paddingTop: 50 }}
+                        onScrollBeginDrag={() => postOptionModal === true && setPostOptionModal(false)}
+                        keyboardDismissMode="on-drag"
+                        keyboardShouldPersistTaps='handled'
+                        data={posts}
+                        renderItem={({ item, index }) => (
+                            <Post shouldAddOffSet={true} theme={theme} post={item} key={index} isLastPost={index === posts.length - 1} userData={userData} usersForSharePosts={usersForSharePosts} />
+                        )}
+                        keyExtractor={(item, index) => index.toString()}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={refreshing}
+                                onRefresh={onRefresh}
+                            />
+                        }
+                        showsVerticalScrollIndicator={false}
+                        removeClippedSubviews={true}
+                        initialNumToRender={2}
+                        maxToRenderPerBatch={1}
+                        updateCellsBatchingPeriod={100}
+                        windowSize={7}
+                        onScroll={Animated.event(
+                            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                            { useNativeDriver: true }
+                        )}
+                        onMomentumScrollBegin={onMomentumScrollBegin}
+                        onMomentumScrollEnd={onMomentumScrollEnd}
+                        onScrollEndDrag={onScrollEndDrag}
+                        scrollEventThrottle={4}
+                    />
+                ) : (
+                    <LoadingPlaceHolder theme={theme} isPaddingNeeded={true} />
+                ) : postFollowing.length !== 0 ? (
+                    <AnimatedFlatList
+                        style={{ paddingTop: 50 }}
+                        onScrollBeginDrag={() => postOptionModal === true && setPostOptionModal(false)}
+                        keyboardDismissMode="on-drag"
+                        keyboardShouldPersistTaps='handled'
+                        data={postFollowing}
+                        renderItem={({ item, index }) => (
+                            <Post shouldAddOffSet={true} theme={theme} post={item} key={index} isLastPost={index === postFollowing.length - 1} userData={userData} usersForSharePosts={usersForSharePosts} />
+                        )}
+                        keyExtractor={(item, index) => index.toString()}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={refreshing}
+                                onRefresh={onRefresh}
+                            />
+                        }
+                        showsVerticalScrollIndicator={false}
+                        removeClippedSubviews={true}
+                        initialNumToRender={2}
+                        maxToRenderPerBatch={1}
+                        updateCellsBatchingPeriod={100}
+                        windowSize={7}
+                        onScroll={Animated.event(
+                            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                            { useNativeDriver: true }
+                        )}
+                        onMomentumScrollBegin={onMomentumScrollBegin}
+                        onMomentumScrollEnd={onMomentumScrollEnd}
+                        onScrollEndDrag={onScrollEndDrag}
+                        scrollEventThrottle={4}
+                    />
+                ) : (
+                    <LoadingPlaceHolder theme={theme} isPaddingNeeded={true} />
+                )}
             <StatusBar
                 barStyle={statusBarColorTheme}
             />
