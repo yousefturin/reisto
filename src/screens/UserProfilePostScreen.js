@@ -1,5 +1,5 @@
-import { Dimensions, FlatList, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { Dimensions, FlatList, SafeAreaView, Text, TouchableOpacity, View, VirtualizedList } from 'react-native'
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import Post from '../components/Home/Post'
 import SvgComponent from '../utils/SvgComponents'
 import initializeScalingUtils from '../utils/NormalizeSize';
@@ -11,6 +11,7 @@ import { useTheme } from '../context/ThemeContext';
 
 import { useTranslation } from 'react-i18next';
 import UseCustomTheme from '../utils/UseCustomTheme';
+import EmptyDataParma from '../components/CustomComponent/EmptyDataParma';
 
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
@@ -21,7 +22,9 @@ const UserProfilePostScreen = ({ route }) => {
     const { userData, scrollToPostId } = route.params;
     const [posts, setPost] = useState([])
     const flatListRef = useRef();
+    const [loading, setLoading] = useState(true);
     const [initialScrollIndex, setInitialScrollIndex] = useState(null);
+    const [initialScrollDone, setInitialScrollDone] = useState(false);
     const [usersForSharePosts, setUsersForSharePosts] = useState([]);
 
     const { selectedTheme } = useTheme();
@@ -31,24 +34,29 @@ const UserProfilePostScreen = ({ route }) => {
     const handleScrollToIndexFailed = info => {
         const wait = new Promise(resolve => setTimeout(resolve, 500));
         wait.then(() => {
-            flatListRef.current?.scrollToIndex({ index: info.index, animated: true });
+            flatListRef.current?.scrollToIndex({ index: info.index, animated: true, viewPosition: 0 });
         });
     };
-
-
     useEffect(() => {
-        // Calculate initialScrollIndex only when posts are fetched
         if (scrollToPostId && posts.length > 0) {
             const index = posts.findIndex(post => post.id === scrollToPostId);
             if (index !== -1) {
                 setInitialScrollIndex(index);
-                if (flatListRef.current) {
-                    // Scroll to the initial index
-                    flatListRef.current.scrollToIndex({ animated: true, index });
-                }
             }
         }
-    }, [posts, scrollToPostId]);
+    }, [scrollToPostId, posts]);
+
+    useEffect(() => {
+        if (initialScrollIndex !== null && !initialScrollDone) {
+            flatListRef.current.scrollToIndex({
+                index: initialScrollIndex,
+                animated: true,
+                viewPosition: 0
+            });
+            setInitialScrollDone(true);
+        }
+    }, [initialScrollIndex, initialScrollDone]);
+
 
     useEffect(() => {
         let unsubscribe;
@@ -77,12 +85,15 @@ const UserProfilePostScreen = ({ route }) => {
                         }
                     })
                     Promise.all(userPostsWithProfilePicture).then(posts => {
+                        setLoading(false)
                         setPost(posts)
                     }).catch(error => {
                         console.error('Error fetching posts with profile pictures:', error);
+                        setLoading(null);
                     })
                 }, error => {
                     console.error("Error fetching posts:", error);
+                    setLoading(null);
                 });
             }
             else {
@@ -146,18 +157,17 @@ const UserProfilePostScreen = ({ route }) => {
         }
     };
 
-
-
-    const renderItem = ({ item }) => (
-        <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} theme={theme} />
-    )
-
+    const renderItem = useCallback(({ item }) => {
+        return (
+            <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} theme={theme} />
+        )
+    }, []);
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <OwnerProfileHeader userData={userData} theme={theme} t={t} />
-            {posts.length !== 0 ? (
-                <FlatList
+            {loading === false ? (
+                <VirtualizedList
                     keyboardDismissMode="on-drag"
                     keyboardShouldPersistTaps={'always'}
                     ref={flatListRef}
@@ -165,11 +175,19 @@ const UserProfilePostScreen = ({ route }) => {
                     renderItem={renderItem}
                     keyExtractor={item => item.id.toString()}
                     initialScrollIndex={initialScrollIndex}
-                    // this is a trick to allow the user to scroll, it needs more test to see if those values will work on
-                    // different devices the same way to remove the drop fame.
-                    getItemLayout={(data, index) => ({ length: windowHeight * 0.736, offset: windowHeight * 0.736 * index, index })}
+                    getItem={(data, index) => data[index]}
+                    getItemCount={data => data.length}
+                    getItemLayout={(_, index) => ({
+                        length: windowHeight * 0.75,
+                        offset: windowHeight * 0.75 * index,
+                        index
+                    })}
                     onScrollToIndexFailed={handleScrollToIndexFailed}
                 />
+            ) : loading === null ? (
+                <View style={{ minHeight: 800 }}>
+                    <EmptyDataParma SvgElement={"DeletedPostIllustration"} theme={theme} t={t} dataMessage={"Check your internet connection, and refresh the page."} TitleDataMessage={"Something went wrong"} />
+                </View>
             ) : (
                 <LoadingPlaceHolder theme={theme} />
             )}
