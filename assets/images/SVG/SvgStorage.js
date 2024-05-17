@@ -289,6 +289,11 @@ const svgData = {
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M2 21V17C2 15.8954 2.89543 15 4 15H14C15.1046 15 16 15.8954 16 17V21M16 3C16.8604 3.2203 17.623 3.7207 18.1676 4.42231C18.7122 5.12392 19.0078 5.98683 19.0078 6.875C19.0078 7.76317 18.7122 8.62608 18.1676 9.32769C17.623 10.0293 16.8604 10.5297 16 10.75M19 15H20C21.1046 15 22 15.8954 22 17V21M13 7C13 9.20914 11.2091 11 9 11C6.79086 11 5 9.20914 5 7C5 4.79086 6.79086 3 9 3C11.2091 3 13 4.79086 13 7Z" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
 </svg>`,
+  forYouSVG: `
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill="none" d="M22 12C22 17.5228 17.5228 22 12 22M22 12C22 6.47715 17.5228 2 12 2M22 12H2M12 22C6.47715 22 2 17.5228 2 12M12 22C14.4744 19.4749 16 15.8145 16 11.9999C16 8.18526 14.4744 4.52507 12 2M12 22C9.52563 19.4749 8 15.8145 8 11.9999C8 8.18526 9.52563 4.52507 12 2M2 12C2 6.47715 6.47715 2 12 2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+  `,
   // #region Illustration Vectors-------------------------------------------------------------------------------------------------
   AddUserIllustration: `
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
