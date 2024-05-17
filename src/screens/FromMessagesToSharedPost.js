@@ -52,8 +52,8 @@ const FromMessagesToSharedPost = ({ route }) => {
                                 profile_picture: dbUserProfilePicture,
                                 ...dbUserPostData
                             };
-                            setPost(postWithProfilePicture);
                             setLoading(false);
+                            setPost(postWithProfilePicture);
                         } catch (error) {
                             console.error('Error fetching user document:', error)
                             setLoading(false);
