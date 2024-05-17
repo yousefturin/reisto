@@ -45,7 +45,7 @@ const SavedPostsGrid = ({ posts, userData, navigateToScreen }) => {
         return index.toString();
     };
     return (
-        <FlatList
+        <FlatList        
             keyboardDismissMode="on-drag"
             keyboardShouldPersistTaps={'always'}
             data={posts}
