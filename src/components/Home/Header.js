@@ -1,4 +1,4 @@
-import { View, Dimensions, StyleSheet, TouchableOpacity, Text } from 'react-native'
+import { View, Dimensions, StyleSheet, TouchableOpacity, Text, Animated } from 'react-native'
 import React, { useContext } from 'react'
 import SvgComponent from '../../utils/SvgComponents'
 import initializeScalingUtils from '../../utils/NormalizeSize';
@@ -8,14 +8,14 @@ import { colorPalette } from '../../Config/Theme';
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
-const Header = ({ theme, onButtonClick }) => {
+const Header = ({ theme, onButtonClick, opacity }) => {
   const navigation = useNavigation();
   const { messagesNum, loadingMessagesNum } = useContext(MessagesNumContext);
-
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={() => onButtonClick()} >
+    <Animated.View style={[styles.container, { opacity: opacity }]}>
+      <TouchableOpacity onPress={() => onButtonClick()} style={{ flexDirection: "row",alignItems:"center" }} >
         <SvgComponent svgKey="LogoSVG" width={moderateScale(60)} height={moderateScale(60)} fill={theme.textPrimary} />
+        <SvgComponent svgKey="ArrowDownSVG" width={moderateScale(25)} height={moderateScale(25)} fill={theme.textPrimary} stroke={theme.textPrimary} />
       </TouchableOpacity>
 
       <View style={styles.iconsContainer}>
@@ -27,7 +27,7 @@ const Header = ({ theme, onButtonClick }) => {
           <SvgComponent svgKey="ChatSVG" width={moderateScale(22)} height={moderateScale(22)} fill={theme.textPrimary} stroke={theme.textPrimary} />
         </TouchableOpacity>
       </View>
-    </View>
+    </Animated.View>
   )
 }
 
