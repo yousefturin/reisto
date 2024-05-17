@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Dimensions } from 'react-native'
+import { View, Text, TouchableOpacity, Dimensions, Animated } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from "@react-navigation/native";
 import initializeScalingUtils from '../../utils/NormalizeSize';
@@ -7,7 +7,7 @@ import SvgComponent from '../../utils/SvgComponents';
 import Modal from 'react-native-modal';
 
 
-const ProfileHeader = ({ handleLogout, userData, theme, t }) => {
+const ProfileHeader = ({ handleLogout, userData, theme, t, opacity }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);
     // const navigation = useNavigation();
     const [isContainerVisible, setContainerVisible] = useState(false);
@@ -16,7 +16,7 @@ const ProfileHeader = ({ handleLogout, userData, theme, t }) => {
     };
     return (
         <>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10 }}>
+            <Animated.View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10, opacity: opacity }}>
                 <Text style={{ color: theme.textPrimary, fontWeight: "800", fontSize: 25, marginLeft: 15 }}>{userData.username}</Text>
                 <View style={{ margin: 10, height: moderateScale(30) }}>
                 </View>
@@ -24,7 +24,7 @@ const ProfileHeader = ({ handleLogout, userData, theme, t }) => {
                     <SvgComponent svgKey="MenuSVG" width={moderateScale(30)} height={moderateScale(30)} stroke={theme.textPrimary} />
                 </TouchableOpacity>
                 <ProfileMenu t={t} theme={theme} setContainerVisible={setContainerVisible} isContainerVisible={isContainerVisible} handleLogout={handleLogout} moderateScale={moderateScale} />
-            </View>
+            </Animated.View>
         </>
     )
 }
