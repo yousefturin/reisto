@@ -8,13 +8,14 @@ import { View } from 'moti'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Image } from 'expo-image'
 import { blurHash } from '../../assets/HashBlurData'
-import { SearchBar } from 'react-native-elements'
+import { Divider, SearchBar } from 'react-native-elements'
 import initializeScalingUtils from '../utils/NormalizeSize'
 import { useNavigation } from '@react-navigation/native'
 import { colorPalette } from '../Config/Theme'
 import { useTheme } from '../context/ThemeContext'
 import { useTranslation } from 'react-i18next'
 import UseCustomTheme from '../utils/UseCustomTheme'
+import { Animated } from 'react-native'
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
@@ -143,8 +144,8 @@ const MessagingMainScreen = () => {
                             if (userDataDb.length === 0) {
                                 setLoading(null);
                             } else {
-                                setUsersForMessaging(userDataDb);
                                 setLoading(false);
+                                setUsersForMessaging(userDataDb);
                             }
                         })
                         .catch((error) => {
@@ -203,46 +204,159 @@ const MessagingMainScreen = () => {
     }, []);
     //#endregion
 
+    //#region  animated header
+    const scrollY = new Animated.Value(0);
+    const offsetAnimation = new Animated.Value(0);
+    const clampedScroll = Animated.diffClamp(
+        Animated.add(
+            scrollY.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 1],
+                extrapolateLeft: 'clamp',
+            }),
+            offsetAnimation,
+        ),
+        0,
+        65,
+    );
+    const clampedScrollSecond = Animated.diffClamp(
+        Animated.add(
+            scrollY.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 1],
+                extrapolateLeft: 'clamp',
+            }),
+            offsetAnimation,
+        ),
+        0,
+        120,
+    );
+    var _clampedScrollValue = 0;
+    var _offsetValue = 0;
+    var _scrollValue = 0;
+    useEffect(() => {
+        scrollY.addListener(({ value }) => {
+            const diff = value - _scrollValue;
+            _scrollValue = value;
+            _clampedScrollValue = Math.min(
+                Math.max(_clampedScrollValue + diff, 0),
+                65,
+            );
+        })
+        offsetAnimation.addListener(({ value }) => {
+            _offsetValue = value;
+        });
+    }, [])
+    const headerTranslate = clampedScroll.interpolate({
+        inputRange: [0, 65],
+        outputRange: [0, -65],
+        extrapolate: 'clamp',
+    });
+    const searchBarTranslate = clampedScrollSecond.interpolate({
+        inputRange: [0, 120],
+        outputRange: [0, -120],
+        extrapolate: 'clamp',
+    });
+
+    const opacity = clampedScroll.interpolate({
+        inputRange: [0, 40, 65],
+        outputRange: [1, 0.3, 0],
+        extrapolate: 'clamp',
+    });
+    const opacitySearchBar = clampedScroll.interpolate({
+        inputRange: [0, 40, 80],
+        outputRange: [1, 0.6, 0],
+        extrapolate: 'clamp',
+    });
+    var scrollEndTimer = null
+    const onMomentumScrollBegin = () => {
+        clearTimeout(scrollEndTimer)
+    }
+    const onMomentumScrollEnd = () => {
+        const toValue = _scrollValue > 65 && _clampedScrollValue > 65 / 2 ? _offsetValue + 65 : _offsetValue - 60;
+        Animated.timing(offsetAnimation, {
+            toValue,
+            duration: 500,
+            useNativeDriver: true,
+        }).start();
+    }
+
+    const onScrollEndDrag = () => {
+        scrollEndTimer = setTimeout(onMomentumScrollEnd, 250)
+    }
+    //#endregion
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
-            <MessageMainHeader excludedUsers={excludedUsers} userData={userData} theme={theme} />
-            <SearchBar
-                disabled={loading === null}
-                placeholder={t('screens.messages.searchPlaceHolder') + "..."}
-                onChangeText={handleSearch}
-                onPressIn={loading === null ? null : handleSearchBarClick}
-                value={searchQuery}
-                platform="ios"
-                containerStyle={[SearchScreenStyles.searchBarContainer, { backgroundColor: theme.Primary, }]}
-                inputContainerStyle={[
-                    SearchScreenStyles.searchBarInputContainer,
-                    searchMode && SearchScreenStyles.searchBarInputContainerTop,
-                    { backgroundColor: theme.SubPrimary, }
-                ]}
-                rightIconContainerStyle={{ opacity: RightIconContainerStyle }}
-                inputStyle={[
-                    SearchScreenStyles.searchBarInput,
-                    {
-                        textAlign: "left",
-                        color: theme.textQuaternary,
-                        borderColor: theme.SubPrimary,
-                        backgroundColor: theme.SubPrimary
-                    },
-                ]}
-                clearIcon={{ type: "ionicon", name: "close-circle" }}
-                onClear={handleClear}
-                cancelButtonProps={{
-                    style: { paddingRight: 10 },
-                    onPress: handleCancel,
-                }}
-                keyboardAppearance={"default"}
-                searchIcon={{ type: "ionicon", name: "search" }}
-                cancelButtonTitle={t('screens.messages.searchCancel')}
+            <View style={{ position: "absolute", top: 0, left: 0, width: "100%", backgroundColor: theme.Primary, height: 48, zIndex: 3, }}></View>
+            {headerTranslate !== -65 && <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} />}
+            <Animated.View style={{
+                backgroundColor: theme.Primary,
+                transform: [{ translateY: headerTranslate }],
+                position: 'absolute',
+                top: 40,
+                right: 0,
+                left: 0,
+                zIndex: 2,
+            }}>
+                <MessageMainHeader excludedUsers={excludedUsers} userData={userData} theme={theme} opacity={opacity} />
+            </Animated.View>
+            <Animated.View style={{
+                backgroundColor: theme.Primary,
+                transform: [{ translateY: searchBarTranslate }],
+                position: 'absolute',
+                top: 80,
+                right: 0,
+                left: 0,
+                zIndex: 1,
+            }}>
+                <SearchBar
+                    disabled={loading === null}
+                    placeholder={t('screens.messages.searchPlaceHolder') + "..."}
+                    onChangeText={handleSearch}
+                    onPressIn={loading === null ? null : handleSearchBarClick}
+                    value={searchQuery}
+                    platform="ios"
+                    containerStyle={[SearchScreenStyles.searchBarContainer, { backgroundColor: theme.Primary, }]}
+                    inputContainerStyle={[
+                        SearchScreenStyles.searchBarInputContainer,
+                        searchMode && SearchScreenStyles.searchBarInputContainerTop,
+                        { backgroundColor: theme.SubPrimary, opacity: opacitySearchBar }
+                    ]}
+                    rightIconContainerStyle={{ opacity: RightIconContainerStyle }}
+                    inputStyle={[
+                        SearchScreenStyles.searchBarInput,
+                        {
+                            textAlign: "left",
+                            color: theme.textQuaternary,
+                            borderColor: theme.SubPrimary,
+                            backgroundColor: theme.SubPrimary
+                        },
+                    ]}
+                    clearIcon={{ type: "ionicon", name: "close-circle" }}
+                    onClear={handleClear}
+                    cancelButtonProps={{
+                        style: { paddingRight: 10, },
+                        onPress: handleCancel,
+                    }}
+                    keyboardAppearance={"default"}
+                    searchIcon={{ type: "ionicon", name: "search" }}
+                    cancelButtonTitle={t('screens.messages.searchCancel')}
+                />
 
-            />
+            </Animated.View>
+
             <View>
                 {searchMode ? (
-                    <>
+                    <Animated.ScrollView
+                        onScroll={Animated.event(
+                            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                            { useNativeDriver: true }
+                        )}
+                        onMomentumScrollBegin={onMomentumScrollBegin}
+                        onMomentumScrollEnd={onMomentumScrollEnd}
+                        onScrollEndDrag={onScrollEndDrag}
+                        style={{ paddingTop: 100, paddingBottom: 150 }}>
                         {shouldDisplaySearchedItems ? searchedItems.map((item, index) => (
                             <TouchableOpacity style={{ flexDirection: "row" }} key={index} onPress={() => { handleNavigationToMessages(item) }}>
                                 <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
@@ -260,17 +374,20 @@ const MessagingMainScreen = () => {
                                         transition={50}
                                         cachePolicy={"memory-disk"} />
                                 </View>
-
                                 <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
                                     <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
                                     {item.displayed_name ? <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text> : <Text style={{ color: colorPalette.dark.textSecondary, fontSize: 13, fontWeight: "500" }}>{t('screens.messages.defaultMessage')}</Text>}
                                 </View>
                             </TouchableOpacity>
                         )) : null}
-                    </>
+                    </Animated.ScrollView>
                 ) : (
                     <MessageMainList usersForMessaging={usersForMessaging}
-                    loading={loading}
+                        scrollY={scrollY}
+                        onMomentumScrollBegin={onMomentumScrollBegin}
+                        onMomentumScrollEnd={onMomentumScrollEnd}
+                        onScrollEndDrag={onScrollEndDrag}
+                        loading={loading}
                         theme={theme} t={t}
                         userData={userData} sortedData={sortedData}
                         updateLastMessage={updateLastMessage} flag={"FromMain"} />
