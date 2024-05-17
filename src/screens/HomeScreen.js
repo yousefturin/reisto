@@ -148,7 +148,7 @@ const HomeScreen = () => {
             console.error('Error refreshing posts:', error);
             return () => { };
         } finally {
-            setRefreshing(false);
+            setTimeout(() => setRefreshing(false), 1000);
         }
     }, [fetchPost]);
 
@@ -325,11 +325,7 @@ const HomeScreen = () => {
                             />
                         }
                         showsVerticalScrollIndicator={false}
-                        removeClippedSubviews={true}
-                        initialNumToRender={2}
-                        maxToRenderPerBatch={1}
-                        updateCellsBatchingPeriod={100}
-                        windowSize={7}
+
                         onScroll={Animated.event(
                             [{ nativeEvent: { contentOffset: { y: scrollY } } }],
                             { useNativeDriver: true }
@@ -359,11 +355,6 @@ const HomeScreen = () => {
                             />
                         }
                         showsVerticalScrollIndicator={false}
-                        removeClippedSubviews={true}
-                        initialNumToRender={2}
-                        maxToRenderPerBatch={1}
-                        updateCellsBatchingPeriod={100}
-                        windowSize={7}
                         onScroll={Animated.event(
                             [{ nativeEvent: { contentOffset: { y: scrollY } } }],
                             { useNativeDriver: true }
