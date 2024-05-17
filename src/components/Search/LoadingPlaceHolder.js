@@ -7,11 +7,10 @@ import { View } from 'moti';
 const LoadingPlaceHolder = ({ condition, theme }) => {
 
     const SkeletonCommonProps = {
-        colorMode: theme.Primary === '#050505' ? 'dark':'light' , // if the primary color is dark then the skeleton will be dark
+        colorMode: theme.Primary === '#050505' ? 'dark' : 'light', // if the primary color is dark then the skeleton will be dark
         backgroundColor: theme.Secondary,
         transition: {
             type: 'timing',
-            duration: 2000,
         }
     }
 
@@ -25,6 +24,8 @@ const LoadingPlaceHolder = ({ condition, theme }) => {
 
     const renderItem = ({ item }) => (
         <View
+            from={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
             style={{
                 width: skeletonWidth,
                 height: skeletonWidth,
