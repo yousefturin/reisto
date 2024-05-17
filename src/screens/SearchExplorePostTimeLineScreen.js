@@ -1,5 +1,5 @@
 import { Dimensions, FlatList, SafeAreaView } from 'react-native'
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import Post from '../components/Home/Post'
 import { db, firebase } from '../firebase';
 import SavedPostsHeader from '../components/SavedPosts/SavedPostsHeader';
@@ -18,6 +18,7 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
     const [posts, setPosts] = useState([])
     const flatListRef = useRef();
     const [initialScrollIndex, setInitialScrollIndex] = useState(null);
+    const [initialScrollDone, setInitialScrollDone] = useState(false);
     const [usersForSharePosts, setUsersForSharePosts] = useState([]);
     const [loading, setLoading] = useState(true)
     const { selectedTheme } = useTheme();
@@ -31,18 +32,23 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
         });
     };
     useEffect(() => {
-        // Calculate initialScrollIndex only when posts are fetched
         if (scrollToPostId && posts.length > 0) {
             const index = posts.findIndex(post => post.id === scrollToPostId);
             if (index !== -1) {
                 setInitialScrollIndex(index);
-                if (flatListRef.current) {
-                    // Scroll to the initial index
-                    flatListRef.current.scrollToIndex({ animated: true, index });
-                }
             }
         }
-    }, [posts, scrollToPostId]);
+    }, [scrollToPostId, posts]);
+
+    useEffect(() => {
+        if (initialScrollIndex !== null && !initialScrollDone) {
+            flatListRef.current.scrollToIndex({
+                index: initialScrollIndex,
+                animated: true,
+            });
+            setInitialScrollDone(true);
+        }
+    }, [initialScrollIndex, initialScrollDone]);
 
     useEffect(() => {
         let unsubscribe
@@ -84,6 +90,7 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
             unsubscribe && unsubscribe();
         };
     }, []);
+
     useLayoutEffect(() => {
         if (loading !== null) {
             fetchData();
@@ -135,13 +142,12 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
             console.error("Error fetching data:", error);
         }
     };
-    // this is only for testing the UI,UX and it will be changed for random posts to be displayedF
 
-
-    const renderItem = ({ item }) => (
-        <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} theme={theme} />
-    )
-
+    const renderItem = useCallback(({ item }) => {
+        return (
+            <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} theme={theme} />
+        )
+    }, []);
 
     const searchHeader = t('screens.profile.profileSavedPostsTimeLineHeader')
     return (
@@ -156,15 +162,17 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
                     renderItem={renderItem}
                     keyExtractor={item => item.id.toString()}
                     initialScrollIndex={initialScrollIndex}
-                    // this is a trick to allow the user to scroll, it needs more test to see if those values will work on
-                    // different devices the same way to remove the drop fame.
-                    getItemLayout={(data, index) => ({ length: windowHeight * 0.736, offset: windowHeight * 0.736 * index, index })}
+                    getItemLayout={(data, index) => ({
+                        length: windowHeight * 0.75,
+                        offset: windowHeight * 0.75 * index,
+                        index
+                    })}
                     onScrollToIndexFailed={handleScrollToIndexFailed}
                 />
             ) : loading === null ? (
                 <View style={{ minHeight: 800 }}>
-                {/* needs change to as if any error happened then show an error message */}
-                    <EmptyDataParma SvgElement={"BookmarkIllustration"} theme={theme} t={t} dataMessage={"You can save posts across Reisto and organize them into collections."} TitleDataMessage={"Nothing saved yet"} />
+                    {/* needs change to as if any error happened then show an error message */}
+                    <EmptyDataParma SvgElement={"DeletedPostIllustration"} theme={theme} t={t} dataMessage={"Check your internet connection, and refresh the page."} TitleDataMessage={"Something went wrong"} />
                 </View>
             ) : (
                 <LoadingPlaceHolder theme={theme} />
