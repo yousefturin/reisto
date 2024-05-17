@@ -1,4 +1,4 @@
-import { RefreshControl, SafeAreaView, ScrollView } from 'react-native'
+import { RefreshControl, SafeAreaView } from 'react-native'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { db, firebase } from '../firebase'
 import ProfileHeader from '../components/Profile/ProfileHeader'
@@ -12,6 +12,8 @@ import { useTranslation } from 'react-i18next'
 import UseCustomTheme from '../utils/UseCustomTheme'
 import EmptyDataParma from '../components/CustomComponent/EmptyDataParma'
 import { View } from 'moti'
+import { Animated } from 'react-native'
+import { Divider } from 'react-native-elements'
 
 const UserProfileScreen = () => {
     const { t } = useTranslation();
@@ -52,9 +54,8 @@ const UserProfileScreen = () => {
                 if (userPostData.length === 0) {
                     setLoading(null);
                 } else {
-                    console.log("User posts fetched successfully");
-                    setUserPost(userPostData)
                     setLoading(false);
+                    setUserPost(userPostData)
                 }
             }, error => {
                 console.error("Error fetching posts:", error);
@@ -79,11 +80,87 @@ const UserProfileScreen = () => {
         setScrollToPostId(postId)
     }
 
+    //#region  animated header
+    const scrollY = new Animated.Value(0);
+    const offsetAnimation = new Animated.Value(0);
+    const clampedScroll = Animated.diffClamp(
+        Animated.add(
+            scrollY.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 1],
+                extrapolateLeft: 'clamp',
+            }),
+            offsetAnimation,
+        ),
+        0,
+        350,
+    );
+    var _clampedScrollValue = 0;
+    var _offsetValue = 0;
+    var _scrollValue = 0;
+    useEffect(() => {
+        scrollY.addListener(({ value }) => {
+            const diff = value - _scrollValue;
+            _scrollValue = value;
+            _clampedScrollValue = Math.min(
+                Math.max(_clampedScrollValue + diff, 0),
+                350,
+            );
+        })
+        offsetAnimation.addListener(({ value }) => {
+            _offsetValue = value;
+        });
+    }, [])
+    const headerTranslate = clampedScroll.interpolate({
+        inputRange: [0, 350],
+        outputRange: [0, -350],
+        extrapolate: 'clamp',
+    });
+    const opacity = clampedScroll.interpolate({
+        inputRange: [0, 40, 350],
+        outputRange: [1, 0.1, 0],
+        extrapolate: 'clamp',
+    });
+
+    var scrollEndTimer = null
+    const onMomentumScrollBegin = () => {
+        clearTimeout(scrollEndTimer)
+    }
+    const onMomentumScrollEnd = () => {
+        const toValue = _scrollValue > 350 && _clampedScrollValue > 350 / 2 ? _offsetValue + 350 : _offsetValue - 350;
+        Animated.timing(offsetAnimation, {
+            toValue,
+            duration: 500,
+            useNativeDriver: true,
+        }).start();
+    }
+
+    const onScrollEndDrag = () => {
+        scrollEndTimer = setTimeout(onMomentumScrollEnd, 250)
+    }
+    const [headerTranslate3, setHeaderTranslate] = useState(0);
+
+    //#endregion
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <>
-                <ProfileHeader handleLogout={handleLogout} userData={userData} theme={theme} t={t} />
-                <ScrollView
+                <View style={{ position: "absolute", top: 0, left: 0, width: "100%", backgroundColor: theme.Primary, height: 48, zIndex: 3, }}></View>
+                <Animated.View style={{
+                    backgroundColor: theme.Primary,
+                    transform: [{ translateY: headerTranslate }],
+                    position: 'absolute',
+                    top: 40,
+                    right: 0,
+                    left: 0,
+                    zIndex: 2,
+                }}>
+                    <ProfileHeader handleLogout={handleLogout} userData={userData} theme={theme} t={t} opacity={opacity} />
+                </Animated.View>
+                {/* need fix so that when the profile content is still in view then the divider should not be visible */}
+                {headerTranslate !== 0 && <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} style={{ zIndex: 1 }} />}
+                <Animated.ScrollView
+                    style={{ paddingTop: 50, }}
                     keyboardDismissMode="on-drag"
                     keyboardShouldPersistTaps={'always'}
                     showsVerticalScrollIndicator={false}
@@ -93,6 +170,14 @@ const UserProfileScreen = () => {
                             onRefresh={onRefresh}
                         />
                     }
+                    onScroll={Animated.event(
+                        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                        { useNativeDriver: true }
+                    )}
+                    onMomentumScrollBegin={onMomentumScrollBegin}
+                    onMomentumScrollEnd={onMomentumScrollEnd}
+                    onScrollEndDrag={onScrollEndDrag}
+                    scrollEventThrottle={4}
                 >
                     <ProfileContent userData={userData} userPosts={userPosts} theme={theme} t={t} />
                     {loading === false ? (
@@ -108,7 +193,7 @@ const UserProfileScreen = () => {
                     {/* (
                             <LoadingPlaceHolder condition={userPosts.length === 0} theme={theme} />
                         )} */}
-                </ScrollView>
+                </Animated.ScrollView>
             </>
         </SafeAreaView>
     )
