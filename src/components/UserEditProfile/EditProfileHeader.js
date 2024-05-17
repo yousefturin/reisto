@@ -1,16 +1,16 @@
-import { View, Text, Dimensions } from 'react-native'
+import { View, Text, Dimensions, Animated } from 'react-native'
 import React from 'react'
 import initializeScalingUtils from '../../utils/NormalizeSize'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import SvgComponent from '../../utils/SvgComponents'
 
-const EditProfileHeader = ({ navigation, headerTitle, theme }) => {
+const EditProfileHeader = ({ navigation, headerTitle, theme, opacity }) => {
     const handlePressBack = () => {
         navigation.goBack()
     }
     const { moderateScale } = initializeScalingUtils(Dimensions);
     return (
-        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10 }}>
+        <Animated.View style={{ opacity: opacity, flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10 }}>
             <TouchableOpacity style={{ margin: 10 }} onPress={() => { handlePressBack() }}>
                 <SvgComponent svgKey="ArrowBackSVG" width={moderateScale(30)} height={moderateScale(30)} stroke={theme.textPrimary} />
             </TouchableOpacity>
@@ -19,7 +19,7 @@ const EditProfileHeader = ({ navigation, headerTitle, theme }) => {
             </View>
             <View style={{ margin: 10, width: moderateScale(30) }}>
             </View>
-        </View>
+        </Animated.View>
     )
 }
 
