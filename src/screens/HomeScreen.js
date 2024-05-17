@@ -279,6 +279,33 @@ const HomeScreen = () => {
         scrollEndTimer = setTimeout(onMomentumScrollEnd, 250)
     }
     //#endregion
+    const renderItemFollowing = useCallback(
+        ({ item, index }) => (
+            <Post
+                shouldAddOffSet={true}
+                theme={theme} post={item}
+                key={index} i
+                sLastPost={index === postFollowing.length - 1}
+                userData={userData}
+                usersForSharePosts={usersForSharePosts} />
+
+        ),
+        [theme, userData, usersForSharePosts, postFollowing.length]
+    )
+    const renderItem = useCallback(
+        ({ item, index }) => (
+            <Post
+                shouldAddOffSet={true}
+                theme={theme}
+                post={item}
+                isLastPost={index === posts.length - 1}
+                userData={userData}
+                usersForSharePosts={usersForSharePosts}
+            />
+        ),
+        [theme, userData, usersForSharePosts, posts.length]
+    );
+    const keyExtractor = useCallback((_, index) => index.toString(), []);
 
     return (
         <SafeAreaView style={[{ flex: 1, backgroundColor: theme.Primary, }]}>
@@ -314,10 +341,8 @@ const HomeScreen = () => {
                         keyboardDismissMode="on-drag"
                         keyboardShouldPersistTaps='handled'
                         data={posts}
-                        renderItem={({ item, index }) => (
-                            <Post shouldAddOffSet={true} theme={theme} post={item} key={index} isLastPost={index === posts.length - 1} userData={userData} usersForSharePosts={usersForSharePosts} />
-                        )}
-                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={renderItem}
+                        keyExtractor={keyExtractor}
                         refreshControl={
                             <RefreshControl
                                 refreshing={refreshing}
@@ -344,10 +369,8 @@ const HomeScreen = () => {
                         keyboardDismissMode="on-drag"
                         keyboardShouldPersistTaps='handled'
                         data={postFollowing}
-                        renderItem={({ item, index }) => (
-                            <Post shouldAddOffSet={true} theme={theme} post={item} key={index} isLastPost={index === postFollowing.length - 1} userData={userData} usersForSharePosts={usersForSharePosts} />
-                        )}
-                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={renderItemFollowing}
+                        keyExtractor={keyExtractor}
                         refreshControl={
                             <RefreshControl
                                 refreshing={refreshing}
