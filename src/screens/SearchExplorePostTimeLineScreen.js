@@ -9,6 +9,7 @@ import { useTheme } from '../context/ThemeContext';
 
 import { useTranslation } from 'react-i18next';
 import UseCustomTheme from '../utils/UseCustomTheme';
+import EmptyDataParma from '../components/CustomComponent/EmptyDataParma';
 const windowHeight = Dimensions.get('window').height;
 
 const SearchExplorePostTimeLineScreen = ({ route }) => {
@@ -18,7 +19,7 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
     const flatListRef = useRef();
     const [initialScrollIndex, setInitialScrollIndex] = useState(null);
     const [usersForSharePosts, setUsersForSharePosts] = useState([]);
-
+    const [loading, setLoading] = useState(true)
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
 
@@ -52,6 +53,7 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
             unsubscribe = query.onSnapshot(snapshot => {
                 const postsWithProfilePictures = snapshot.docs.map(async post => {
                     const dbPostData = post.data();
+                    if (dbPostData.length === 0) { setLoading(null); return }
                     try {
                         const userDoc = await db.collection('users').doc(dbPostData.owner_email).get()
                         const dbUserData = userDoc.data()
@@ -71,6 +73,7 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
                 })
                 Promise.all(postsWithProfilePictures).then(posts => {
                     setPosts(posts)
+                    setLoading(false);
                 }).catch(error => {
                     console.error('Error fetching posts with profile pictures:', error);
                 })
@@ -82,7 +85,9 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
         };
     }, []);
     useLayoutEffect(() => {
-        fetchData();
+        if (loading !== null) {
+            fetchData();
+        }
     }, []);
 
     const fetchData = async () => {
@@ -142,7 +147,7 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <SavedPostsHeader header={searchHeader} theme={theme} />
-            {posts.length !== 0 ? (
+            {loading === false ? (
                 <FlatList
                     keyboardDismissMode="on-drag"
                     keyboardShouldPersistTaps={'always'}
@@ -156,6 +161,11 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
                     getItemLayout={(data, index) => ({ length: windowHeight * 0.736, offset: windowHeight * 0.736 * index, index })}
                     onScrollToIndexFailed={handleScrollToIndexFailed}
                 />
+            ) : loading === null ? (
+                <View style={{ minHeight: 800 }}>
+                {/* needs change to as if any error happened then show an error message */}
+                    <EmptyDataParma SvgElement={"BookmarkIllustration"} theme={theme} t={t} dataMessage={"You can save posts across Reisto and organize them into collections."} TitleDataMessage={"Nothing saved yet"} />
+                </View>
             ) : (
                 <LoadingPlaceHolder theme={theme} />
             )}
