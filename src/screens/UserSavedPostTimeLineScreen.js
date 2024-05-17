@@ -1,5 +1,5 @@
 import { Dimensions, FlatList, SafeAreaView } from 'react-native'
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import Post from '../components/Home/Post'
 import { db, firebase } from '../firebase';
 import SavedPostsHeader from '../components/SavedPosts/SavedPostsHeader';
@@ -9,6 +9,7 @@ import { useTheme } from '../context/ThemeContext';
 
 import { useTranslation } from 'react-i18next';
 import UseCustomTheme from '../utils/UseCustomTheme';
+import EmptyDataParma from '../components/CustomComponent/EmptyDataParma';
 const windowHeight = Dimensions.get('window').height;
 
 const UserSavedPostTimeLineScreen = ({ route }) => {
@@ -16,33 +17,39 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
     const { userData, scrollToPostId } = route.params;
     const [savedPosts, setSavedPosts] = useState([])
     const flatListRef = useRef();
+    const [loading, setLoading] = useState(true)
     const [initialScrollIndex, setInitialScrollIndex] = useState(null);
+    const [initialScrollDone, setInitialScrollDone] = useState(false);
     const [usersForSharePosts, setUsersForSharePosts] = useState([]);
-
-    const handleScrollToIndexFailed = info => {
-        const wait = new Promise(resolve => setTimeout(resolve, 500));
-        wait.then(() => {
-            flatListRef.current?.scrollToIndex({ index: info.index, animated: true });
-        });
-    };
 
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
-
-
+    
+    const handleScrollToIndexFailed = info => {
+        const wait = new Promise(resolve => setTimeout(resolve, 500));
+        wait.then(() => {
+            flatListRef.current?.scrollToIndex({ index: info.index, animated: true, viewPosition: 1 });
+        });
+    };
     useEffect(() => {
-        // Calculate initialScrollIndex only when posts are fetched
         if (scrollToPostId && savedPosts.length > 0) {
             const index = savedPosts.findIndex(post => post.id === scrollToPostId);
             if (index !== -1) {
                 setInitialScrollIndex(index);
-                if (flatListRef.current) {
-                    // Scroll to the initial index
-                    flatListRef.current.scrollToIndex({ animated: true, index });
-                }
             }
         }
-    }, [savedPosts, scrollToPostId]);
+    }, [scrollToPostId, savedPosts]);
+
+    useEffect(() => {
+        if (initialScrollIndex !== null && !initialScrollDone) {
+            flatListRef.current.scrollToIndex({
+                index: initialScrollIndex,
+                animated: true,
+                viewPosition: 1
+            });
+            setInitialScrollDone(true);
+        }
+    }, [initialScrollIndex, initialScrollDone]);
 
     useEffect(() => {
         let unsubscribe;
@@ -93,15 +100,20 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
                                 });
 
                                 Promise.all(postsWithProfilePictures).then(posts => {
+                                    setLoading(false);
                                     setSavedPosts(posts);
                                 }).catch(error => {
                                     console.error('Error fetching saved posts with profile pictures:', error);
                                 });
                             } else {
                                 console.error('Invalid or empty post IDs array');
+                                setLoading(null);
+                                return
                             }
                         } else {
                             console.log('No saved post document found for the user');
+                            setLoading(null);
+                            return
                         }
                     }).catch(error => {
                         console.error("Error fetching saved posts:", error);
@@ -170,18 +182,17 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
         }
     };
 
-
-
-
-    const renderItem = ({ item }) => (
-        <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} theme={theme} />
-    )
+    const renderItem = useCallback(({ item }) => {
+        return (
+            <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} theme={theme} />
+        )
+    }, []);
 
     const profileSavedPostsTimeLineHeader = t('screens.profile.profileSavedPostsTimeLineHeader')
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <SavedPostsHeader header={profileSavedPostsTimeLineHeader} theme={theme} />
-            {savedPosts.length !== 0 ? (
+            {loading === false ? (
                 <FlatList
                     keyboardDismissMode="on-drag"
                     keyboardShouldPersistTaps={'always'}
@@ -190,11 +201,17 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
                     renderItem={renderItem}
                     keyExtractor={item => item.id.toString()}
                     initialScrollIndex={initialScrollIndex}
-                    // this is a trick to allow the user to scroll, it needs more test to see if those values will work on
-                    // different devices the same way to remove the drop fame.
-                    getItemLayout={(data, index) => ({ length: windowHeight * 0.73, offset: windowHeight * 0.736 * index, index })}
+                    getItemLayout={(_, index) => ({
+                        length: windowHeight * 0.75,
+                        offset: windowHeight * 0.75 * index,
+                        index
+                    })}
                     onScrollToIndexFailed={handleScrollToIndexFailed}
                 />
+            ) : loading === null ? (
+                <View style={{ minHeight: 800 }}>
+                    <EmptyDataParma SvgElement={"DeletedPostIllustration"} theme={theme} t={t} dataMessage={"Check your internet connection, and refresh the page."} TitleDataMessage={"Something went wrong"} />
+                </View>
             ) : (
                 <LoadingPlaceHolder theme={theme} />
             )}
