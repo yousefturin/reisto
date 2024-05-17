@@ -1,5 +1,5 @@
-import { ScrollView, RefreshControl, SafeAreaView, View } from 'react-native'
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import {  SafeAreaView, View } from 'react-native'
+import React, {  useContext, useEffect, useState } from 'react'
 import { UserContext } from '../context/UserDataProvider';
 import { db, firebase } from '../firebase';
 import SavedPostsHeader from '../components/SavedPosts/SavedPostsHeader';
@@ -64,8 +64,8 @@ const UserSavedPostScreen = () => {
                                 setLoading(null);
                             } else {
                                 console.log("Saved posts fetched successfully");
-                                setSavedPosts(savedPostsData);
                                 setLoading(false);
+                                setSavedPosts(savedPostsData);
                             }
                         } else {
                             console.error('Invalid or empty post IDs array');
@@ -84,16 +84,6 @@ const UserSavedPostScreen = () => {
         }
     };
 
-    const onRefresh = useCallback(() => {
-        setRefreshing(true);
-        try {
-            fetchUserSavedPosts(); // Your function to fetch posts
-        } catch (error) {
-            console.error('Error refreshing posts:', error);
-        }
-        setRefreshing(false);
-    }, []);
-
     const handlePostPress = (postId) => {
         setScrollToPostId(postId)
     }
@@ -102,29 +92,15 @@ const UserSavedPostScreen = () => {
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <>
                 <SavedPostsHeader header={savedPostHeader} theme={theme} />
-                <ScrollView
-                    keyboardDismissMode="on-drag"
-                    keyboardShouldPersistTaps={'always'}
-                    showsVerticalScrollIndicator={false}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={onRefresh}
-                        />
-                    }
-                >
                     {loading === false ? (
-                        <SavedPostsGrid posts={savedPosts} userData={userData} onPostPress={handlePostPress} navigateToScreen={"SavedPosts"} />
+                        <SavedPostsGrid fromWhereValue={0} posts={savedPosts} userData={userData} onPostPress={handlePostPress} navigateToScreen={"SavedPosts"} />
                     ) : loading === null ? (
                         <View style={{ minHeight: 800 }}>
                             <EmptyDataParma SvgElement={"BookmarkIllustration"} theme={theme} t={t} dataMessage={"You can save posts across Reisto and organize them into collections."} TitleDataMessage={"Nothing saved yet"} />
                         </View>
-
                     ) : (
                         <LoadingPlaceHolder theme={theme} />)}
-                </ScrollView>
             </>
-
         </SafeAreaView>
     )
 }
