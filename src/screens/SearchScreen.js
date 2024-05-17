@@ -1,6 +1,6 @@
 import { Dimensions, Keyboard, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
-import { SearchBar } from "react-native-elements";
+import React, { useCallback, useContext, useEffect, useState } from 'react'
+import { Divider, SearchBar } from "react-native-elements";
 import initializeScalingUtils from '../utils/NormalizeSize';
 import { db, firebase } from '../firebase';
 import { blurHash } from '../../assets/HashBlurData';
@@ -18,12 +18,16 @@ import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import UseCustomTheme from '../utils/UseCustomTheme';
 import EmptyDataParma from '../components/CustomComponent/EmptyDataParma';
+import { Animated } from 'react-native';
+
+
 
 const SearchScreen = () => {
     const { t } = useTranslation()
     const [searchQuery, setSearchQuery] = useState("");
     const [searchMode, setSearchMode] = useState(false);
     const [searchedItems, setSearchedItems] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
     const [items, setItems] = useState([]);
     const [RightIconContainerStyle, setRightIconContainerStyle] = useState(1);
     const [clearedManually, setClearedManually] = useState(true); // Add a state to track if search query was cleared manually
@@ -153,8 +157,6 @@ const SearchScreen = () => {
         setSearchMode(true);
     };
 
-
-
     useEffect(() => {
         let unsubscribe;
         // this is only for testing the UI,UX and it will be changed for random posts to be displayedF
@@ -164,7 +166,7 @@ const SearchScreen = () => {
             unsubscribe = query.onSnapshot(snapshot => {
                 const postsWithProfilePictures = snapshot.docs.map(async post => {
                     const dbPostData = post.data();
-                    if (dbPostData.length === 0) { setLoading(null); return; }
+                    if (dbPostData.length === 0) { setLoading(null); }
                     try {
                         const userDoc = await db.collection('users').doc(dbPostData.owner_email).get()
                         const dbUserData = userDoc.data()
@@ -183,8 +185,8 @@ const SearchScreen = () => {
                     }
                 })
                 Promise.all(postsWithProfilePictures).then(posts => {
-                    setPosts(posts)
                     setLoading(false)
+                    setPosts(posts)
                 }).catch(error => {
                     console.error('Error fetching posts with profile pictures:', error);
                 })
@@ -196,76 +198,172 @@ const SearchScreen = () => {
         };
     }, []);
 
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        let unsubscribe;
+        // this is only for testing the UI,UX and it will be changed for random posts to be displayedF
+        const fetchPost = () => {
+            const query = db.collectionGroup('posts').orderBy('createdAt', 'desc');
+            // get the id of each post, and destructure the posts then order them based on createdAt as desc
+            unsubscribe = query.onSnapshot(snapshot => {
+                const postsWithProfilePictures = snapshot.docs.map(async post => {
+                    const dbPostData = post.data();
+                    if (dbPostData.length === 0) { setLoading(null); }
+                    try {
+                        const userDoc = await db.collection('users').doc(dbPostData.owner_email).get()
+                        const dbUserData = userDoc.data()
+                        const dbProfilePicture = dbUserData.profile_picture
+                        return {
+                            id: post.id,
+                            profile_picture: dbProfilePicture, // this is work the picture is from the current logged in user not the one that is mapped to the post!
+                            ...dbPostData
+                        }
+                    } catch (error) {
+                        console.error('Error fetching user document:', error)
+                        return {
+                            id: post.id,
+                            ...dbPostData // Fallback to original post data if user document fetch fails
+                        }
+                    }
+                })
+                Promise.all(postsWithProfilePictures).then(posts => {
+                    setLoading(false)
+                    setRefreshing(false)
+                    setPosts(posts)
+                }).catch(error => {
+                    console.error('Error fetching posts with profile pictures:', error);
+                })
+            });
+        };
+        fetchPost()
+        return () => {
+            unsubscribe && unsubscribe();
+        };
+    }, []);
+    
+    //#region  animated header
+    const scrollY = new Animated.Value(0);
+    const offsetAnimation = new Animated.Value(0);
+    const clampedScroll = Animated.diffClamp(
+        Animated.add(
+            scrollY.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 1],
+                extrapolateLeft: 'clamp',
+            }),
+            offsetAnimation,
+        ),
+        0,
+        65,
+    );
+    var _clampedScrollValue = 0;
+    var _offsetValue = 0;
+    var _scrollValue = 0;
+    useEffect(() => {
+        scrollY.addListener(({ value }) => {
+            const diff = value - _scrollValue;
+            _scrollValue = value;
+            _clampedScrollValue = Math.min(
+                Math.max(_clampedScrollValue + diff, 0),
+                65,
+            );
+        })
+        offsetAnimation.addListener(({ value }) => {
+            _offsetValue = value;
+        });
+    }, [])
+    const headerTranslate = clampedScroll.interpolate({
+        inputRange: [0, 65],
+        outputRange: [0, -65],
+        extrapolate: 'clamp',
+    });
+    const opacity = clampedScroll.interpolate({
+        inputRange: [0, 40, 65],
+        outputRange: [1, 0.1, 0],
+        extrapolate: 'clamp',
+    });
 
+    var scrollEndTimer = null
+    const onMomentumScrollBegin = () => {
+        clearTimeout(scrollEndTimer)
+    }
+    const onMomentumScrollEnd = () => {
+        const toValue = _scrollValue > 65 && _clampedScrollValue > 65 / 2 ? _offsetValue + 65 : _offsetValue - 60;
+        Animated.timing(offsetAnimation, {
+            toValue,
+            duration: 500,
+            useNativeDriver: true,
+        }).start();
+    }
 
+    const onScrollEndDrag = () => {
+        scrollEndTimer = setTimeout(onMomentumScrollEnd, 250)
+    }
+    //#endregion
 
     return (
         // this must be on a scrollView-<<<<<<<<<<<<<<<<
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary, justifyContent: "flex-start" }}>
-            <SearchBar
-                placeholder={t('screens.messages.searchPlaceHolder') + "..."}
-                onChangeText={handleSearch}
-                onPressIn={handleSearchBarClick}
-                value={searchQuery}
-                platform="ios"
-                containerStyle={[SearchScreenStyles.searchBarContainer, { backgroundColor: theme.Primary, }]}
-                inputContainerStyle={[
-                    SearchScreenStyles.searchBarInputContainer,
-                    searchMode && SearchScreenStyles.searchBarInputContainerTop, // when searchMode is true
-                    { backgroundColor: theme.SubPrimary, }
-                ]}
-                rightIconContainerStyle={{ opacity: RightIconContainerStyle }}
-                inputStyle={[
-                    SearchScreenStyles.searchBarInput,
-                    {
-                        textAlign: "left",
-                        color: theme.textQuaternary,
-                        borderColor: theme.SubPrimary,
-                        backgroundColor: theme.SubPrimary
-                    },
-                ]}
-                clearIcon={{ type: "ionicon", name: "close-circle" }}
-                onClear={handleClear}
-                cancelButtonProps={{
-                    style: { paddingRight: 10 },
-                    onPress: handleCancel,
-                }}
-                keyboardAppearance={"default"}
-                searchIcon={{ type: "ionicon", name: "search" }}
-                cancelButtonTitle={t('screens.messages.searchCancel')}
+            <View style={{ position: "absolute", top: 0, left: 0, width: "100%", backgroundColor: theme.Primary, height: 48, zIndex: 2, }}></View>
+            <Animated.View style={{
+                backgroundColor: theme.Primary,
+                transform: [{ translateY: headerTranslate }],
+                position: 'absolute',
+                top: 40,
+                right: 0,
+                left: 0,
+                zIndex: 1,
+            }}>
+                <SearchBar
+                    placeholder={t('screens.messages.searchPlaceHolder') + "..."}
+                    onChangeText={handleSearch}
+                    onPressIn={handleSearchBarClick}
+                    value={searchQuery}
+                    platform="ios"
+                    containerStyle={[SearchScreenStyles.searchBarContainer, { backgroundColor: theme.Primary, }]}
+                    inputContainerStyle={[
+                        SearchScreenStyles.searchBarInputContainer,
+                        searchMode && SearchScreenStyles.searchBarInputContainerTop, // when searchMode is true
+                        { backgroundColor: theme.SubPrimary, opacity: opacity }
+                    ]}
+                    rightIconContainerStyle={{ opacity: RightIconContainerStyle }}
+                    inputStyle={[
+                        SearchScreenStyles.searchBarInput,
+                        {
+                            textAlign: "left",
+                            color: theme.textQuaternary,
+                            borderColor: theme.SubPrimary,
+                            backgroundColor: theme.SubPrimary
+                        },
+                    ]}
+                    clearIcon={{ type: "ionicon", name: "close-circle" }}
+                    onClear={handleClear}
+                    cancelButtonProps={{
+                        style: { paddingRight: 10 },
+                        onPress: handleCancel,
+                    }}
+                    keyboardAppearance={"default"}
+                    searchIcon={{ type: "ionicon", name: "search" }}
+                    cancelButtonTitle={t('screens.messages.searchCancel')}
+                />
+            </Animated.View>
+            {headerTranslate !== -65 && <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} />}
 
-            />
             <View>
                 {searchMode ? (
-                    <>
-                        {shouldDisplaySearchedItems ? searchedItems.map((item, index) => (
-                            <TouchableOpacity style={{ flexDirection: "row" }} key={index} onPress={() => { handleNavigationToProfile(item) }}>
-                                <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
-                                    <Image source={{ uri: item.profile_picture, cache: "force-cache", }}
-                                        style={{
-                                            width: 50,
-                                            height: 50,
-                                            borderRadius: 50,
-                                            margin: 7,
-                                            borderWidth: 1.5,
-                                            borderColor: theme.Secondary
-                                        }}
-                                        placeholder={blurHash}
-                                        contentFit="cover"
-                                        transition={50}
-                                        cachePolicy={"memory-disk"} />
-                                </View>
-
-                                <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
-                                    <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
-                                    <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
-                                </View>
-                            </TouchableOpacity>
-                        )) : (
-                            clickedUsers.map((item, index) => (
-                                <TouchableOpacity activeOpacity={0.8} style={{ flexDirection: "row" }} key={index} onPress={() => { handleNavigationToProfile(item) }}>
+                        <Animated.ScrollView
+                            onScroll={Animated.event(
+                                [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                                { useNativeDriver: true }
+                            )}
+                            onMomentumScrollBegin={onMomentumScrollBegin}
+                            onMomentumScrollEnd={onMomentumScrollEnd}
+                            onScrollEndDrag={onScrollEndDrag}
+                            style={{ paddingTop: 50, paddingBottom: 150 }}>
+                            {shouldDisplaySearchedItems ? searchedItems.map((item, index) => (
+                                <TouchableOpacity style={{ flexDirection: "row" }} key={index} onPress={() => { handleNavigationToProfile(item) }}>
                                     <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
-                                        <Image source={{ uri: item.profile_picture, cache: "force-cache" }}
+                                        <Image source={{ uri: item.profile_picture, cache: "force-cache", }}
                                             style={{
                                                 width: 50,
                                                 height: 50,
@@ -280,22 +378,57 @@ const SearchScreen = () => {
                                             cachePolicy={"memory-disk"} />
                                     </View>
 
-                                    <View style={{ flexDirection: "column", width: "70%", justifyContent: "center", alignItems: "flex-start" }}>
+                                    <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
                                         <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
                                         <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
                                     </View>
-                                    <TouchableOpacity style={{ width: "10%", justifyContent: "center", alignItems: "center" }} onPress={() => handleRemoveFromAsync(item)}>
-                                        <SvgComponent svgKey="CloseSVG" width={moderateScale(16)} height={moderateScale(16)} stroke={theme.textSecondary} />
-                                    </TouchableOpacity>
                                 </TouchableOpacity>
-                            ))
-                        )}
-                    </>
+
+                            )) : (
+                                clickedUsers.map((item, index) => (
+                                    <TouchableOpacity activeOpacity={0.8} style={{ flexDirection: "row" }} key={index} onPress={() => { handleNavigationToProfile(item) }}>
+                                        <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
+                                            <Image source={{ uri: item.profile_picture, cache: "force-cache" }}
+                                                style={{
+                                                    width: 50,
+                                                    height: 50,
+                                                    borderRadius: 50,
+                                                    margin: 7,
+                                                    borderWidth: 1.5,
+                                                    borderColor: theme.Secondary
+                                                }}
+                                                placeholder={blurHash}
+                                                contentFit="cover"
+                                                transition={50}
+                                                cachePolicy={"memory-disk"} />
+                                        </View>
+
+                                        <View style={{ flexDirection: "column", width: "70%", justifyContent: "center", alignItems: "flex-start" }}>
+                                            <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
+                                            <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
+                                        </View>
+                                        <TouchableOpacity style={{ width: "10%", justifyContent: "center", alignItems: "center" }} onPress={() => handleRemoveFromAsync(item)}>
+                                            <SvgComponent svgKey="CloseSVG" width={moderateScale(16)} height={moderateScale(16)} stroke={theme.textSecondary} />
+                                        </TouchableOpacity>
+                                    </TouchableOpacity>
+                                ))
+                            )}
+                        </Animated.ScrollView>
 
                 ) : (
                     <>
                         {loading === false ? (
-                            <SavedPostsGrid posts={posts} userData={userData} navigateToScreen={"SearchExplore"} />
+                            <SavedPostsGrid
+                                fromWhereValue={50}
+                                posts={posts}
+                                userData={userData}
+                                navigateToScreen={"SearchExplore"}
+                                onRefresh={onRefresh} refreshing={refreshing}
+                                scrollY={scrollY}
+                                onMomentumScrollBegin={onMomentumScrollBegin}
+                                onMomentumScrollEnd={onMomentumScrollEnd}
+                                onScrollEndDrag={onScrollEndDrag}
+                            />
                         ) : loading === null ? (
                             <View style={{ minHeight: 800 }}>
                                 <EmptyDataParma SvgElement={"BookmarkIllustration"} theme={theme} t={t} dataMessage={"You can save posts across Reisto and organize them into collections."} TitleDataMessage={"Nothing saved yet"} />
