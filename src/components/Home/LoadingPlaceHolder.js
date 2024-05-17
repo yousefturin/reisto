@@ -14,7 +14,7 @@ const LoadingPlaceHolder = ({ fromWhere, theme, isPaddingNeeded }) => {
         }
     }
     return (
-        <View style={{ paddingTop: isPaddingNeeded ? 40 : 0 }}>
+        <View style={{ paddingTop: isPaddingNeeded ? 50 : 0 }}>
             <LoaderPostHeader SkeletonCommonProps={SkeletonCommonProps} />
             <LoaderPostImage SkeletonCommonProps={SkeletonCommonProps} />
             <View style={{ marginHorizontal: 15, marginTop: 10, }}>
