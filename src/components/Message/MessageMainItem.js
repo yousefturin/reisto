@@ -42,10 +42,11 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag, theme, t }
                 const latestMessage = allMessages[0] || null;
                 //this code need more observation for behavior
                 unseenMessages = allMessages.filter(message => !message.seenBy.includes(userData.owner_uid));
+                setLoading(false);
                 setMessagesNum(unseenMessages.length);
                 setLastMessage(latestMessage);
                 if (flag === "FromMain") onUpdateLastMessage(item.owner_uid, latestMessage);
-                setLoading(false);
+                
             });
         } catch (error) {
             Alert.alert(error.message);
