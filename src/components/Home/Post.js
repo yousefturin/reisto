@@ -47,7 +47,7 @@ const Icons = [
     },
 ]
 //#region Post
-const Post = ({ post, userData, isLastPost, usersForSharePosts, theme, shouldAddOffSet }) => {
+const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme, shouldAddOffSet }) => {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
     const [isContainerVisible, setContainerVisible] = useState(false);
@@ -364,7 +364,7 @@ const Post = ({ post, userData, isLastPost, usersForSharePosts, theme, shouldAdd
             </View>
         </View>
     )
-}
+})
 //#endregion
 
 //#region  Time display
