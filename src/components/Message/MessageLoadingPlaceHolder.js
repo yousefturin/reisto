@@ -4,7 +4,7 @@ import { Skeleton } from 'moti/skeleton'
 
 const MessageLoadingPlaceHolder = ({ theme }) => {
     const SkeletonCommonProps = {
-        colorMode: theme.Primary === '#050505' ? 'dark':'light' , // if the primary color is dark then the skeleton will be dark
+        colorMode: theme.Primary === '#050505' ? 'dark' : 'light', // if the primary color is dark then the skeleton will be dark
         backgroundColor: theme.Secondary,
         transition: {
             type: 'timing',
@@ -14,9 +14,9 @@ const MessageLoadingPlaceHolder = ({ theme }) => {
     const skeletonArray = new Array(10).fill();
 
     return (
-        <>
+        <View style={{ paddingTop: 100, }}>
             {skeletonArray.map((item, index) => (
-                <View style={{ flexDirection: "row", marginHorizontal: 10 }} key={index}>
+                <View style={{ flexDirection: "row", marginHorizontal: 10, }} key={index}>
                     <View style={{ width: "20%", justifyContent: "center", alignItems: "center", marginVertical: 7 }}>
                         <Skeleton
                             show
@@ -50,7 +50,7 @@ const MessageLoadingPlaceHolder = ({ theme }) => {
                 </View>
             ))
             }
-        </>
+        </View>
     )
 }
 
