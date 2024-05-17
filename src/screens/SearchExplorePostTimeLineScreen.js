@@ -20,6 +20,7 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
     const [initialScrollIndex, setInitialScrollIndex] = useState(null);
     const [initialScrollDone, setInitialScrollDone] = useState(false);
     const [usersForSharePosts, setUsersForSharePosts] = useState([]);
+
     const [loading, setLoading] = useState(true)
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
@@ -78,8 +79,8 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
                     }
                 })
                 Promise.all(postsWithProfilePictures).then(posts => {
-                    setPosts(posts)
                     setLoading(false);
+                    setPosts(posts)
                 }).catch(error => {
                     console.error('Error fetching posts with profile pictures:', error);
                 })
@@ -171,7 +172,6 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
                 />
             ) : loading === null ? (
                 <View style={{ minHeight: 800 }}>
-                    {/* needs change to as if any error happened then show an error message */}
                     <EmptyDataParma SvgElement={"DeletedPostIllustration"} theme={theme} t={t} dataMessage={"Check your internet connection, and refresh the page."} TitleDataMessage={"Something went wrong"} />
                 </View>
             ) : (
