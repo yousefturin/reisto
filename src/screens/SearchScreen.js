@@ -17,6 +17,7 @@ import { useTheme } from '../context/ThemeContext';
 
 import { useTranslation } from 'react-i18next';
 import UseCustomTheme from '../utils/UseCustomTheme';
+import EmptyDataParma from '../components/CustomComponent/EmptyDataParma';
 
 const SearchScreen = () => {
     const { t } = useTranslation()
@@ -30,7 +31,7 @@ const SearchScreen = () => {
     const [posts, setPosts] = useState([])
     const navigation = useNavigation();
     const [clickedUsers, setClickedUsers] = useState([]);
-
+    const [loading, setLoading] = useState(true);
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
 
@@ -163,6 +164,7 @@ const SearchScreen = () => {
             unsubscribe = query.onSnapshot(snapshot => {
                 const postsWithProfilePictures = snapshot.docs.map(async post => {
                     const dbPostData = post.data();
+                    if (dbPostData.length === 0) { setLoading(null); return; }
                     try {
                         const userDoc = await db.collection('users').doc(dbPostData.owner_email).get()
                         const dbUserData = userDoc.data()
@@ -182,6 +184,7 @@ const SearchScreen = () => {
                 })
                 Promise.all(postsWithProfilePictures).then(posts => {
                     setPosts(posts)
+                    setLoading(false)
                 }).catch(error => {
                     console.error('Error fetching posts with profile pictures:', error);
                 })
@@ -291,8 +294,16 @@ const SearchScreen = () => {
 
                 ) : (
                     <>
-                        {posts.length === 0 && <LoadingPlaceHolder condition={posts.length} theme={theme} />}
-                        <SavedPostsGrid posts={posts} userData={userData} navigateToScreen={"SearchExplore"} />
+                        {loading === false ? (
+                            <SavedPostsGrid posts={posts} userData={userData} navigateToScreen={"SearchExplore"} />
+                        ) : loading === null ? (
+                            <View style={{ minHeight: 800 }}>
+                                <EmptyDataParma SvgElement={"BookmarkIllustration"} theme={theme} t={t} dataMessage={"You can save posts across Reisto and organize them into collections."} TitleDataMessage={"Nothing saved yet"} />
+                            </View>
+                        ) : (
+                            <LoadingPlaceHolder condition={loading === false} theme={theme} />
+                        )}
+
                     </>
                 )
                 }
