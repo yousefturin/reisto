@@ -285,7 +285,6 @@ const ProfileContent = ({ userData, userPosts, theme, t }) => {
                     </View>
                 </TouchableOpacity>
             </View>
-
         </View>
     )
 }
