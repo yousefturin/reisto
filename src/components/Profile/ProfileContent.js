@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Dimensions, Modal } from 'react-native'
+import { View, Text, TouchableOpacity, Dimensions, Modal, Animated } from 'react-native'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useNavigation } from "@react-navigation/native";
 import { blurHash } from '../../../assets/HashBlurData';
@@ -11,7 +11,7 @@ import { Divider } from 'react-native-elements';
 import { db, firebase } from '../../firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ProfileContent = ({ userData, userPosts, theme, t }) => {
+const ProfileContent = ({ userData, userPosts, theme, t, opacityContent }) => {
     const navigation = useNavigation();
     const handleEditProfileNavigation = () => {
         navigation.navigate("UserEditProfile", {
@@ -136,7 +136,7 @@ const ProfileContent = ({ userData, userPosts, theme, t }) => {
     }
 
     return (
-        <View style={{ flexDirection: "column", }}>
+        <Animated.View style={{ flexDirection: "column", opacity: opacityContent }}>
             <View style={{ flexDirection: "row", }}>
                 <View style={{ width: "30%", justifyContent: "center", alignItems: "center" }}>
                     <Image source={{ uri: userData.profile_picture, cache: "force-cache" }}
@@ -285,7 +285,7 @@ const ProfileContent = ({ userData, userPosts, theme, t }) => {
                     </View>
                 </TouchableOpacity>
             </View>
-        </View>
+        </Animated.View>
     )
 }
 
