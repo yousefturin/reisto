@@ -47,14 +47,20 @@ const ProfilePost = ({ posts, userData, keyValue, userDataToBeNavigated }) => {
         return index.toString();
     };
     const formatData = (data, numColumns) => {
-        const numberOfFullRows = Math.floor(data.length / numColumns);
-        let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
+        // Create a copy of the data array to avoid mutating the original array------------------------------ this shit made me scared a data updated in child
+        // will be return to parent and another child will use this data from this child! OMG react really!
+        const dataCopy = [...data];
+    
+        const numberOfFullRows = Math.floor(dataCopy.length / numColumns);
+        let numberOfElementsLastRow = dataCopy.length - (numberOfFullRows * numColumns);
+    
         while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {
-            data.push({ key: `blank-${numberOfElementsLastRow}`, empty: true });
+            dataCopy.push({ key: `blank-${numberOfElementsLastRow}`, empty: true });
             numberOfElementsLastRow++;
         }
-        return data;
-    }
+    
+        return dataCopy;
+    };
     return (
         <>
             {/* <View style={{ justifyContent: "space-around", alignItems: "center", paddingTop: 20, paddingHorizontal: 20, flexDirection: "row", }}>
