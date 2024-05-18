@@ -27,11 +27,11 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
 
 
     const handleScrollToIndexFailed = info => {
-        const wait = new Promise(resolve => setTimeout(resolve, 500));
-        wait.then(() => {
-            flatListRef.current?.scrollToIndex({ index: info.index, animated: true });
-        });
+        const offset = info.averageItemLength * info.index;
+        setTimeout(() => { flatListRef.current?.scrollToIndex({ index: info.index, animated: false, }); }, 10);
+        flatListRef.current?.scrollToOffset({ offset: offset, animated: false });
     };
+
     useEffect(() => {
         if (scrollToPostId && posts.length > 0) {
             const index = posts.findIndex(post => post.id === scrollToPostId);
@@ -163,9 +163,9 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
                     renderItem={renderItem}
                     keyExtractor={item => item.id.toString()}
                     initialScrollIndex={initialScrollIndex}
-                    getItemLayout={(data, index) => ({
-                        length: windowHeight * 0.75,
-                        offset: windowHeight * 0.75 * index,
+                    getItemLayout={(_, index) => ({
+                        length: (windowHeight - 100) * 0.84,
+                        offset: (windowHeight - 110) * 0.84 * index,
                         index
                     })}
                     onScrollToIndexFailed={handleScrollToIndexFailed}
