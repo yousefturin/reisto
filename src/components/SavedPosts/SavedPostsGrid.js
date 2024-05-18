@@ -35,7 +35,7 @@ const SavedPostsGrid = ({
     }
     const renderItem = useCallback(
         ({ item }) => (
-            <TouchableOpacity style={styles.listContainer} activeOpacity={0.8} onPress={() => handleNavigationToPost(item.id)}>
+            <TouchableOpacity disabled={item.empty=== true}  style={styles.listContainer} activeOpacity={0.8} onPress={() => handleNavigationToPost(item.id)}>
                 <View style={styles.imageContainer}>
                     <Image
                         source={{ uri: item.imageURL, cache: "force-cache" }}
@@ -57,6 +57,15 @@ const SavedPostsGrid = ({
         }
         return index.toString();
     };
+    const formatData = (data, numColumns) => {
+        const numberOfFullRows = Math.floor(data.length / numColumns);
+        let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
+        while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {
+            data.push({ key: `blank-${numberOfElementsLastRow}`, empty: true });
+            numberOfElementsLastRow++;
+        }
+        return data;
+    }
     //  coming from search
     if (fromWhereValue !== 0) {
         return (
@@ -65,7 +74,7 @@ const SavedPostsGrid = ({
                 keyboardDismissMode="on-drag"
                 keyboardShouldPersistTaps={'always'}
                 showsVerticalScrollIndicator={false}
-                data={posts}
+                data={formatData(posts, columnCount)}
                 nestedScrollEnabled={true}
                 scrollEnabled={true}
                 renderItem={renderItem}
@@ -95,7 +104,7 @@ const SavedPostsGrid = ({
                 style={{ paddingTop: fromWhereValue }}
                 keyboardDismissMode="on-drag"
                 keyboardShouldPersistTaps={'always'}
-                data={posts}
+                data={formatData(posts, columnCount)}
                 nestedScrollEnabled={true}
                 scrollEnabled={true}
                 renderItem={renderItem}
@@ -131,4 +140,6 @@ const styles = StyleSheet.create({
         height: (screenWidth + 4 - (columnCount)) / 3,
     },
 });
-export default SavedPostsGrid
+export default SavedPostsGrid          
+
+
