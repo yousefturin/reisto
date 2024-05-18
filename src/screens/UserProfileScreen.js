@@ -121,6 +121,11 @@ const UserProfileScreen = () => {
         outputRange: [1, 0.1, 0],
         extrapolate: 'clamp',
     });
+    const opacityContent = clampedScroll.interpolate({
+        inputRange: [0, 130, 260],
+        outputRange: [1, 1, 0],
+        extrapolate: 'clamp',
+    });
 
     var scrollEndTimer = null
     const onMomentumScrollBegin = () => {
@@ -138,7 +143,6 @@ const UserProfileScreen = () => {
     const onScrollEndDrag = () => {
         scrollEndTimer = setTimeout(onMomentumScrollEnd, 250)
     }
-    const [headerTranslate3, setHeaderTranslate] = useState(0);
 
     //#endregion
 
@@ -158,7 +162,6 @@ const UserProfileScreen = () => {
                     <ProfileHeader handleLogout={handleLogout} userData={userData} theme={theme} t={t} opacity={opacity} />
                 </Animated.View>
                 {/* need fix so that when the profile content is still in view then the divider should not be visible */}
-                {headerTranslate !== 0 && <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} style={{ zIndex: 1 }} />}
                 <Animated.ScrollView
                     style={{ paddingTop: 50, }}
                     keyboardDismissMode="on-drag"
@@ -179,7 +182,7 @@ const UserProfileScreen = () => {
                     onScrollEndDrag={onScrollEndDrag}
                     scrollEventThrottle={4}
                 >
-                    <ProfileContent userData={userData} userPosts={userPosts} theme={theme} t={t} />
+                    <ProfileContent userData={userData} userPosts={userPosts} theme={theme} t={t} opacityContent={opacityContent} />
                     {loading === false ? (
                         <ProfilePost posts={userPosts} userData={userData} onPostPress={handlePostPress} keyValue={"NavigationToMyProfile"} t={t} />
                     ) : loading === null ? (
