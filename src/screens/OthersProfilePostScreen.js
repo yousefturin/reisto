@@ -184,7 +184,7 @@ const OwnerProfileHeader = ({ userDataToBeNavigated, theme, t }) => {
     return (
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10 }}>
             <TouchableOpacity style={{ margin: 10 }} onPress={() => { handlePressBack() }}>
-                <SvgComponent svgKey="ArrowBackSVG" width={moderateScale(30)} height={moderateScale(30)} />
+                <SvgComponent svgKey="ArrowBackSVG" width={moderateScale(30)} height={moderateScale(30)} stroke={theme.textPrimary} />
             </TouchableOpacity>
             <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", flex: 1 }}>
                 <Text style={{ color: theme.textSecondary, fontWeight: "600", fontSize: 12 }}>{userDataToBeNavigated.username.toUpperCase()}</Text>
