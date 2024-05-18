@@ -85,7 +85,7 @@ const SavedPostsGrid = ({
                 onMomentumScrollEnd={onMomentumScrollEnd}
                 onScrollEndDrag={onScrollEndDrag}
                 scrollEventThrottle={4}
-                contentContainerStyle={{ paddingBottom: (screenWidth + 4 - (columnCount)) / 3 }}
+                contentContainerStyle={{ paddingBottom: 60 }}
             />
         )
         // any place else
