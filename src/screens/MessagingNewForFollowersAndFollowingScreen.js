@@ -274,7 +274,7 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
                         onMomentumScrollBegin={onMomentumScrollBegin}
                         onMomentumScrollEnd={onMomentumScrollEnd}
                         onScrollEndDrag={onScrollEndDrag}
-                        style={{ paddingTop: 100, paddingBottom: 150 }}>
+                        style={{ paddingTop: 100, paddingBottom: 50 }}>
                         {shouldDisplaySearchedItems ? (
                             searchedItems.map((item, index) => (
                                 <TouchableOpacity style={{ flexDirection: "row" }} key={index} onPress={() => { handleNavigationToMessages(item) }}>
