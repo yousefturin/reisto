@@ -68,7 +68,7 @@ const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue, them
                     validateOnMount={true}>
                     {({ handleChange, handleBlur, handleSubmit, values, isValid, errors, setFieldValue }) => (
                         <>
-                            <HeaderEditProfileIndividual t={t} theme={theme} navigation={navigation} headerTitle={title} handleSubmit={handleSubmit} isValid={isValid} />
+                            <HeaderEditProfileIndividual t={t} theme={theme} navigation={navigation} headerTitle={title} handleSubmit={handleSubmit} isValid={isValid} prevValue={prevValue} values={values.DisplayedName} />
                             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                                 <TextInput
                                     multiline={false}
@@ -114,7 +114,7 @@ const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue, them
                     validateOnMount={true}>
                     {({ handleChange, handleBlur, handleSubmit, values, isValid, errors, setFieldValue }) => (
                         <>
-                            <HeaderEditProfileIndividual t={t} theme={theme} navigation={navigation} headerTitle={title} handleSubmit={handleSubmit} isValid={isValid} />
+                            <HeaderEditProfileIndividual t={t} theme={theme} navigation={navigation} headerTitle={title} handleSubmit={handleSubmit} isValid={isValid} prevValue={prevValue} values={values.Bio} />
                             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                                 <TextInput
                                     multiline={false}
@@ -154,7 +154,7 @@ const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue, them
                     validateOnMount={true}>
                     {({ handleChange, handleBlur, handleSubmit, values, isValid, errors, setFieldValue }) => (
                         <>
-                            <HeaderEditProfileIndividual  t={t} theme={theme} navigation={navigation} headerTitle={title} handleSubmit={handleSubmit} isValid={isValid} />
+                            <HeaderEditProfileIndividual  t={t} theme={theme} navigation={navigation} headerTitle={title} handleSubmit={handleSubmit} isValid={isValid} prevValue={prevValue} values={values.Link} />
                             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                                 <TextInput
                                     multiline={false}
