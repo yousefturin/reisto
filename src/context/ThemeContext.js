@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Appearance, AppState } from 'react-native';
+import { Appearance, AppState, SafeAreaView, Text } from 'react-native';
 
 // Create a ThemeContext
 const ThemeContext = createContext();
@@ -21,12 +21,10 @@ export function ThemeProvider({ children }) {
                     setSelectedTheme('system');
                     setSystemAppearance(appearance || 'light'); // Set the theme based on the system appearance
                 }
+                setIsLoading(false);
             } catch (error) {
                 console.error('Error fetching theme:', error);
                 setSelectedTheme('system');
-            } finally {
-
-                setIsLoading(false); // Mark loading as complete
             }
         }
         fetchTheme();
@@ -61,8 +59,11 @@ export function ThemeProvider({ children }) {
     }, []);
 
     if (isLoading) {
-        // Return null while the theme is loading
-        return null;
+        // return null will cause the application to flicker when the theme is loading with the fallback color of the system theme
+            // so even if the user selected the theme as dark and the device is light the flicker will be visible
+            // on solution is to pass the loading state to teh authProvider that is having teh animation and instead of using timer base value it can use
+            // the loading state to show the animation 
+        return <SafeAreaView style={{ flex: 1, backgroundColor: systemAppearance === 'dark' ? "#050505" : "#fefffe" }}></SafeAreaView>;
     }
 
 
