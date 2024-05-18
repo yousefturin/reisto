@@ -24,7 +24,7 @@ const ProfilePost = ({ posts, userData, keyValue, userDataToBeNavigated }) => {
     }
     const renderItem = useCallback(
         ({ item }) => (
-            <TouchableOpacity style={styles.listContainer} activeOpacity={0.8} onPress={() => handleNavigationToPost(item.id)}>
+            <TouchableOpacity disabled={item.empty=== true} style={styles.listContainer} activeOpacity={0.8} onPress={() => handleNavigationToPost(item.id)}>
                 <View style={styles.imageContainer}>
                     <Image
                         source={{ uri: item.imageURL, cache: "force-cache" }}
@@ -46,7 +46,15 @@ const ProfilePost = ({ posts, userData, keyValue, userDataToBeNavigated }) => {
         }
         return index.toString();
     };
-
+    const formatData = (data, numColumns) => {
+        const numberOfFullRows = Math.floor(data.length / numColumns);
+        let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
+        while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {
+            data.push({ key: `blank-${numberOfElementsLastRow}`, empty: true });
+            numberOfElementsLastRow++;
+        }
+        return data;
+    }
     return (
         <>
             {/* <View style={{ justifyContent: "space-around", alignItems: "center", paddingTop: 20, paddingHorizontal: 20, flexDirection: "row", }}>
@@ -55,12 +63,13 @@ const ProfilePost = ({ posts, userData, keyValue, userDataToBeNavigated }) => {
                 style={{ paddingTop: 25, paddingBottom: 50 }}
                 keyboardDismissMode="on-drag"
                 keyboardShouldPersistTaps={'always'}
-                data={posts}
+                showsVerticalScrollIndicator={false}
+                data={formatData(posts, columnCount)}
                 nestedScrollEnabled={true}
                 scrollEnabled={false}
                 renderItem={renderItem}
                 keyExtractor={keyExtractor}
-                numColumns={columnCount}
+                numColumns={3}
                 contentContainerStyle={styles.container}
             />
         </>
@@ -73,7 +82,6 @@ const styles = StyleSheet.create({
         flex: 1,
         margin: 0.3,
         overflow: 'hidden',
-
     },
     imageContainer: {
         flex: 1,
