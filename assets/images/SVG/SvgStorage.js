@@ -119,17 +119,17 @@ const svgData = {
         stroke-linejoin="round"></path>
 </svg>`,
   DummyImage: `
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 768">
+  <svg xmlns="http://www.w3.org/2000/svg" width="768" height="768"  viewBox="0 0 768 768">
   <g transform="translate(-13.59 -66.639)">
-    <path fill="#D0D0D0" d="M13.6,66.6h767.1v1024H13.6V66.6z"/>
-    <g>
-      <polygon opacity="0.675" fill="#FFFFFF" points="425.3,558.3 365.9,617.7 338.2,590 265.4,662.7 529.8,662.7 		"/>
-      
-        <ellipse transform="matrix(0.7071 -0.7071 0.7071 0.7071 -270.1986 377.5812)" opacity="0.675" fill="#FFFFFF" cx="320.7" cy="514.9" rx="20.4" ry="20.4"/>
-    </g>
-    <path class="st2" fill="none" d="M66.9,341.2h650v494.5h-650L66.9,341.2L66.9,341.2z"/>
+      <path fill="#D0D0D0" d="M13.6,66.6h768v768h-768V66.6z" />
+      <g>
+          <polygon opacity="0.675" fill="#FFFFFF"
+              points="425.3,430.3 365.9,489.7 338.2,462 265.4,534.7 529.8,534.7 		" />
+          <circle opacity="0.675" fill="#FFFFFF" cx="320.6" cy="386.9" r="20.4" />
+      </g>
+      <path fill="none" d="M67.3,237.3h650v494.5h-650L67.3,237.3L67.3,237.3z"/>
   </g>
-  </svg>`,
+</svg>`,
   MenuSVG: `
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <line x1="5" y1="7" x2="19" y2="7" stroke-width="1.5" stroke-linecap="round"
