@@ -23,6 +23,7 @@ const UserProfilePostScreen = ({ route }) => {
     const [posts, setPost] = useState([])
     const flatListRef = useRef();
     const [loading, setLoading] = useState(true);
+
     const [initialScrollIndex, setInitialScrollIndex] = useState(null);
     const [initialScrollDone, setInitialScrollDone] = useState(false);
     const [usersForSharePosts, setUsersForSharePosts] = useState([]);
@@ -32,10 +33,9 @@ const UserProfilePostScreen = ({ route }) => {
 
 
     const handleScrollToIndexFailed = info => {
-        const wait = new Promise(resolve => setTimeout(resolve, 500));
-        wait.then(() => {
-            flatListRef.current?.scrollToIndex({ index: info.index, animated: true, viewPosition: 0 });
-        });
+        const offset = info.averageItemLength * info.index;
+        setTimeout(() => { flatListRef.current?.scrollToIndex({ index: info.index, animated: false, }); }, 10);
+        flatListRef.current?.scrollToOffset({ offset: offset, animated: false });
     };
     useEffect(() => {
         if (scrollToPostId && posts.length > 0) {
@@ -167,30 +167,32 @@ const UserProfilePostScreen = ({ route }) => {
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <OwnerProfileHeader userData={userData} theme={theme} t={t} />
             {loading === false ? (
-                <VirtualizedList
-                    keyboardDismissMode="on-drag"
-                    keyboardShouldPersistTaps={'always'}
-                    ref={flatListRef}
-                    data={posts}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.id.toString()}
-                    initialScrollIndex={initialScrollIndex}
-                    getItem={(data, index) => data[index]}
-                    getItemCount={data => data.length}
-                    getItemLayout={(_, index) => ({
-                        length: windowHeight * 0.75,
-                        offset: windowHeight * 0.75 * index,
-                        index
-                    })}
-                    onScrollToIndexFailed={handleScrollToIndexFailed}
-                />
+                    <VirtualizedList
+                        keyboardDismissMode="on-drag"
+                        showsVerticalScrollIndicator={false}
+                        keyboardShouldPersistTaps={'always'}
+                        ref={flatListRef}
+                        data={posts}
+                        renderItem={renderItem}
+                        keyExtractor={item => item.id.toString()}
+                        initialScrollIndex={initialScrollIndex}
+                        getItem={(data, index) => data[index]}
+                        getItemCount={data => data.length}
+                        getItemLayout={(_, index) => ({
+                            length: (windowHeight - 100) * 0.84,
+                            offset: (windowHeight - 110) * 0.84 * index,
+                            index
+                        })}
+                        onScrollToIndexFailed={handleScrollToIndexFailed}
+                    />
             ) : loading === null ? (
                 <View style={{ minHeight: 800 }}>
                     <EmptyDataParma SvgElement={"DeletedPostIllustration"} theme={theme} t={t} dataMessage={"Check your internet connection, and refresh the page."} TitleDataMessage={"Something went wrong"} />
                 </View>
             ) : (
                 <LoadingPlaceHolder theme={theme} />
-            )}
+            )
+            }
         </SafeAreaView>
     )
 }
