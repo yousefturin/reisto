@@ -20,7 +20,7 @@ const UserProfileScreen = () => {
     const userData = useContext(UserContext);
     const [userPosts, setUserPost] = useState([])
     const [refreshing, setRefreshing] = useState(false);
-    const [scrollToPostId, setScrollToPostId] = useState(null)
+    const [_, setScrollToPostId] = useState(null)
     const [loading, setLoading] = useState(true);
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
