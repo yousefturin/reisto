@@ -103,67 +103,67 @@ const UserFollowingAndFollowersListScreen = ({ route }) => {
             </View>
             {/* <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} style={{ zIndex: -1 }} /> */}
             <View>
-                {paramFollowing.length === 0 && paramFollower.length === 0 ? 
-                (paramFlag === "followers" ? (
+                {paramFollower.length === 0 && paramFlag === "followers" && (
                     <EmptyDataParma SvgElement={"ConnectionIllustration"} theme={theme} t={t} dataMessage={"Once people follow you, you'll see theme here."} TitleDataMessage={"People who follow you"} />
-                ) : (
-                    <EmptyDataParma SvgElement={"AddUserIllustration"} theme={theme} t={t} dataMessage={"Once you follow people, you'll see theme here."} TitleDataMessage={"People you follow"} />
-                )) : (
-                    paramFlag === "followers" ? (
-                        <>
-                            {paramFollower?.map((item, index) => (
-                                <TouchableOpacity style={{ flexDirection: "row" }} key={index} onPress={() => { handleNavigationToOtherUserProfile(item) }}>
-                                    <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
-                                        <Image source={{ uri: item.profile_picture, cache: "force-cache", }}
-                                            style={{
-                                                width: 50,
-                                                height: 50,
-                                                borderRadius: 50,
-                                                margin: 7,
-                                                borderWidth: 1.5,
-                                                borderColor: theme.Secondary
-                                            }}
-                                            placeholder={blurHash}
-                                            contentFit="cover"
-                                            transition={50}
-                                            cachePolicy={"memory-disk"} />
-                                    </View>
-
-                                    <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
-                                        <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
-                                        <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            ))}
-                        </>
-                    ) : (
-                        <>
-                            {paramFollowing?.map((item, index) => (
-                                <TouchableOpacity style={{ flexDirection: "row" }} key={index} onPress={() => { handleNavigationToOtherUserProfile(item) }}>
-                                    <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
-                                        <Image source={{ uri: item.profile_picture, cache: "force-cache", }}
-                                            style={{
-                                                width: 50,
-                                                height: 50,
-                                                borderRadius: 50,
-                                                margin: 7,
-                                                borderWidth: 1.5,
-                                                borderColor: theme.Secondary
-                                            }}
-                                            placeholder={blurHash}
-                                            contentFit="cover"
-                                            transition={50}
-                                            cachePolicy={"memory-disk"} />
-                                    </View>
-
-                                    <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
-                                        <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
-                                        <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            ))}
-                        </>)
                 )}
+                {paramFollowing.length === 0 && paramFlag === "following" && (
+                    <EmptyDataParma SvgElement={"ConnectionIllustration"} theme={theme} t={t} dataMessage={"Once people follow you, you'll see theme here."} TitleDataMessage={"People who follow you"} />
+                )} 
+                {paramFlag === "followers" ? (
+                    <>
+                        {paramFollower?.map((item, index) => (
+                            <TouchableOpacity style={{ flexDirection: "row" }} key={index} onPress={() => { handleNavigationToOtherUserProfile(item) }}>
+                                <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
+                                    <Image source={{ uri: item.profile_picture, cache: "force-cache", }}
+                                        style={{
+                                            width: 50,
+                                            height: 50,
+                                            borderRadius: 50,
+                                            margin: 7,
+                                            borderWidth: 1.5,
+                                            borderColor: theme.Secondary
+                                        }}
+                                        placeholder={blurHash}
+                                        contentFit="cover"
+                                        transition={50}
+                                        cachePolicy={"memory-disk"} />
+                                </View>
+
+                                <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
+                                    <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
+                                    <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        ))}
+                    </>
+                ) : (
+                    <>
+                        {paramFollowing?.map((item, index) => (
+                            <TouchableOpacity style={{ flexDirection: "row" }} key={index} onPress={() => { handleNavigationToOtherUserProfile(item) }}>
+                                <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
+                                    <Image source={{ uri: item.profile_picture, cache: "force-cache", }}
+                                        style={{
+                                            width: 50,
+                                            height: 50,
+                                            borderRadius: 50,
+                                            margin: 7,
+                                            borderWidth: 1.5,
+                                            borderColor: theme.Secondary
+                                        }}
+                                        placeholder={blurHash}
+                                        contentFit="cover"
+                                        transition={50}
+                                        cachePolicy={"memory-disk"} />
+                                </View>
+
+                                <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
+                                    <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
+                                    <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        ))}
+                    </>)
+                }
             </View>
         </SafeAreaView>
     );
