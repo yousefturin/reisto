@@ -26,10 +26,9 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
     
     const handleScrollToIndexFailed = info => {
-        const wait = new Promise(resolve => setTimeout(resolve, 500));
-        wait.then(() => {
-            flatListRef.current?.scrollToIndex({ index: info.index, animated: true, viewPosition: 1 });
-        });
+        const offset = info.averageItemLength * info.index;
+        setTimeout(() => { flatListRef.current?.scrollToIndex({ index: info.index, animated: false, }); }, 10);
+        flatListRef.current?.scrollToOffset({ offset: offset, animated: false });
     };
     useEffect(() => {
         if (scrollToPostId && savedPosts.length > 0) {
@@ -202,10 +201,10 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
                     keyExtractor={item => item.id.toString()}
                     initialScrollIndex={initialScrollIndex}
                     getItemLayout={(_, index) => ({
-                        length: windowHeight * 0.75,
-                        offset: windowHeight * 0.75 * index,
-                        index
-                    })}
+                            length: (windowHeight - 100) * 0.84,
+                            offset: (windowHeight - 110) * 0.84 * index,
+                            index
+                        })}
                     onScrollToIndexFailed={handleScrollToIndexFailed}
                 />
             ) : loading === null ? (
