@@ -40,7 +40,7 @@ const MessageMainList = ({ updateLastMessage,
                                 theme={theme}
                             />}
                             keyExtractor={item => item.owner_uid.toString()}
-                            style={{ paddingTop: 100, paddingBottom: 150 }}
+                            style={{ paddingTop: 100, paddingBottom: 50 }}
                         />
                     ) : (
                         loading === null ? (
@@ -77,7 +77,7 @@ const MessageMainList = ({ updateLastMessage,
                                 theme={theme} t={t}
                             />}
                             keyExtractor={item => item.owner_uid.toString()}
-                            style={{ paddingTop: 100, paddingBottom: 150 }}
+                            style={{ paddingTop: 100, paddingBottom: 50 }}
                         />
                     ) : loading === null ? (
                         <EmptyDataParma SvgElement={"AddUserIllustration"} theme={theme} t={t} TitleDataMessage={"Make new connections"} dataMessage={"Connect with new people to start messaging. All new followings will appear here."} />
