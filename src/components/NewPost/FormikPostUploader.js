@@ -156,7 +156,7 @@ const FormikPostUploader = ({ theme, t }) => {
                                             {!image ? (
                                                 <TouchableOpacity
                                                     onPress={() => pickImage(setFieldValue, setFieldTouched)} activeOpacity={0.8}>
-                                                    <SvgComponent svgKey="DummyImage" width={moderateScale(390)} height={moderateScale(280)} fill={theme.textPrimary} />
+                                                    <SvgComponent svgKey="DummyImage" width={moderateScale(380)} height={moderateScale(380)} fill={theme.textPrimary} />
                                                 </TouchableOpacity>
                                             ) : (
                                                 <TouchableOpacity
