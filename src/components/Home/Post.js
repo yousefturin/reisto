@@ -47,7 +47,7 @@ const Icons = [
     },
 ]
 //#region Post
-const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme, shouldAddOffSet }) => {
+const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme }) => {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
     const [isContainerVisible, setContainerVisible] = useState(false);
@@ -79,8 +79,6 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
                     : firebase.firestore.FieldValue.arrayRemove(
                         firebase.auth().currentUser.email
                     ),
-            }).then(() => {
-                console.log('Document successfully updated likes!')
             }).catch(error => {
                 console.error('Error updating document: ', error)
             })
