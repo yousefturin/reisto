@@ -52,7 +52,7 @@ const ProfilePost = ({ posts, userData, keyValue, userDataToBeNavigated }) => {
             {/* <View style={{ justifyContent: "space-around", alignItems: "center", paddingTop: 20, paddingHorizontal: 20, flexDirection: "row", }}>
             </View> */}
             <FlatList
-                style={{ paddingTop: 25, paddingBottom: 150 }}
+                style={{ paddingTop: 25, paddingBottom: 50 }}
                 keyboardDismissMode="on-drag"
                 keyboardShouldPersistTaps={'always'}
                 data={posts}
