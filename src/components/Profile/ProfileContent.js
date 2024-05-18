@@ -156,7 +156,7 @@ const ProfileContent = ({ userData, userPosts, theme, t, opacityContent }) => {
                 <View style={{ flexDirection: "row", justifyContent: "space-evenly", flex: 1, }}>
                     <View style={{ alignItems: "center", justifyContent: "center" }}>
                         <Text style={{ color: theme.textPrimary, fontWeight: "600", fontSize: 18 }}>
-                            {Object.keys(userPosts).length}
+                            {Object.values(userPosts).length}
                         </Text>
                         <Text style={{ color: theme.textQuaternary }}>
                             {t('screens.profile.text.profileContent.recipes')}
