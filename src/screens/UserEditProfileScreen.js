@@ -19,6 +19,7 @@ const UserEditProfileScreen = ({ route }) => {
 
     const headerEditProfile = t("screens.profile.text.profileEdit.editProfile");
     const navigation = useNavigation();
+    
     return (
         <SafeAreaView style={{ backgroundColor: theme.Primary, flex: 1, justifyContent: "flex-start" }}>
             <EditProfileHeader navigation={navigation} headerTitle={headerEditProfile} theme={theme} />

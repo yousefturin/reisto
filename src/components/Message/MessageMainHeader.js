@@ -7,10 +7,12 @@ import { useNavigation } from "@react-navigation/native";
 const MessageMainHeader = ({ userData, excludedUsers, theme, opacity }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);
     const navigation = useNavigation();
+
     // This function will navigate to the new message screen
     const handleNavigationToNewMessage = () => {
         navigation.navigate("MessagingNewMessageForFollowerAndFollowings", { userData: userData, excludedUsers: excludedUsers, theme: theme });
     }
+    
     return (
             <Animated.View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", opacity: opacity, marginHorizontal: 10 }}>
                 <View style={{ flexDirection: "row", alignItems: "center", }}>

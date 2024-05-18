@@ -34,13 +34,13 @@ const OthersProfilePostScreen = ({ route }) => {
             flatListRef.current?.scrollToIndex({ index: info.index, animated: true });
         });
     };
+
     useLayoutEffect(() => {
         fetchData();
     }, []);
 
     const fetchData = async () => {
         try {
-
             const querySnapshot = await db.collection('users').doc(firebase.auth().currentUser.email).collection('following_followers').limit(1).get();
             if (!querySnapshot.empty) {
                 const doc = querySnapshot.docs[0];
@@ -147,11 +147,9 @@ const OthersProfilePostScreen = ({ route }) => {
         };
     }, []);
 
-
     const renderItem = ({ item }) => (
         <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} theme={theme} />
     )
-
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
@@ -176,8 +174,10 @@ const OthersProfilePostScreen = ({ route }) => {
         </SafeAreaView>
     )
 }
+
 const OwnerProfileHeader = ({ userDataToBeNavigated, theme, t }) => {
     const navigation = useNavigation();
+    
     const handlePressBack = () => {
         navigation.goBack()
     }

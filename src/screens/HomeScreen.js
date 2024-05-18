@@ -24,6 +24,11 @@ const HomeScreen = () => {
     const [followingUsers, setFollowingUsers] = useState([]);
     const { moderateScale } = initializeScalingUtils(Dimensions);
 
+    const [isFollowingData, setIsFollowingData] = useState(false)
+    const [postOptionModal, setPostOptionModal] = useState(false)
+    const [textForPostOption, setTextForPostOption] = useState("Following")
+    const [SvgForPostOption, setSvgForPostOption] = useState("followingSVG")
+
     const userData = useContext(UserContext);
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
@@ -202,13 +207,11 @@ const HomeScreen = () => {
         }
     };
     //#endregion
-    const [isFollowingData, setIsFollowingData] = useState(false)
-    const [postOptionModal, setPostOptionModal] = useState(false)
-    const [textForPostOption, setTextForPostOption] = useState("Following")
-    const [SvgForPostOption, setSvgForPostOption] = useState("followingSVG")
+
     const handleShowPostOptions = () => {
         setPostOptionModal(!postOptionModal)
     }
+
     const handleDataToBeShown = () => {
         setIsFollowingData(!isFollowingData)
         setPostOptionModal(false)
@@ -220,6 +223,7 @@ const HomeScreen = () => {
             setSvgForPostOption("followingSVG")
         }
     }
+
     //#region  animated header
     const scrollY = new Animated.Value(0);
     const offsetAnimation = new Animated.Value(0);
@@ -279,6 +283,7 @@ const HomeScreen = () => {
         scrollEndTimer = setTimeout(onMomentumScrollEnd, 250)
     }
     //#endregion
+    
     const renderItemFollowing = useCallback(
         ({ item, index }) => (
             <Post
@@ -292,6 +297,7 @@ const HomeScreen = () => {
         ),
         [theme, userData, usersForSharePosts, postFollowing.length]
     )
+
     const renderItem = useCallback(
         ({ item, index }) => (
             <Post
@@ -305,6 +311,7 @@ const HomeScreen = () => {
         ),
         [theme, userData, usersForSharePosts, posts.length]
     );
+    
     const keyExtractor = useCallback((_, index) => index.toString(), []);
 
     return (

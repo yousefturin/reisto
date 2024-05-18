@@ -33,6 +33,7 @@ const UserProfileScreen = () => {
             console.error(error)
         }
     }
+
     useEffect(() => {
         const unsubscribe = fetchUserPosts();
         // Return cleanup function to unsubscribe when component unmounts
@@ -40,7 +41,6 @@ const UserProfileScreen = () => {
             unsubscribe();
         };
     }, []);
-
 
     const fetchUserPosts = () => {
         const user = firebase.auth().currentUser;
@@ -66,6 +66,7 @@ const UserProfileScreen = () => {
             return () => { };
         }
     };
+    
     // Function to handle scroll event
     const onRefresh = useCallback(() => {
         setRefreshing(true);

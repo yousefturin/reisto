@@ -12,7 +12,6 @@ const UserSettingScreen = () => {
     const { selectedTheme, toggleTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
 
-
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <ThemeSelector theme={theme} selectedTheme={selectedTheme} toggleTheme={toggleTheme} t={t} />

@@ -1,8 +1,16 @@
+
 import { View } from 'react-native'
 import React from 'react'
 import { Skeleton } from 'moti/skeleton'
 
-
+/**
+ * Represents a loading placeholder component for displaying skeleton UI.
+ * @param {Object} props - The props object.
+ * @param {string} props.fromWhere - The source of the post.
+ * @param {Object} props.theme - The theme object containing primary and secondary colors.
+ * @param {boolean} props.isPaddingNeeded - Determines if padding is needed.
+ * @returns {JSX.Element} The loading placeholder component.
+ */
 // the implementation of theme is not yet done
 const LoadingPlaceHolder = ({ fromWhere, theme, isPaddingNeeded }) => {
     const SkeletonCommonProps = {

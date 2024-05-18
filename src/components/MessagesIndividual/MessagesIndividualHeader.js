@@ -11,10 +11,12 @@ import { db } from '../../firebase';
 
 const MessagesIndividualHeader = ({ header, theme }) => {
     const navigation = useNavigation();
+    const { moderateScale } = initializeScalingUtils(Dimensions);
+
     const handlePressBack = () => {
         navigation.goBack()
     }
-    const { moderateScale } = initializeScalingUtils(Dimensions);
+
     const handleNavigation = () => {
         const unsubscribe = db.collection('users').where('owner_uid', '==', header.owner_uid).limit(1).onSnapshot(snapshot => {
             const data = snapshot.docs.map(doc => doc.data())[0];
@@ -31,6 +33,7 @@ const MessagesIndividualHeader = ({ header, theme }) => {
         });
         return () => unsubscribe()
     }
+    
     return (
         <>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10, }}>

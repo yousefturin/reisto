@@ -17,7 +17,7 @@ const OtherUsersProfileScreen = ({ route }) => {
     const { t } = useTranslation()
     const [userPosts, setUserPost] = useState([])
     const [refreshing, setRefreshing] = useState(false);
-    const [scrollToPostId, setScrollToPostId] = useState(null)
+    const [_, setScrollToPostId] = useState(null)
 
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
@@ -53,6 +53,7 @@ const OtherUsersProfileScreen = ({ route }) => {
             return () => { };
         }
     };
+
     // Function to handle scroll event
     const onRefresh = useCallback(() => {
         setRefreshing(true);
@@ -63,9 +64,11 @@ const OtherUsersProfileScreen = ({ route }) => {
         }
         setRefreshing(false);
     }, []);
+
     const handlePostPress = (postId) => {
         setScrollToPostId(postId)
     }
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <>
@@ -90,7 +93,6 @@ const OtherUsersProfileScreen = ({ route }) => {
                     )}
                 </ScrollView>
             </>
-
         </SafeAreaView>
     )
 }

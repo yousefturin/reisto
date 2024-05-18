@@ -2,11 +2,9 @@
 import { FlatList, StyleSheet, Dimensions, TouchableOpacity, Animated, View, RefreshControl } from 'react-native';
 import React, { useCallback } from 'react'
 import { Image } from 'expo-image';
-
 import { useNavigation } from "@react-navigation/native";
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
-
 const screenWidth = Dimensions.get('window').width;
 const columnCount = 3;
 
@@ -21,7 +19,9 @@ const SavedPostsGrid = ({
     onMomentumScrollBegin,
     onMomentumScrollEnd,
     onScrollEndDrag }) => {
+
     const navigation = useNavigation();
+
     const handleNavigationToPost = (postId) => {
         if (navigateToScreen === "SavedPosts") {
             navigation.navigate('UserSavedPostTimeLine', {
@@ -33,6 +33,7 @@ const SavedPostsGrid = ({
             });
         }
     }
+
     const renderItem = useCallback(
         ({ item }) => (
             <TouchableOpacity disabled={item.empty=== true}  style={styles.listContainer} activeOpacity={0.8} onPress={() => handleNavigationToPost(item.id)}>
@@ -46,17 +47,18 @@ const SavedPostsGrid = ({
                         transition={50}
                     />
                 </View>
-
             </TouchableOpacity>
         ),
         []
     )
+
     const keyExtractor = (item, index) => {
         if (item.id !== undefined && item.id !== null) {
             return item.id.toString();
         }
         return index.toString();
     };
+
     const formatData = (data, numColumns) => {
         const numberOfFullRows = Math.floor(data.length / numColumns);
         let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
@@ -66,6 +68,7 @@ const SavedPostsGrid = ({
         }
         return data;
     }
+
     //  coming from search
     if (fromWhereValue !== 0) {
         return (
@@ -97,7 +100,8 @@ const SavedPostsGrid = ({
                 contentContainerStyle={{ paddingBottom: 60 }}
             />
         )
-        // any place else
+
+    // any place else
     }else{
         return(
             <FlatList
@@ -120,7 +124,6 @@ const SavedPostsGrid = ({
             />
         )
     }
-
 }
 
 const styles = StyleSheet.create({

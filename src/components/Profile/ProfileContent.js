@@ -13,16 +13,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfileContent = ({ userData, userPosts, theme, t, opacityContent }) => {
     const navigation = useNavigation();
-    const handleEditProfileNavigation = () => {
-        navigation.navigate("UserEditProfile", {
-            userData
-        })
-    }
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [followersAndFollowing, setFollowersAndFollowing] = useState({ followers: '', following: '', id: '' })
     const { moderateScale } = initializeScalingUtils(Dimensions);
     const [followersData, setFollowersData] = useState([]);
     const [followingData, setFollowingData] = useState([]);
+    
+    const handleEditProfileNavigation = () => {
+        navigation.navigate("UserEditProfile", {
+            userData
+        })
+    }
+
     // this took my 4 hours to remove the error of unsubscribe is not a function and i am still not sure if this is the correct way to do it
     useEffect(() => {
         let unsubscribe;

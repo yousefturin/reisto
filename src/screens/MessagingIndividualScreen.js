@@ -34,7 +34,6 @@ const MessagingIndividualScreen = ({ route }) => {
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
 
-
     useEffect(() => {
         // room creation is not needed here and will be only created on send message and then it will be checked if the room exists or not
         // handleCreateChat();
@@ -77,9 +76,9 @@ const MessagingIndividualScreen = ({ route }) => {
             scrollViewRef?.current?.scrollToEnd({ animated: true })
         }, 100)
     }
+    
     // Function to update the seen status of a message
     const updateMessageSeenStatus = async (roomId, messageId) => {
-
         try {
             const messageRef = doc(db, 'messages', roomId, 'private_messages', messageId);
             await updateDoc(messageRef, {
@@ -89,6 +88,7 @@ const MessagingIndividualScreen = ({ route }) => {
             console.error("Error updating message seen status:", error);
         }
     }
+
     const handleCreateChat = async () => {
         let roomId = GenerateRoomId(userData.owner_uid, userDataUid.owner_uid);
         try {
@@ -108,6 +108,7 @@ const MessagingIndividualScreen = ({ route }) => {
             Alert.alert(error.message);
         }
     }
+
     const handleSendMessage = async (flag, base64Image) => {
         let imageToBeSent = null
         let Post_Shared_id = null
@@ -125,7 +126,6 @@ const MessagingIndividualScreen = ({ route }) => {
             messagePurpose = "text"
         }
         handleCreateChat()
-
         try {
             let roomId = GenerateRoomId(userData.owner_uid, userDataUid.owner_uid);
             const DocRef = db.collection('messages').doc(roomId)
@@ -194,6 +194,7 @@ const MessagingIndividualScreen = ({ route }) => {
             }
         }
     };
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <MessagesIndividualHeader header={userDataUid} theme={theme} />
@@ -249,7 +250,7 @@ const MessagingIndividualScreen = ({ route }) => {
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
-        </SafeAreaView >
+        </SafeAreaView>
     )
 }
 

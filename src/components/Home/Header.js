@@ -8,9 +8,19 @@ import { colorPalette } from '../../Config/Theme';
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
+/**
+ * Renders the header component.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.theme - The theme of the header.
+ * @param {Function} props.onButtonClick - The function to be called when the button is clicked.
+ * @param {number} props.opacity - The opacity of the header.
+ * @returns {JSX.Element} The rendered header component.
+ */
 const Header = ({ theme, onButtonClick, opacity }) => {
   const navigation = useNavigation();
   const { messagesNum, loadingMessagesNum } = useContext(MessagesNumContext);
+  
   return (
     <Animated.View style={[styles.container, { opacity: opacity }]}>
       <TouchableOpacity onPress={() => onButtonClick()} style={{ flexDirection: "row",alignItems:"center" }} >

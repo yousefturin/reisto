@@ -30,8 +30,6 @@ import { colorPalette } from "../Config/Theme";
 
 const Stack = createStackNavigator();
 
-
-
 const customCardStyleInterpolator = ({ current, next, layouts }) => {
     return {
         cardStyle: {
@@ -74,6 +72,7 @@ const AuthAppNavigator = () => {
     // Function to determine if NavigationStack should be shown
     const navigationState = useNavigationState(state => state);
     const [currentRouteName, setCurrentRouteName] = useState('Home'); // Default to 'Home'
+    const userData = useContext(UserContext);
 
     useEffect(() => {
         if (navigationState && navigationState.routes && navigationState.index !== undefined) {
@@ -81,7 +80,7 @@ const AuthAppNavigator = () => {
             setCurrentRouteName(routeName);
         }
     }, [navigationState]);
-    const userData = useContext(UserContext);
+
     const shouldShowNavigationStack = currentRouteName !== 'AddPost'
         && currentRouteName !== 'UserEditProfile'
         && currentRouteName !== 'UserEditProfileIndividualData'
@@ -90,6 +89,7 @@ const AuthAppNavigator = () => {
         && currentRouteName !== 'MessageIndividual'
         && currentRouteName !== 'MessagingNewMessageForFollowerAndFollowings'
         && currentRouteName !== 'FromMessagesToSharedPost';
+
     return (
         <>
             <Stack.Navigator
@@ -255,10 +255,6 @@ const UnAuthAppNavigator = () => (
         />
     </Stack.Navigator>
 )
-
-
-
-
 
 
 export { AuthAppNavigator, UnAuthAppNavigator };

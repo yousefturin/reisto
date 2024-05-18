@@ -7,10 +7,12 @@ import initializeScalingUtils from '../../utils/NormalizeSize';
 
 const SavedPostsHeader = ({ header, theme }) => {
     const navigation = useNavigation();
+    const { moderateScale } = initializeScalingUtils(Dimensions);
+
     const handlePressBack = () => {
         navigation.goBack()
     }
-    const { moderateScale } = initializeScalingUtils(Dimensions);
+
     return (
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10 }}>
             <TouchableOpacity style={{ margin: 10 }} onPress={() => { handlePressBack() }}>

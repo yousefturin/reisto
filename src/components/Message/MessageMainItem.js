@@ -19,6 +19,7 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag, theme, t }
     const [lastMessage, setLastMessage] = useState(null);
     const [loading, setLoading] = useState(true);
     const { moderateScale } = initializeScalingUtils(Dimensions);
+
     const SkeletonCommonProps = {
         colorMode: theme.Primary === '#050505' ? 'dark' : 'light',
         backgroundColor: theme.Secondary,
@@ -62,6 +63,17 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag, theme, t }
     const handleNavigationToChat = (userDataUid) => {
         navigation.navigate('MessageIndividual', { userDataUid });
     };
+
+    const renderTime = () => {
+        if (lastMessage && lastMessage.createdAt) {
+            let date = lastMessage.createdAt;
+            const dataFormatted = calculateTimeDifference(date, t);
+            return dataFormatted + " " +`${t('screens.messages.timeRender')}`;
+        } else {
+            return '';
+        }
+    }
+    
     const renderLastMessage = () => {
         // if i am who sent then show the you 
         // not need to use the ? here since the condition is already will be passed only if it exist
@@ -91,6 +103,7 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag, theme, t }
                 </>
             )
         }
+
         else if (lastMessage.text === null) {
             // if not me the just show it normally
             return <View style={{ flexDirection: "row-reverse", gap: 2, }}>
@@ -109,6 +122,7 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag, theme, t }
                 </View>
             </View>
         }
+
         // if not me the just show it normally
         return <View style={{ flexDirection: "row-reverse", gap: 2, }}>
             <Text style={{ color: !lastMessage.seenBy.includes(userData.owner_uid) ? theme.textPrimary : theme.textSecondary, fontSize: 15, fontWeight: !lastMessage.seenBy.includes(userData.owner_uid) ? "700" : "500", }} numberOfLines={1} ellipsizeMode="tail"  >{lastMessage?.text}</Text>
@@ -122,15 +136,7 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag, theme, t }
             </View>
         </View>
     }
-    const renderTime = () => {
-        if (lastMessage && lastMessage.createdAt) {
-            let date = lastMessage.createdAt;
-            const dataFormatted = calculateTimeDifference(date, t);
-            return dataFormatted + " " +`${t('screens.messages.timeRender')}`;
-        } else {
-            return '';
-        }
-    }
+
     if (flag === "FromMain") {
         return (
             <TouchableOpacity style={{ flexDirection: "row", marginHorizontal: 10 }} onPress={() => handleNavigationToChat(item)}>

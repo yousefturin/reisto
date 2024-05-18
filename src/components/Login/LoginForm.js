@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 const LoginForm = ({ navigation, theme }) => {
     const { t } = useTranslation();
+
     const LoginFormSchema = Yup.object().shape({
         email: Yup.string().email().required('An email is required'),
         password: Yup.string()
@@ -30,6 +31,7 @@ const LoginForm = ({ navigation, theme }) => {
                 value => /[@$!%*#?&-]/.test(value)
             )
     });
+    
     const onLogin = async (email, password) => {
         try {
             await firebase.auth().signInWithEmailAndPassword(email, password)

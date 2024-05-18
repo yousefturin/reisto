@@ -22,12 +22,9 @@ const FromMessagesToSharedPost = ({ route }) => {
     const userData = useContext(UserContext);
     const [usersForSharePosts, setUsersForSharePosts] = useState([]);
     const [loading, setLoading] = useState(true)
-
     const [post, setPost] = useState([]) // Initialize the post state with an empty array
-
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
-
 
     useEffect(() => {
         let unsubscribe
@@ -76,6 +73,7 @@ const FromMessagesToSharedPost = ({ route }) => {
             unsubscribe && unsubscribe();
         };
     }, []);
+
     useLayoutEffect(() => {
         fetchData();
     }, []);
@@ -140,9 +138,11 @@ const FromMessagesToSharedPost = ({ route }) => {
 
 const PostHeader = ({ theme, t }) => {
     const navigation = useNavigation();
+    
     const handlePressBack = () => {
         navigation.goBack()
     }
+
     return (
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10 }}>
             <TouchableOpacity style={{ margin: 10 }} onPress={() => { handlePressBack() }}>

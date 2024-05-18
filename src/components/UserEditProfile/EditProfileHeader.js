@@ -5,10 +5,12 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import SvgComponent from '../../utils/SvgComponents'
 
 const EditProfileHeader = ({ navigation, headerTitle, theme, opacity }) => {
+    const { moderateScale } = initializeScalingUtils(Dimensions);
+
     const handlePressBack = () => {
         navigation.goBack()
     }
-    const { moderateScale } = initializeScalingUtils(Dimensions);
+    
     return (
         <Animated.View style={{ opacity: opacity, flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10 }}>
             <TouchableOpacity style={{ margin: 10 }} onPress={() => { handlePressBack() }}>

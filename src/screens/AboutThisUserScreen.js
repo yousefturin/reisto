@@ -10,7 +10,6 @@ import initializeScalingUtils from '../utils/NormalizeSize';
 import { formatCreatedAt } from '../utils/FormatCreateAt';
 import { colorPalette } from '../Config/Theme';
 import { useTheme } from '../context/ThemeContext';
-
 import { useTranslation } from 'react-i18next';
 import UseCustomTheme from '../utils/UseCustomTheme';
 
@@ -21,9 +20,9 @@ const AboutThisUserScreen = ({ route }) => {
     const { ownerID } = route.params;
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
-
-    // const targetTime = new Date((timestampObj.seconds * 1000) + (timestampObj.nanoseconds / 1000000));
     const [userData, setUserData] = useState([])
+    const headerTitle = t("screens.home.text.aboutThisAccount.headerTitle")
+
     useEffect(() => {
         let unsubscribe
         const fetchUserData = () => {
@@ -43,7 +42,7 @@ const AboutThisUserScreen = ({ route }) => {
             unsubscribe && unsubscribe();
         };
     }, [])
-    const headerTitle = t("screens.home.text.aboutThisAccount.headerTitle")
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <SavedPostsHeader header={headerTitle} theme={theme} />

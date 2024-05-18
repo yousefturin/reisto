@@ -8,6 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const AddNewPostHeader = ({ handleSubmit, isValid, theme, t }) => {
     const navigation = useNavigation();
+    
     return (
         <>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10 }}>

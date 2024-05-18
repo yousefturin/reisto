@@ -37,6 +37,7 @@ const UserProfilePostScreen = ({ route }) => {
         setTimeout(() => { flatListRef.current?.scrollToIndex({ index: info.index, animated: false, }); }, 10);
         flatListRef.current?.scrollToOffset({ offset: offset, animated: false });
     };
+
     useEffect(() => {
         if (scrollToPostId && posts.length > 0) {
             const index = posts.findIndex(post => post.id === scrollToPostId);
@@ -107,6 +108,7 @@ const UserProfilePostScreen = ({ route }) => {
             unsubscribe && unsubscribe();
         };
     }, []);
+
     useLayoutEffect(() => {
         fetchData();
     }, []);
@@ -196,11 +198,14 @@ const UserProfilePostScreen = ({ route }) => {
         </SafeAreaView>
     )
 }
+
 const OwnerProfileHeader = ({ userData, theme, t }) => {
     const navigation = useNavigation();
+
     const handlePressBack = () => {
         navigation.goBack()
     }
+    
     return (
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10 }}>
             <TouchableOpacity style={{ margin: 10 }} onPress={() => { handlePressBack() }}>

@@ -44,11 +44,11 @@ const MessagingMainScreen = () => {
         let userDataUid = user
         navigation.navigate('MessageIndividual', { userDataUid: userDataUid })
     }
+
     const handleSearch = (query) => {
         setSearchQuery(query);
         setRightIconContainerStyle(1);
         const normalizedQuery = query.toLowerCase().replace(/[أإِ]/g, "ا");
-
         // Filter items based on the normalized search query and normalized item names
         const filtered = usersForMessaging.filter((item) => {
             const normalizedItemName = item.username.toLowerCase().replace(/[أإِ]/g, "ا");
@@ -57,9 +57,11 @@ const MessagingMainScreen = () => {
 
         setSearchedItems(filtered);
     };
+
     const handleSearchBarClick = () => {
         setSearchMode(true);
     };
+    
     const handleCancel = () => {
         setRightIconContainerStyle(0);
         Keyboard.dismiss();

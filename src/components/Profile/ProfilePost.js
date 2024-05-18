@@ -11,6 +11,7 @@ const columnCount = 3;
 
 const ProfilePost = ({ posts, userData, keyValue, userDataToBeNavigated }) => {
     const navigation = useNavigation();
+
     const handleNavigationToPost = (postId) => {
         if (keyValue === "NavigationToMyProfile") {
             navigation.navigate('UserProfilePost', {
@@ -22,6 +23,7 @@ const ProfilePost = ({ posts, userData, keyValue, userDataToBeNavigated }) => {
             });
         }
     }
+
     const renderItem = useCallback(
         ({ item }) => (
             <TouchableOpacity disabled={item.empty=== true} style={styles.listContainer} activeOpacity={0.8} onPress={() => handleNavigationToPost(item.id)}>
@@ -40,12 +42,14 @@ const ProfilePost = ({ posts, userData, keyValue, userDataToBeNavigated }) => {
         ),
         []
     )
+
     const keyExtractor = (item, index) => {
         if (item.id !== undefined && item.id !== null) {
             return item.id.toString();
         }
         return index.toString();
     };
+
     const formatData = (data, numColumns) => {
         // Create a copy of the data array to avoid mutating the original array------------------------------ this shit made me scared a data updated in child
         // will be return to parent and another child will use this data from this child! OMG react really!
@@ -61,10 +65,9 @@ const ProfilePost = ({ posts, userData, keyValue, userDataToBeNavigated }) => {
     
         return dataCopy;
     };
+
     return (
         <>
-            {/* <View style={{ justifyContent: "space-around", alignItems: "center", paddingTop: 20, paddingHorizontal: 20, flexDirection: "row", }}>
-            </View> */}
             <FlatList
                 style={{ paddingTop: 25, paddingBottom: 50 }}
                 keyboardDismissMode="on-drag"
@@ -79,7 +82,6 @@ const ProfilePost = ({ posts, userData, keyValue, userDataToBeNavigated }) => {
                 contentContainerStyle={styles.container}
             />
         </>
-
     )
 }
 

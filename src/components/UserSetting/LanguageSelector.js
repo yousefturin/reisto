@@ -8,6 +8,7 @@ import { Divider } from 'react-native-elements';
 const LanguageSelector = ({ theme, t, i18n }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);
     const [isContainerVisible, setContainerVisible] = useState(false);
+
     const toggleContainer = () => {
         setContainerVisible(!isContainerVisible);
     };
@@ -73,6 +74,7 @@ const LanguageSelector = ({ theme, t, i18n }) => {
         </View>
     )
 }
+
 const ModelLanguage = ({ isContainerVisible, setContainerVisible, moderateScale, theme, i18n, t, }) => {
     const screenHeight = Dimensions.get('window').height;
 
@@ -156,7 +158,6 @@ const ModelLanguage = ({ isContainerVisible, setContainerVisible, moderateScale,
         </Modal>
     )
 }
-
 
 const ModalNotch = ({ theme }) => (
     <>

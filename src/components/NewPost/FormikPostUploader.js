@@ -13,34 +13,9 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import AddNewPostHeader from './AddNewPost';
 import UploadImageToStorage from '../../utils/UploadImageToStorage';
 import { Image } from 'expo-image';
-
-
-
+import { uploadPostSchema } from '../../Config/Schemas';
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
-
-const uploadPostSchema = (t) => Yup.object().shape({
-    imageURL: Yup.string().required(t('screens.sharePost.schemaWarnings.image.required')),
-    caption: Yup.string().max(1200, t('screens.sharePost.schemaWarnings.caption.maxWarning')).required(t('screens.sharePost.schemaWarnings.caption.required')),
-    category: Yup.string().max(50, t('screens.sharePost.schemaWarnings.category.maxWarning')).required(t('screens.sharePost.schemaWarnings.category.required')),
-    timeOfMake: Yup.string().max(2, t('screens.sharePost.schemaWarnings.timeOfMake.maxWarning')).required(t('screens.sharePost.schemaWarnings.timeOfMake.required')),
-    captionIngredients: Yup.array()
-        .of(Yup.string().trim().max(300, t('screens.sharePost.schemaWarnings.ingredients.maxWarning')))
-        .test('at-least-one', t('screens.sharePost.schemaWarnings.ingredients.condition1'), function (value) {
-            return value && value.some(ingredient => ingredient && ingredient.trim().length > 0);
-        })
-        .min(1, t('screens.sharePost.schemaWarnings.ingredients.condition2'))
-        .max(10, t('screens.sharePost.schemaWarnings.ingredients.condition3'))
-        .required(t('screens.sharePost.schemaWarnings.ingredients.required')),
-    captionInstructions: Yup.array()
-        .of(Yup.string().trim().max(300, t('screens.sharePost.schemaWarnings.instructions.maxWarning')))
-        .test('at-least-one', t('screens.sharePost.schemaWarnings.instructions.maxWarning'), function (value) {
-            return value && value.some(instruction => instruction && instruction.trim().length > 0);
-        })
-        .min(1, t('screens.sharePost.schemaWarnings.instructions.maxWarning'))
-        .max(10, t('screens.sharePost.schemaWarnings.instructions.maxWarning'))
-        .required(t('screens.sharePost.schemaWarnings.instructions.maxWarning')),
-});
 
 
 const FormikPostUploader = ({ theme, t }) => {
@@ -86,6 +61,7 @@ const FormikPostUploader = ({ theme, t }) => {
             .then(() => navigation.goBack())
         return unsubscribe
     }
+
     // this must be fixed not every image is selected needs to be stored on the cloud this is shit<<<<<<<<<<-
     const pickImage = async (setFieldValue, setFieldTouched) => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -277,7 +253,7 @@ const FormikPostUploader = ({ theme, t }) => {
                     )}
                 </Formik>
             </>
-        </KeyboardAvoidingView >
+        </KeyboardAvoidingView>
     )
 }
 

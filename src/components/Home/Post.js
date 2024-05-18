@@ -57,12 +57,19 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
     const [savedPosts, setSavedPosts] = useState([])
     const [sharePostModal, setSharePostModal] = useState(false);
 
+    const [selectedPostToShare, setSelectedPostToShare] = useState({});
+    const [isButtonSharePressed, setIsButtonSharePressed] = useState(false);
+    const [userToBeSharedPostWith, setUserToBeSharedPostWith] = useState({});
+    const [userIndex, setUserIndex] = useState(null);
+
     const toggleCaption = () => {
         setIsExpanded(!isExpanded);
     };
+
     const toggleContainer = () => {
         setContainerVisible(!isContainerVisible);
     };
+
     // if the currentUser is included in the likes_by_users array then negate the state otherwise make it positive 
     const handleLike = post => {
         const currentLikeStatus = !post.likes_by_users.includes(
@@ -83,17 +90,20 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
                 console.error('Error updating document: ', error)
             })
     }
+
     const handleComment = (post, commentText, setCommentText) => {
         const time = {
             seconds: Math.floor(Date.now() / 1000),
             nanoseconds: (Date.now() % 1000) * 1e6
         }
+
         const commentData = {
             username: userData.username,
             comment: commentText,
             profile_picture: userData.profile_picture,
             createdAt: time,
         }
+
         db.collection('users')
             .doc(post.owner_email)
             .collection('posts')
@@ -106,6 +116,7 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
                 console.error('Error updating document: ', error)
             })
     }
+
     useEffect(() => {
         getUserSavedPosts();
     }, []);
@@ -157,10 +168,7 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
             console.error('Error updating document: ', error);
         }
     };
-    const [selectedPostToShare, setSelectedPostToShare] = useState({});
-    const [isButtonSharePressed, setIsButtonSharePressed] = useState(false);
-    const [userToBeSharedPostWith, setUserToBeSharedPostWith] = useState({});
-    const [userIndex, setUserIndex] = useState(null);
+
     const handleSharePostToggle = (post) => {
         // open modal, since the useState of setSharePostModal is considered bad code.So it is made from the Post component.
         setSharePostModal(true);
@@ -171,10 +179,12 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
 
         setSelectedPostToShare(postToShare);
     }
+
     const handleSharingPost = (user, index) => {
         setUserToBeSharedPostWith(user);
         setUserIndex(index)
     }
+
     const handleCreateChat = async () => {
         let roomId = GenerateRoomId(userData.owner_uid, userToBeSharedPostWith.owner_uid);
         try {
@@ -194,6 +204,7 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
             Alert.alert(error.message);
         }
     }
+    
     const handleShareMessage = async () => {
         // this is the function that will be used to share the post to the user
         // the post that is selected to be shared is selectedPostToShare

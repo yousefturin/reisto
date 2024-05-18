@@ -24,6 +24,7 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
     const [loading, setLoading] = useState(true)
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
+    const searchHeader = t('screens.profile.profileSavedPostsTimeLineHeader')
 
 
     const handleScrollToIndexFailed = info => {
@@ -150,7 +151,6 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
         )
     }, []);
 
-    const searchHeader = t('screens.profile.profileSavedPostsTimeLineHeader')
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <SavedPostsHeader header={searchHeader} theme={theme} />

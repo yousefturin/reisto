@@ -16,6 +16,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
     const [followersAndFollowingForPassedUser, setFollowersAndFollowingForPassedUser] = useState([])
     const [userDataAfterNavigation, setUserDataAfterNavigation] = useState(userDataToBeNavigated)
     const isUserFollowed = followersAndFollowing?.following?.includes(userDataToBeNavigated.id)
+
     // a stupid code was made before depending on the route to get all the data of the user, but now it will only be the id of the user and the rest will be fetched.
     useEffect(() => {
         const GetPostOwnerData = (userDataToBeNavigated) => {
@@ -41,6 +42,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
         // Call the function here
         GetPostOwnerData(userDataToBeNavigated);
     }, []);
+
     useEffect(() => {
         let unsubscribe;
         const getFollowersAndFollowingDataForCurrentUser = async () => {
@@ -145,6 +147,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
                 console.error('Error updating document: ', error)
             })
     }
+    
     return (
         <View style={{ flexDirection: "column", }}>
             <View style={{ flexDirection: "row", }}>

@@ -5,6 +5,11 @@ import { FlatList } from 'react-native';
 import { View } from 'moti';
 
 const LoadingPlaceHolder = ({ condition, theme }) => {
+    const screenWidth = Dimensions.get('window').width;
+    const columnCount = 3;
+    const gapSize = 1;
+    const skeletonWidth = (screenWidth - (columnCount + 1) * gapSize) / columnCount;
+    const skeletonArray = new Array(20).fill();
 
     const SkeletonCommonProps = {
         colorMode: theme.Primary === '#050505' ? 'dark' : 'light', // if the primary color is dark then the skeleton will be dark
@@ -13,14 +18,6 @@ const LoadingPlaceHolder = ({ condition, theme }) => {
             type: 'timing',
         }
     }
-
-    const screenWidth = Dimensions.get('window').width;
-    const columnCount = 3;
-    const gapSize = 1;
-
-    const skeletonWidth = (screenWidth - (columnCount + 1) * gapSize) / columnCount;
-
-    const skeletonArray = new Array(20).fill();
 
     const renderItem = ({ item }) => (
         <View
@@ -40,12 +37,14 @@ const LoadingPlaceHolder = ({ condition, theme }) => {
             />
         </View>
     );
+
     const keyExtractor = (item, index) => {
         if (item !== undefined && item !== null) {
             return item.toString();
         }
         return index.toString();
     };
+    
     return (
         <FlatList
             keyboardDismissMode="on-drag"

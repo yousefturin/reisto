@@ -6,34 +6,11 @@ import Validator from 'email-validator'
 import { firebase, db } from '../../firebase';
 import { colorPalette } from '../../Config/Theme'
 import { useTranslation } from 'react-i18next'
+import { SinginFormSchema } from '../../Config/Schemas'
 
 const SinginForm = ({ navigation, theme }) => {
     const { t } = useTranslation();
-    const SinginFormSchema = Yup.object().shape({
-        name: Yup.string()
-            .matches(/^\S*$/, 'Username cannot contain spaces')
-            .matches(/^[a-zA-Z0-9]+$/, 'Username can only contain letters and numbers')
-            .required('Username is required').min(3, 'Username must be more than 3 letters'),
-        email: Yup.string().email().required('An email is required'),
-        password: Yup.string()
-            .required('')
-            .min(8, 'Password must be at least 8 characters')
-            .test(
-                'contains-letter',
-                'Password must contain at least one letter',
-                value => /[A-Za-z]/.test(value)
-            )
-            .test(
-                'contains-number',
-                'Password must contain at least one number',
-                value => /\d/.test(value)
-            )
-            .test(
-                'contains-special-character',
-                'Password must contain at least one special character',
-                value => /[@$!%*#?&-]/.test(value)
-            ),
-    });
+
     const onSingin = async (email, password, name) => {
         try {
             const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
@@ -56,6 +33,7 @@ const SinginForm = ({ navigation, theme }) => {
             Alert.alert(msg)
         }
     };
+
     // with no return unsubscribe the collection will never be made
     const savedPostCreation = (userCredential) => {
         const unsubscribe = db.collection('users').doc(userCredential.user.email)
@@ -66,6 +44,7 @@ const SinginForm = ({ navigation, theme }) => {
 
         return unsubscribe
     }
+
     const followersAndFollowingUserCreation = (userCredential) => {
         const unsubscribe = db.collection('users').doc(userCredential.user.email)
             .collection('following_followers').add({
@@ -75,6 +54,7 @@ const SinginForm = ({ navigation, theme }) => {
             }).then(() => navigation.navigate("Home"))
         return unsubscribe
     }
+
     return (
         <Formik
             initialValues={{ name: '', email: '', password: '' }}
@@ -182,10 +162,8 @@ const SinginForm = ({ navigation, theme }) => {
                     }}>
                     <Text style={styles.formFooter(theme)}>{t('screens.signup.text.createAccount')}{' '}<Text style={{ textDecorationLine: "underline" }}>{t('screens.signup.text.login')}</Text> </Text>
                 </TouchableOpacity>
-
             </View>
         )}
-
         </Formik>
     )
 }

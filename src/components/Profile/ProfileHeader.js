@@ -9,11 +9,12 @@ import Modal from 'react-native-modal';
 
 const ProfileHeader = ({ handleLogout, userData, theme, t, opacity }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);
-    // const navigation = useNavigation();
     const [isContainerVisible, setContainerVisible] = useState(false);
+
     const toggleContainer = () => {
         setContainerVisible(!isContainerVisible);
     };
+    
     return (
         <>
             <Animated.View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10, opacity: opacity }}>

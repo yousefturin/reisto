@@ -17,6 +17,7 @@ const HeaderEditProfileIndividual = ({ headerTitle, navigation, handleSubmit, is
             setIsModalVisible(!isModalVisible);
         }
     }
+
     return (
         <>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10 }}>
@@ -33,6 +34,7 @@ const HeaderEditProfileIndividual = ({ headerTitle, navigation, handleSubmit, is
         </>
     )
 }
+
 const ModalAlert = ({ navigation, handleGoingBack, isModalVisible, theme, t }) => {
     const screenHeight = Dimensions.get('window').height;
 
@@ -71,7 +73,6 @@ const ModalAlert = ({ navigation, handleGoingBack, isModalVisible, theme, t }) =
                         <Text style={{ color: theme.Primary === "#050505" ? theme.textQuaternary : theme.textPrimary, fontWeight: "400", fontSize: 18, textAlign: "center", }}>{t('screens.profile.text.profileEdit.onCancel.keep')}</Text>
                     </TouchableOpacity>
                 </View>
-
             </View>
         </Modal>
     )

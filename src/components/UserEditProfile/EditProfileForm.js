@@ -42,6 +42,7 @@ const EditProfileForm = ({ navigation, theme, t }) => {
                 break;
         }
     };
+
     const handleNavigationPress = (id) => {
         let key;
         let value;
@@ -67,6 +68,7 @@ const EditProfileForm = ({ navigation, theme, t }) => {
         }
         navigation.navigate("UserEditProfileIndividualData", { userData, key, value, headerTitleForScreen });
     }
+    
     return (
         <View style={{}}>
             <View style={{ flexDirection: "column", backgroundColor: isNamePressed ? theme.Secondary : theme.Primary }}>

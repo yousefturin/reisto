@@ -40,8 +40,6 @@ const SearchScreen = () => {
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
 
-
-
     // Determine whether to display searchedItems based on searchQuery and clearedManually flag
     const shouldDisplaySearchedItems = searchQuery !== "" || !clearedManually;
 
@@ -68,6 +66,7 @@ const SearchScreen = () => {
             console.error('Error saving clicked user:', error);
         }
     };
+    
     const handleRemoveFromAsync = async (item) => {
         try {
             let clickedUsersList = await AsyncStorage.getItem('clickedUsers');

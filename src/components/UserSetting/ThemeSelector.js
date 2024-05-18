@@ -9,6 +9,7 @@ const ThemeSelector = ({ theme, selectedTheme, toggleTheme, t }) => {
         { label: t('screens.settingOption.theme.lightTheme'), value: 'light' },
         { label: t('screens.settingOption.theme.darkTheme'), value: 'dark' },
     ];
+
     const renderThemeItem = ({ item, index }) => (
         <>
             <TouchableOpacity
@@ -56,6 +57,7 @@ const ThemeSelector = ({ theme, selectedTheme, toggleTheme, t }) => {
             {index !== themes.length - 1 && <Divider width={0.5} orientation='horizontal' color={theme.dividerTertiary} />}
         </>
     );
+    
     return (
         <>
             <View style={{

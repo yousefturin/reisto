@@ -20,6 +20,9 @@ const UserFollowingAndFollowersListScreen = ({ route }) => {
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
 
+    const navigation = useNavigation();
+    const [paramFlag, setParamFlag] = useState(flag);
+    const [animatedValue] = useState(new Animated.Value(flag === "followers" ? 0 : 1));
 
     const handleNavigationToOtherUserProfile = (item) => {
         const userDataToBeNavigated = {
@@ -28,9 +31,6 @@ const UserFollowingAndFollowersListScreen = ({ route }) => {
         };
         navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated });
     }
-    const navigation = useNavigation();
-    const [paramFlag, setParamFlag] = useState(flag);
-    const [animatedValue] = useState(new Animated.Value(flag === "followers" ? 0 : 1));
 
     const handleDataSwitch = (param) => {
         if (param === "followers") {
@@ -164,10 +164,8 @@ const UserFollowingAndFollowersListScreen = ({ route }) => {
                             ))}
                         </>)
                 )}
-
-
             </View>
-        </SafeAreaView >
+        </SafeAreaView>
     );
 };
 

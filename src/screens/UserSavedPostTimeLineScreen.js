@@ -24,12 +24,14 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
 
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
-    
+    const profileSavedPostsTimeLineHeader = t('screens.profile.profileSavedPostsTimeLineHeader')
+
     const handleScrollToIndexFailed = info => {
         const offset = info.averageItemLength * info.index;
         setTimeout(() => { flatListRef.current?.scrollToIndex({ index: info.index, animated: false, }); }, 10);
         flatListRef.current?.scrollToOffset({ offset: offset, animated: false });
     };
+
     useEffect(() => {
         if (scrollToPostId && savedPosts.length > 0) {
             const index = savedPosts.findIndex(post => post.id === scrollToPostId);
@@ -133,6 +135,7 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
     useLayoutEffect(() => {
         fetchData();
     }, []);
+
     // if this function is not duplicated across the app, and instead placed in Post Component it will slow down the performance, since it will 
     // be called for each post, and it will be called for each post that is rendered on the screen, but using it in each parent component is better.
     const fetchData = async () => {
@@ -187,7 +190,6 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
         )
     }, []);
 
-    const profileSavedPostsTimeLineHeader = t('screens.profile.profileSavedPostsTimeLineHeader')
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <SavedPostsHeader header={profileSavedPostsTimeLineHeader} theme={theme} />

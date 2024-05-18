@@ -16,8 +16,9 @@ const screenHeight = Dimensions.get('window').height;
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
 export const ModalContentForUserWithSameId = ({ handleSavedPost, savedPosts, post, setIsModalVisible, setIsAlertModaVisible, isAlertModaVisible, theme, t }) => {
-    const [postToBeDeleted, setPostToBeDeleted] = useState([])
+    const [_, setPostToBeDeleted] = useState([])
     const isPostSaved = savedPosts?.saved_post_id?.includes(post.id) || false;
+
     const handleBeforeSavePost = (post) => {
         handleSavedPost(post)
         // show the users the changes in the ui then close it
@@ -25,10 +26,12 @@ export const ModalContentForUserWithSameId = ({ handleSavedPost, savedPosts, pos
             setIsModalVisible(false);
         }, 300);
     }
+
     const handelBeforeDeletePost = (post) => {
         setPostToBeDeleted(post)
         setIsAlertModaVisible(!isAlertModaVisible)
     }
+
     const handlePostDeleteConfirmed = () => {
         db.collection('users').doc(firebase.auth().currentUser.email)
             .collection('posts')
@@ -40,6 +43,7 @@ export const ModalContentForUserWithSameId = ({ handleSavedPost, savedPosts, pos
                 console.error("Error removing document: ", error);
             })
     }
+    
     return (
         <>
             {/* if the backgroundColor is not on the TouchableOpacity then it wont change the active opacity of that background,

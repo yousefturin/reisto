@@ -12,8 +12,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 const MessageItem = ({ message, currentUser, theme }) => {
     const navigation = useNavigation();
-
     const { moderateScale } = initializeScalingUtils(Dimensions);
+
     const handleNavigationFromSharedPostToUserProfile = (data) => {
         const currentUser = firebase.auth().currentUser;
         if (currentUser.uid === data.owner_uid) {
@@ -29,9 +29,11 @@ const MessageItem = ({ message, currentUser, theme }) => {
             navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated: userDataToBeNavigated });
         }
     }
+
     const handleNavigationFromSharedPostToPost = (postId, userID) => {
         navigation.navigate("FromMessagesToSharedPost", { postId: postId, userID: userID });
     }
+
     if (currentUser?.owner_uid == message.owner_id) {
         //this message is sent by me
         if (message?.type_of_message === "text") {
@@ -67,6 +69,7 @@ const MessageItem = ({ message, currentUser, theme }) => {
                 </View>
             )
         }
+
         if (message?.type_of_message === "image") {
             return (
                 <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 10, marginRight: 10 }}>
@@ -109,6 +112,7 @@ const MessageItem = ({ message, currentUser, theme }) => {
                 </View>
             )
         }
+
         if (message?.type_of_message === "share_post") {
             return (
                 <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 10, marginRight: 10 }}>
@@ -159,6 +163,7 @@ const MessageItem = ({ message, currentUser, theme }) => {
                 </View>
             )
         }
+
     } else {
         //this message belongs to the other user
         if (message?.type_of_message === "text") {
@@ -192,6 +197,7 @@ const MessageItem = ({ message, currentUser, theme }) => {
                 </View>
             )
         }
+
         if (message?.type_of_message === "image") {
             return (
                 <View style={{ flexDirection: "row", justifyContent: "flex-start", marginBottom: 10, marginLeft: 10 }}>
@@ -233,6 +239,7 @@ const MessageItem = ({ message, currentUser, theme }) => {
                 </View>
             )
         }
+        
         if (message?.type_of_message === "share_post") {
             return (
                 <View style={{ flexDirection: "row", justifyContent: "flex-start", marginBottom: 10, marginLeft: 10 }}>

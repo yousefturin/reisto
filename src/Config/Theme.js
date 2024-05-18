@@ -113,3 +113,24 @@ export const colorPalette = {
 
     }
 }
+
+export const DarkThemeNavigator = {
+    colors: {
+        primary: 'rgb(10, 132, 255)',
+        background: '#050505',
+        card: 'rgb(18, 18, 18)',
+        text: 'rgb(229, 229, 231)',
+        border: 'rgb(39, 39, 41)',
+        notification: 'rgb(255, 69, 58)',
+    },
+};
+export const LightThemeNavigator = {
+    colors: {
+        primary: 'rgb(10, 132, 255)',
+        background: '#fefffe',
+        card: 'rgb(18, 18, 18)',
+        text: 'rgb(229, 229, 231)',
+        border: 'rgb(39, 39, 41)',
+        notification: 'rgb(255, 69, 58)',
+    },
+};

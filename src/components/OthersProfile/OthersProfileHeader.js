@@ -6,15 +6,18 @@ import SvgComponent from '../../utils/SvgComponents';
 
 const OthersProfileHeader = ({ userDataToBeNavigated, theme }) => {
     const navigation = useNavigation();
+    const { moderateScale } = initializeScalingUtils(Dimensions);
+
     const handlePressBack = () => {
         navigation.goBack()
     }
-    const { moderateScale } = initializeScalingUtils(Dimensions);
+
     //needs more work
     const handleNavigationToMessages = () => {
         let userDataUid = userDataToBeNavigated
         navigation.navigate('MessageIndividual', { userDataUid: userDataUid })
     }
+    
     return (
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10 }}>
             <TouchableOpacity style={{ margin: 10 }} onPress={() => { handlePressBack() }}>

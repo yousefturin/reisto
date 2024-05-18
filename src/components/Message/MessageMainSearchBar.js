@@ -17,7 +17,9 @@ const MessageMainSearchBar = ({ RightIconContainerStyle,
     searchQuery,
     setSearchQuery
 }) => {
+
     const { t } = useTranslation();
+
     const handleSearch = (query) => {
         setSearchQuery(query);
         setRightIconContainerStyle(1);
@@ -28,12 +30,13 @@ const MessageMainSearchBar = ({ RightIconContainerStyle,
             const normalizedItemName = item.username.toLowerCase().replace(/[أإِ]/g, "ا");
             return normalizedItemName.includes(normalizedQuery);
         });
-
         setSearchedItems(filtered);
     };
+
     const handleSearchBarClick = () => {
         setSearchMode(true);
     };
+
     const handleCancel = () => {
         setRightIconContainerStyle(0);
         Keyboard.dismiss();
@@ -47,6 +50,7 @@ const MessageMainSearchBar = ({ RightIconContainerStyle,
         setSearchedItems([]);
         setClearedManually(true); // Set clearedManually flag to true when clearing manually
     }
+
     return (
         <SearchBar
             placeholder={t('screens.messages.searchPlaceHolder') + "..."}
@@ -76,6 +80,7 @@ const MessageMainSearchBar = ({ RightIconContainerStyle,
         />
     )
 }
+
 const SearchScreenStyles = StyleSheet.create({
     container: {
         flexGrow: 1,

@@ -21,11 +21,10 @@ const UserSavedPostScreen = () => {
 
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
-
+    const savedPostHeader = t('screens.profile.profileSavedHeader')
 
     useEffect(() => {
         const unsubscribe = fetchUserSavedPosts();
-
         // Return cleanup function to unsubscribe when component unmounts
         return () => {
             unsubscribe();
@@ -80,14 +79,13 @@ const UserSavedPostScreen = () => {
         } else {
             console.error("No authenticated user found.");
             return () => { };
-
         }
     };
 
     const handlePostPress = (postId) => {
         setScrollToPostId(postId)
     }
-    const savedPostHeader = t('screens.profile.profileSavedHeader')
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <>

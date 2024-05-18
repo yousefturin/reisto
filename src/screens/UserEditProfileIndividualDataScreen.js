@@ -11,12 +11,13 @@ import { Formik } from 'formik'
 import { db, firebase } from '../firebase';
 import { colorPalette } from '../Config/Theme';
 import { useTheme } from '../context/ThemeContext';
+import { uploadBioSchema, uploadLinkSchema, uploadNameSchema } from '../Config/Schemas';
 
 import { useTranslation } from 'react-i18next';
 import UseCustomTheme from '../utils/UseCustomTheme';
 
 const UserEditProfileIndividualDataScreen = ({ route }) => {
-    const { userData, key, value, headerTitleForScreen } = route.params
+    const { _, key, value, headerTitleForScreen } = route.params
     const { t } = useTranslation();
     const navigation = useNavigation();
     const { selectedTheme } = useTheme();
@@ -28,6 +29,7 @@ const UserEditProfileIndividualDataScreen = ({ route }) => {
         </SafeAreaView>
     )
 }
+
 const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue, theme, title, t }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);
 
@@ -56,6 +58,7 @@ const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue, them
                 return unsubscribe
         }
     }
+
     switch (headerTitle) {
         case 'Name': {
             return (
@@ -103,6 +106,7 @@ const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue, them
                 </Formik>
             )
         }
+
         case 'Bio': {
             return (
                 <Formik
@@ -143,6 +147,7 @@ const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue, them
                 </Formik>
             )
         }
+
         case 'Link': {
             return (
                 <Formik
@@ -154,7 +159,7 @@ const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue, them
                     validateOnMount={true}>
                     {({ handleChange, handleBlur, handleSubmit, values, isValid, errors, setFieldValue }) => (
                         <>
-                            <HeaderEditProfileIndividual  t={t} theme={theme} navigation={navigation} headerTitle={title} handleSubmit={handleSubmit} isValid={isValid} prevValue={prevValue} values={values.Link} />
+                            <HeaderEditProfileIndividual t={t} theme={theme} navigation={navigation} headerTitle={title} handleSubmit={handleSubmit} isValid={isValid} prevValue={prevValue} values={values.Link} />
                             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                                 <TextInput
                                     multiline={false}
@@ -187,13 +192,5 @@ const ContentEditProfileIndividual = ({ headerTitle, navigation, prevValue, them
             break;
     }
 }
-const uploadNameSchema = (t) => Yup.object().shape({
-    DisplayedName: Yup.string().required(t('screens.profile.text.profileEdit.usernameSchemaWarning.required')).min(4, t('screens.profile.text.profileEdit.usernameSchemaWarning.minWarning')).max(15, t('screens.profile.text.profileEdit.usernameSchemaWarning.maxWarning'))
-})
-const uploadBioSchema = (t) => Yup.object().shape({
-    Bio: Yup.string().min(10, t('screens.profile.text.profileEdit.bioSchemaWarning.minWarning')).max(160, t('screens.profile.text.profileEdit.bioSchemaWarning.maxWarning'))
-})
-const uploadLinkSchema = (t) => Yup.object().shape({
-    Link: Yup.string().url(t('screens.profile.text.profileEdit.linkSchemaWarning.maxWarning'))
-})
+
 export default UserEditProfileIndividualDataScreen

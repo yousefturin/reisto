@@ -24,11 +24,21 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
     const [usersForMessaging, setUsersForMessaging] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigation = useNavigation();
+
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchMode, setSearchMode] = useState(false);
+    const [searchedItems, setSearchedItems] = useState([]);
+    const [RightIconContainerStyle, setRightIconContainerStyle] = useState(1);
+    const [clearedManually, setClearedManually] = useState(true);
+    const shouldDisplaySearchedItems = searchQuery !== "" || !clearedManually;
+
+    const { selectedTheme } = useTheme();
+    const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
+    const headerTitle = t('screens.messages.headerTitle');
+
     useLayoutEffect(() => {
         fetchData();
     }, []);
-    const { selectedTheme } = useTheme();
-    const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
 
     const fetchData = async () => {
         try {
@@ -82,17 +92,12 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
     };
 
     //#region search 
-    const [searchQuery, setSearchQuery] = useState("");
-    const [searchMode, setSearchMode] = useState(false);
-    const [searchedItems, setSearchedItems] = useState([]);
-    const [RightIconContainerStyle, setRightIconContainerStyle] = useState(1);
-    const [clearedManually, setClearedManually] = useState(true);
-    const shouldDisplaySearchedItems = searchQuery !== "" || !clearedManually;
 
     const handleNavigationToMessages = (user) => {
         let userDataUid = user
         navigation.navigate('MessageIndividual', { userDataUid: userDataUid })
     }
+
     const handleSearch = (query) => {
         setSearchQuery(query);
         setRightIconContainerStyle(1);
@@ -106,9 +111,11 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
 
         setSearchedItems(filtered);
     };
+
     const handleSearchBarClick = () => {
         setSearchMode(true);
     };
+
     const handleCancel = () => {
         setRightIconContainerStyle(0);
         Keyboard.dismiss();
@@ -206,7 +213,6 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
     }
     //#endregion
 
-    const headerTitle = t('screens.messages.headerTitle');
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <View style={{ position: "absolute", top: 0, left: 0, width: "100%", backgroundColor: theme.Primary, height: 48, zIndex: 3, }}></View>

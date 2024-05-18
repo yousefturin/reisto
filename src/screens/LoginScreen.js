@@ -9,7 +9,6 @@ import { useTheme } from '../context/ThemeContext';
 
 import UseCustomTheme from '../utils/UseCustomTheme';
 
-
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
 export default function LoginScreen({ }) {

@@ -12,7 +12,6 @@ const AddPostScreen = () => {
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
 
-
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <FormikPostUploader theme={theme} t={t} />

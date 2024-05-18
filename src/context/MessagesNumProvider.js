@@ -7,10 +7,10 @@ const MessagesNumContext = createContext();
 
 // Create a context provider component
 const MessagesNumProvider = ({ children }) => {
-
     // State to hold the number of messages
     const [messagesNum, setMessagesNum] = useState([]);
     const [loading, setLoading] = useState(true);
+    
     // Declare the unsubscribe variable
     useEffect(() => {
         const messagesQuery1 = db.collection('messages')

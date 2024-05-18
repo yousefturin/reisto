@@ -5,6 +5,7 @@ import initializeScalingUtils from '../../utils/NormalizeSize';
 
 const EmptyDataParma = ({ theme, dataMessage, TitleDataMessage, SvgElement }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);
+    
     return (
         <View style={{ height: "90%", }}>
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center", }}>

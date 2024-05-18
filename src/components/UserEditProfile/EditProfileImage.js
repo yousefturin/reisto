@@ -10,6 +10,7 @@ import { Image } from 'expo-image';
 
 const EditProfileImage = ({ userData, theme, t }) => {
     const [image, setImage] = useState(null);
+    
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -40,6 +41,7 @@ const EditProfileImage = ({ userData, theme, t }) => {
             }
         }
     };
+    
     return (
         <View style={{ justifyContent: "center", alignItems: "center" }}>
             <TouchableOpacity activeOpacity={0.9} onPress={() => pickImage()}>
