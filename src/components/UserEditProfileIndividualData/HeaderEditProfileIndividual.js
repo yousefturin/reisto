@@ -5,14 +5,17 @@ import initializeScalingUtils from '../../utils/NormalizeSize';
 import { Divider } from 'react-native-elements';
 import Modal from 'react-native-modal';
 
-const HeaderEditProfileIndividual = ({ headerTitle, navigation, handleSubmit, isValid, theme, t }) => {
+const HeaderEditProfileIndividual = ({ headerTitle, navigation, handleSubmit, isValid, theme, t, prevValue, values }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     const handleGoingBack = () => {
         //not having the dismiss here will make the go back to flash teh Keyboard for couple seconds.
-        Keyboard.dismiss();
-        setIsModalVisible(!isModalVisible)
+        if (prevValue === values) navigation.goBack()
+        else {
+            Keyboard.dismiss();
+            setIsModalVisible(!isModalVisible);
+        }
     }
     return (
         <>
@@ -21,8 +24,8 @@ const HeaderEditProfileIndividual = ({ headerTitle, navigation, handleSubmit, is
                     <SvgComponent svgKey="ArrowBackSVG" width={moderateScale(30)} height={moderateScale(30)} stroke={theme.textPrimary} />
                 </TouchableOpacity>
                 <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 20, marginLeft: 15 }}>{headerTitle}</Text>
-                <TouchableOpacity style={{ margin: 10 }} onPress={handleSubmit} disabled={!isValid}>
-                    <Text style={{ color: !isValid ? theme.textQuaternary : theme.appPrimary, fontWeight: "600", fontSize: 20, }}>{t('screens.profile.text.profileEdit.onCancel.done')}</Text>
+                <TouchableOpacity style={{ margin: 10 }} onPress={handleSubmit} disabled={!isValid || prevValue === values}>
+                    <Text style={{ color: !isValid || prevValue === values ? theme.textQuaternary : theme.appPrimary, fontWeight: "600", fontSize: 20, }}>{t('screens.profile.text.profileEdit.onCancel.done')}</Text>
                 </TouchableOpacity>
             </View>
             <Divider width={0.3} orientation='horizontal' color={theme.dividerPrimary} />
