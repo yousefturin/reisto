@@ -56,7 +56,7 @@ const FromMessagesToSharedPost = ({ route }) => {
                             setPost(postWithProfilePicture);
                         } catch (error) {
                             console.error('Error fetching user document:', error)
-                            setLoading(false);
+                            setLoading(null);
                             setPost({
                                 id: snapshot.id,
                                 ...dbUserPostData
