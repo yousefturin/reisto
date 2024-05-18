@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import UseCustomTheme from '../utils/UseCustomTheme';
 import EmptyDataParma from '../components/CustomComponent/EmptyDataParma';
 import { Animated } from 'react-native';
+import SearchSuggestion from '../components/Search/SearchSuggestion';
 
 
 
@@ -240,7 +241,7 @@ const SearchScreen = () => {
             unsubscribe && unsubscribe();
         };
     }, []);
-    
+
     //#region  animated header
     const scrollY = new Animated.Value(0);
     const offsetAnimation = new Animated.Value(0);
@@ -336,6 +337,7 @@ const SearchScreen = () => {
                             backgroundColor: theme.SubPrimary
                         },
                     ]}
+                    showCancel={searchMode? true : false}
                     clearIcon={{ type: "ionicon", name: "close-circle" }}
                     onClear={handleClear}
                     cancelButtonProps={{
@@ -351,19 +353,46 @@ const SearchScreen = () => {
 
             <View>
                 {searchMode ? (
-                        <Animated.ScrollView
-                            onScroll={Animated.event(
-                                [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-                                { useNativeDriver: true }
-                            )}
-                            onMomentumScrollBegin={onMomentumScrollBegin}
-                            onMomentumScrollEnd={onMomentumScrollEnd}
-                            onScrollEndDrag={onScrollEndDrag}
-                            style={{ paddingTop: 50, paddingBottom: 150 }}>
-                            {shouldDisplaySearchedItems ? searchedItems.map((item, index) => (
-                                <TouchableOpacity style={{ flexDirection: "row" }} key={index} onPress={() => { handleNavigationToProfile(item) }}>
+                    <Animated.ScrollView
+                        onScroll={Animated.event(
+                            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                            { useNativeDriver: true }
+                        )}
+                        onMomentumScrollBegin={onMomentumScrollBegin}
+                        onMomentumScrollEnd={onMomentumScrollEnd}
+                        onScrollEndDrag={onScrollEndDrag}
+                        keyboardDismissMode="on-drag"
+                        keyboardShouldPersistTaps='handled'
+                        style={{ paddingTop: 50, paddingBottom: 50 }}>
+                        {shouldDisplaySearchedItems && searchQuery !== null && <SearchSuggestion searchQuery={searchQuery} theme={theme} />}
+                        {shouldDisplaySearchedItems ? searchedItems.map((item, index) => (
+                            <TouchableOpacity style={{ flexDirection: "row" }} key={index} onPress={() => { handleNavigationToProfile(item) }}>
+                                <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
+                                    <Image source={{ uri: item.profile_picture, cache: "force-cache", }}
+                                        style={{
+                                            width: 50,
+                                            height: 50,
+                                            borderRadius: 50,
+                                            margin: 7,
+                                            borderWidth: 1.5,
+                                            borderColor: theme.Secondary
+                                        }}
+                                        placeholder={blurHash}
+                                        contentFit="cover"
+                                        transition={50}
+                                        cachePolicy={"memory-disk"} />
+                                </View>
+
+                                <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
+                                    <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
+                                    <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        )) : (
+                            clickedUsers.map((item, index) => (
+                                <TouchableOpacity activeOpacity={0.8} style={{ flexDirection: "row" }} key={index} onPress={() => { handleNavigationToProfile(item) }}>
                                     <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
-                                        <Image source={{ uri: item.profile_picture, cache: "force-cache", }}
+                                        <Image source={{ uri: item.profile_picture, cache: "force-cache" }}
                                             style={{
                                                 width: 50,
                                                 height: 50,
@@ -378,48 +407,23 @@ const SearchScreen = () => {
                                             cachePolicy={"memory-disk"} />
                                     </View>
 
-                                    <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start", }}>
+                                    <View style={{ flexDirection: "column", width: "70%", justifyContent: "center", alignItems: "flex-start" }}>
                                         <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
                                         <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
                                     </View>
-                                </TouchableOpacity>
-
-                            )) : (
-                                clickedUsers.map((item, index) => (
-                                    <TouchableOpacity activeOpacity={0.8} style={{ flexDirection: "row" }} key={index} onPress={() => { handleNavigationToProfile(item) }}>
-                                        <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
-                                            <Image source={{ uri: item.profile_picture, cache: "force-cache" }}
-                                                style={{
-                                                    width: 50,
-                                                    height: 50,
-                                                    borderRadius: 50,
-                                                    margin: 7,
-                                                    borderWidth: 1.5,
-                                                    borderColor: theme.Secondary
-                                                }}
-                                                placeholder={blurHash}
-                                                contentFit="cover"
-                                                transition={50}
-                                                cachePolicy={"memory-disk"} />
-                                        </View>
-
-                                        <View style={{ flexDirection: "column", width: "70%", justifyContent: "center", alignItems: "flex-start" }}>
-                                            <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16 }}>{item.username}</Text>
-                                            <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{item.displayed_name}</Text>
-                                        </View>
-                                        <TouchableOpacity style={{ width: "10%", justifyContent: "center", alignItems: "center" }} onPress={() => handleRemoveFromAsync(item)}>
-                                            <SvgComponent svgKey="CloseSVG" width={moderateScale(16)} height={moderateScale(16)} stroke={theme.textSecondary} />
-                                        </TouchableOpacity>
+                                    <TouchableOpacity style={{ width: "10%", justifyContent: "center", alignItems: "center" }} onPress={() => handleRemoveFromAsync(item)}>
+                                        <SvgComponent svgKey="CloseSVG" width={moderateScale(16)} height={moderateScale(16)} stroke={theme.textSecondary} />
                                     </TouchableOpacity>
-                                ))
-                            )}
-                        </Animated.ScrollView>
+                                </TouchableOpacity>
+                            ))
+                        )}
+                    </Animated.ScrollView>
 
                 ) : (
                     <>
                         {loading === false ? (
                             <SavedPostsGrid
-                                fromWhereValue={50}
+                                fromWhereValue={60}
                                 posts={posts}
                                 userData={userData}
                                 navigateToScreen={"SearchExplore"}
