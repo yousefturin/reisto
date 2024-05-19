@@ -27,6 +27,7 @@ import UserFollowingAndFollowersListScreen from "../screens/UserFollowingAndFoll
 import MessagingNewForFollowersAndFollowingScreen from "../screens/MessagingNewForFollowersAndFollowingScreen";
 import FromMessagesToSharedPost from "../screens/FromMessagesToSharedPost";
 import { colorPalette } from "../Config/Theme";
+import AdditionalSearchScreen from "../screens/AdditionalSearchScreen";
 
 const Stack = createStackNavigator();
 
@@ -58,8 +59,35 @@ const customCardStyleInterpolator = ({ current, next, layouts }) => {
         },
     };
 };
+const customCardStyleInterpolator2 = ({ current, next, layouts }) => {
+    return {
+        cardStyle: {
+            opacity: current.progress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 1],
+            }),
+        },
+        overlayStyle: {
+            opacity: current.progress.interpolate({
+                inputRange: [0, 0.5, 0.9, 1],
+                outputRange: [0, 0.25, 0.7, 1],
+            }),
+        },
+    };
+};
+const getCardStyleInterpolator = (route) => {
+    console.log(route.name);
+    switch (route.name) {
+        case 'AdditionalSearchScreen':
+            return customCardStyleInterpolator2;
+        case 'Home':
+            return customCardStyleInterpolator;
+        default:
+            return customCardStyleInterpolator;
+    }
+};
 const headerTintColor = "white";
-const backgroundBarColor = colorPalette.dark.Primary ;
+const backgroundBarColor = colorPalette.dark.Primary;
 
 const headerStyle = {
     height: 100,
@@ -94,12 +122,12 @@ const AuthAppNavigator = () => {
         <>
             <Stack.Navigator
                 initialRouteName={"Home"}
-                screenOptions={{
+                screenOptions={({ route }) => ({
                     headerTintColor,
                     headerTitle: null,
                     headerStyle: headerStyle,
-                    cardStyleInterpolator: customCardStyleInterpolator, // Custom animation
-                }}
+                    cardStyleInterpolator: getCardStyleInterpolator(route),
+                })}
             >
                 <Stack.Screen
                     name={"Home"}
@@ -226,6 +254,18 @@ const AuthAppNavigator = () => {
                     options={{
                         headerShown: false,
                     }}
+                />
+                <Stack.Screen
+                    name={"AdditionalSearchScreen"}
+                    component={AdditionalSearchScreen}
+                    options={({ route }) => ({
+                        // cardStyleInterpolator: getCardStyleInterpolator(route), // Custom animation
+                        headerShown: false,
+                        // transitionSpec: {
+                        //     open: config,
+                        //     close: config,
+                        // },
+                    })}
                 />
             </Stack.Navigator>
             {shouldShowNavigationStack && <NavigationStack routeName={currentRouteName} userData={userData} />}
