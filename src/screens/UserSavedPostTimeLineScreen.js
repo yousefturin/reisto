@@ -119,6 +119,8 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
                     }).catch(error => {
                         console.error("Error fetching saved posts:", error);
                     });
+                }, error => {
+                    return () => { };
                 })
             } else {
                 console.error("No authenticated user found.");
