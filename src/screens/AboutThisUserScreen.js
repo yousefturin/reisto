@@ -34,6 +34,8 @@ const AboutThisUserScreen = ({ route }) => {
                     //short cut to get the date correctly formatted before assigning 
                     createdAt: formatCreatedAt(new Date((data.createdAt.seconds * 1000) + (data.createdAt.nanoseconds / 1000000)))
                 });
+            }, error => {
+                return () => { };
             });
         }
         fetchUserData();
