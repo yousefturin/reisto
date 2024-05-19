@@ -5,7 +5,7 @@ import { blurHash } from '../../../assets/HashBlurData';
 import { useNavigation } from '@react-navigation/native'
 import { GenerateRoomId } from '../../utils/GenerateChatId';
 import { collection, doc, onSnapshot, orderBy, query } from 'firebase/firestore';
-import { db } from '../../firebase';
+import { db, firebase } from '../../firebase';
 import { Skeleton } from 'moti/skeleton';
 import calculateTimeDifference from '../../utils/TimeDifferenceCalculator';
 import SvgComponent from '../../utils/SvgComponents';
@@ -30,35 +30,54 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag, theme, t }
     }
 
     useEffect(() => {
-        let roomId = GenerateRoomId(userData.owner_uid, item.owner_uid);
-        const DocRef = doc(db, 'messages', roomId);
-        const messagesRef = collection(DocRef, "private_messages");
-        const qu = query(messagesRef, orderBy('createdAt', 'desc'));
+        console.log("Subscribed to messages.");
 
-        let unsubscribe;
-        try {
-            unsubscribe = onSnapshot(qu, (snapshot) => {
-                let unseenMessages = 0;
-                let allMessages = snapshot.docs.map(doc => doc.data());
-                const latestMessage = allMessages[0] || null;
-                //this code need more observation for behavior
-                unseenMessages = allMessages.filter(message => !message.seenBy.includes(userData.owner_uid));
-                setLoading(false);
-                setMessagesNum(unseenMessages.length);
-                setLastMessage(latestMessage);
-                if (flag === "FromMain") onUpdateLastMessage(item.owner_uid, latestMessage);
-                
-            });
-        } catch (error) {
-            Alert.alert(error.message);
-            setLoading(false);
-        }
+        const subscription = fetchMassages();
 
         return () => {
-            // clearTimeout(timer);
-            unsubscribe && unsubscribe();
+            console.log("Unsubscribed from messages.");
+            // Check if subscription object contains an unsubscribe function
+            if (subscription && typeof subscription.unsubscribe === 'function') {
+                // Call the unsubscribe function to stop listening to Firestore updates
+                subscription.unsubscribe();
+            }
         };
     }, []);
+
+    const fetchMassages = async () => {
+        const user = firebase.auth().currentUser;
+        if (user) {
+            let roomId = GenerateRoomId(userData.owner_uid, item.owner_uid);
+            const DocRef = doc(db, 'messages', roomId);
+            const messagesRef = collection(DocRef, "private_messages");
+            const qu = query(messagesRef, orderBy('createdAt', 'desc'));
+
+            return onSnapshot(qu, (snapshot) => {
+                try {
+                    let unseenMessages = 0;
+                    let allMessages = snapshot.docs.map(doc => doc.data());
+                    const latestMessage = allMessages[0] || null;
+                    //this code need more observation for behavior
+                    unseenMessages = allMessages.filter(message => !message.seenBy.includes(userData.owner_uid));
+                    setLoading(false);
+                    setMessagesNum(unseenMessages.length);
+                    setLastMessage(latestMessage);
+                    if (flag === "FromMain") onUpdateLastMessage(item.owner_uid, latestMessage);
+
+                } catch (error) {
+                    console.error('Error fetching messages:', error);
+                    Alert.alert(error.message);
+                    setLoading(false);
+                }
+            }, error => {
+                return () => { };
+            });
+
+        } else {
+            console.error("No authenticated user found.");
+            return () => { }; // Return null if user is not authenticated
+        }
+    }
 
     const handleNavigationToChat = (userDataUid) => {
         navigation.navigate('MessageIndividual', { userDataUid });
@@ -68,12 +87,12 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag, theme, t }
         if (lastMessage && lastMessage.createdAt) {
             let date = lastMessage.createdAt;
             const dataFormatted = calculateTimeDifference(date, t);
-            return dataFormatted + " " +`${t('screens.messages.timeRender')}`;
+            return dataFormatted + " " + `${t('screens.messages.timeRender')}`;
         } else {
             return '';
         }
     }
-    
+
     const renderLastMessage = () => {
         // if i am who sent then show the you 
         // not need to use the ? here since the condition is already will be passed only if it exist
