@@ -10,7 +10,7 @@ const MessagesNumProvider = ({ children }) => {
     // State to hold the number of messages
     const [messagesNum, setMessagesNum] = useState([]);
     const [loading, setLoading] = useState(true);
-    
+
     // Declare the unsubscribe variable
     useEffect(() => {
         const messagesQuery1 = db.collection('messages')
@@ -55,6 +55,8 @@ const MessagesNumProvider = ({ children }) => {
             // Update the number of messages
             setMessagesNum(uniquePrivateMessages.size);
             setLoading(false);
+        }, error => {
+            return () => { };
         });
 
         // Clean up the subscription when the component unmounts
