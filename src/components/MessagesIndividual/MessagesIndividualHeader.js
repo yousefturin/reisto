@@ -30,6 +30,8 @@ const MessagesIndividualHeader = ({ header, theme }) => {
                 id: data.email
             });
             navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated: userDataUid })
+        }, error => {
+            return () => { };
         });
         return () => unsubscribe()
     }
