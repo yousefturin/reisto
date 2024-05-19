@@ -23,7 +23,10 @@ const UserProviderComponent = ({ children }) => {
                     email: data.email
                 });
             });
-            return () => unsubscribe(); // Unsubscribe on unmount
+            return () =>{
+                console.log("Unsubscribed from user data.")
+                unsubscribe();
+            }  // Unsubscribe on unmount
         }else{
             console.error("No authenticated user found.");
             return () => { };
