@@ -36,7 +36,7 @@ const SavedPostsGrid = ({
 
     const renderItem = useCallback(
         ({ item }) => (
-            <TouchableOpacity disabled={item.empty=== true}  style={styles.listContainer} activeOpacity={0.8} onPress={() => handleNavigationToPost(item.id)}>
+            <TouchableOpacity disabled={item.empty === true} style={styles.listContainer} activeOpacity={0.8} onPress={() => handleNavigationToPost(item.id)}>
                 <View style={styles.imageContainer}>
                     <Image
                         source={{ uri: item.imageURL, cache: "force-cache" }}
@@ -49,8 +49,9 @@ const SavedPostsGrid = ({
                 </View>
             </TouchableOpacity>
         ),
-        []
+        [posts]
     )
+
 
     const keyExtractor = (item, index) => {
         if (item.id !== undefined && item.id !== null) {
@@ -83,6 +84,13 @@ const SavedPostsGrid = ({
                 renderItem={renderItem}
                 keyExtractor={keyExtractor}
                 numColumns={columnCount}
+
+                // removeClippedSubviews={true}
+                // maxToRenderPerBatch={2}
+                // updateCellsBatchingPeriod={10}
+                // initialNumToRender={2}
+                // windowSize={2}
+
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -101,9 +109,9 @@ const SavedPostsGrid = ({
             />
         )
 
-    // any place else
-    }else{
-        return(
+        // any place else
+    } else {
+        return (
             <FlatList
                 style={{ paddingTop: fromWhereValue }}
                 keyboardDismissMode="on-drag"
@@ -143,6 +151,6 @@ const styles = StyleSheet.create({
         height: (screenWidth + 4 - (columnCount)) / 3,
     },
 });
-export default SavedPostsGrid          
+export default SavedPostsGrid
 
 
