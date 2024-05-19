@@ -9,7 +9,7 @@ const LoadingPlaceHolder = ({ condition, theme }) => {
     const columnCount = 3;
     const gapSize = 1;
     const skeletonWidth = (screenWidth - (columnCount + 1) * gapSize) / columnCount;
-    const skeletonArray = new Array(20).fill();
+    const skeletonArray = [1,3,23,4,24,23,54,23,5,25,2,35,23,52,52,5,2,5,23,5223424,23424,12,34]
 
     const SkeletonCommonProps = {
         colorMode: theme.Primary === '#050505' ? 'dark' : 'light', // if the primary color is dark then the skeleton will be dark
@@ -19,7 +19,7 @@ const LoadingPlaceHolder = ({ condition, theme }) => {
         }
     }
 
-    const renderItem = ({ item }) => (
+    const renderItem = () => (
         <View
             from={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
