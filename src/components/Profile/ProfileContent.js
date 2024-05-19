@@ -59,6 +59,7 @@ const ProfileContent = ({ userData, userPosts, theme, t, opacityContent }) => {
                     }));
                 }, (error) => {
                     console.error("Error listening to document:", error);
+                    return () => { };
                 });
 
             } else {
