@@ -28,8 +28,7 @@ const MessagingIndividualScreen = ({ route }) => {
     const textRef = useRef('');
     const inputRef = useRef(null);
     const scrollViewRef = useRef(null);
-    const [dummyState, setDummyState] = useState({});
-    const [image, setImage] = useState(null);
+    const [_, setDummyState] = useState({});
 
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
@@ -54,6 +53,8 @@ const MessagingIndividualScreen = ({ route }) => {
                     return messageData;
                 })
                 setMessages([...allMessages]);
+            }, error => {
+                return () => { };
             });
             const keyboardDidShowListener = Keyboard.addListener(
                 'keyboardDidShow', updateScrollView
