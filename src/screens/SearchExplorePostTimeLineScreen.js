@@ -85,6 +85,8 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
                 }).catch(error => {
                     console.error('Error fetching posts with profile pictures:', error);
                 })
+            }, error => {
+                return () => { };
             });
         };
         fetchPost();
