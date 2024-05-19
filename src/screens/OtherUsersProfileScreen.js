@@ -46,6 +46,7 @@ const OtherUsersProfileScreen = ({ route }) => {
                 })))
             }, error => {
                 console.error("Error fetching posts:", error);
+                return () => { };
             });
         }
         else {
