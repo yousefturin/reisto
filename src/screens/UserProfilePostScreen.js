@@ -95,6 +95,7 @@ const UserProfilePostScreen = ({ route }) => {
                 }, error => {
                     console.error("Error fetching posts:", error);
                     setLoading(null);
+                    return () => { };
                 });
             }
             else {
