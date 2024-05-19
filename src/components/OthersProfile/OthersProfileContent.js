@@ -34,6 +34,8 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
                     };
                     // this was the only way to do it otherwise the useStat wil not be updated when it pass the Params to navigation
                     setUserDataAfterNavigation(userDataNew);
+                }, error => {
+                    return () => { };
                 });
                 return () => unsubscribe();
             });
@@ -65,6 +67,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
                     });
                 }, (error) => {
                     console.error("Error listening to document:", error);
+                    return () => { };
                 });
 
             } else {
@@ -102,6 +105,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
                     });
                 }, (error) => {
                     console.error("Error listening to document:", error);
+                    return () => { };
                 });
             } else {
                 // No documents found
