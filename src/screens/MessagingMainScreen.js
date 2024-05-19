@@ -154,6 +154,10 @@ const MessagingMainScreen = () => {
                             console.error("Error fetching user data:", error);
                         });
                 });
+            }, error => {
+                return () => { };
+            }, error => {
+                return () => { };
             });
 
             // Return the unsubscribe function to stop listening for updates
