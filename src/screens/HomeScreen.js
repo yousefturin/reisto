@@ -35,21 +35,23 @@ const HomeScreen = () => {
     // statusBarColorTheme is move from auth to give access to the theme values and based on that the status bar color will be changed
     const statusBarColorTheme = UseCustomTheme(selectedTheme, { colorPaletteDark: "light-content", colorPaletteLight: "dark-content" })
 
-    //#region Fetching Posts
     useEffect(() => {
-        // Call fetchPost when the component mounts
-        const unsubscribe = fetchPost();
         console.log("Subscribed to posts.");
-        // Return a cleanup function to unsubscribe when the component unmounts
+        // Function to fetch user saved posts and return subscription object
+        const subscription = fetchPost();
+
+        // Return cleanup function to unsubscribe when component unmounts or when dependencies change
         return () => {
-            if (unsubscribe) {
-                unsubscribe();
-                console.log("Unsubscribed from posts.");
+            console.log("Unsubscribed from posts.");
+            // Check if subscription object contains an unsubscribe function
+            if (subscription && typeof subscription.unsubscribe === 'function') {
+                // Call the unsubscribe function to stop listening to Firestore updates
+                subscription.unsubscribe();
             }
         };
     }, []);
 
-    const fetchPost = useCallback(() => {
+    const fetchPost = useCallback(async () => {
         const user = firebase.auth().currentUser;
         // Assign the listener and store the reference
         if (user) {
@@ -78,10 +80,12 @@ const HomeScreen = () => {
                 }).catch(error => {
                     console.error('Error fetching posts with profile pictures:', error);
                 })
+            }, error => {
+                return () => { };
             });
         } else {
             console.error("No authenticated user found.");
-            return null; // Return null if user is not authenticated
+            return () => { }; // Return null if user is not authenticated
         }
     }, []);
     //#endregion
@@ -89,48 +93,62 @@ const HomeScreen = () => {
     //#region Fetching Following Posts
     useEffect(() => {
         // Call fetchPost when the component mounts
-        if (followingUsers.length !== 0) {
-            const unsubscribe = fetchContent();
+        if (followingUsers.length !== 0 && postOptionModal === true) {
+            const subscription = fetchContent();
             console.log("Subscribed to following posts.");
             // Return a cleanup function to unsubscribe when the component unmounts
             return () => {
-                if (unsubscribe) {
-                    unsubscribe();
-                    console.log("Unsubscribed from following posts.");
+                console.log("Unsubscribed from following posts.");
+                // Check if subscription object contains an unsubscribe function
+                if (subscription && typeof subscription.unsubscribe === 'function') {
+                    // Call the unsubscribe function to stop listening to Firestore updates
+                    subscription.unsubscribe();
                 }
             };
         }
-    }, [fetchContent, followingUsers]);
+    }, [postOptionModal, followingUsers]);
 
-    const fetchContent = () => {
-        const uIds = followingUsers.map(user => user.email);
-        // since the uIds is an array of emails, we need to use 'in' instead of '=='
-        return db.collectionGroup('posts').where('owner_email', 'in', uIds).orderBy('createdAt', 'desc').onSnapshot(snapshot => {
-            const postsWithProfilePictures = snapshot.docs.map(async post => {
-                const dbPostData = post.data();
-                try {
-                    const userDoc = await db.collection('users').doc(dbPostData.owner_email).get()
-                    const dbUserData = userDoc.data()
-                    const dbProfilePicture = dbUserData.profile_picture
-                    return {
-                        id: post.id,
-                        profile_picture: dbProfilePicture,
-                        ...dbPostData
+    // Return cleanup function to unsubscribe when component unmounts or when dependencies change
+
+    const fetchContent = async () => {
+        const user = firebase.auth().currentUser;
+        // Assign the listener and store the reference
+        if (user) {
+            const uIds = followingUsers.map(user => user.email);
+
+            // since the uIds is an array of emails, we need to use 'in' instead of '=='
+            return db.collectionGroup('posts').where('owner_email', 'in', uIds).orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                const postsWithProfilePictures = snapshot.docs.map(async post => {
+                    const dbPostData = post.data();
+                    try {
+                        const userDoc = await db.collection('users').doc(dbPostData.owner_email).get()
+                        const dbUserData = userDoc.data()
+                        const dbProfilePicture = dbUserData.profile_picture
+                        return {
+                            id: post.id,
+                            profile_picture: dbProfilePicture,
+                            ...dbPostData
+                        }
+                    } catch (error) {
+                        console.error('Error fetching user document:', error)
+                        return {
+                            id: post.id,
+                            ...dbPostData // Fallback to original post data if user document fetch fails
+                        }
                     }
-                } catch (error) {
-                    console.error('Error fetching user document:', error)
-                    return {
-                        id: post.id,
-                        ...dbPostData // Fallback to original post data if user document fetch fails
-                    }
-                }
+                })
+                Promise.all(postsWithProfilePictures).then(posts => {
+                    setPostFollowing(posts)
+                }).catch(error => {
+                    console.error('Error fetching posts with profile pictures:', error);
+                })
+            }, error => {
+                return () => { };
             })
-            Promise.all(postsWithProfilePictures).then(posts => {
-                setPostFollowing(posts)
-            }).catch(error => {
-                console.error('Error fetching posts with profile pictures:', error);
-            })
-        })
+        } else {
+            console.error("No authenticated user found.");
+            return () => { };
+        }
     };
     //#endregion
 
@@ -283,7 +301,7 @@ const HomeScreen = () => {
         scrollEndTimer = setTimeout(onMomentumScrollEnd, 250)
     }
     //#endregion
-    
+
     const renderItemFollowing = useCallback(
         ({ item, index }) => (
             <Post
@@ -311,7 +329,7 @@ const HomeScreen = () => {
         ),
         [theme, userData, usersForSharePosts, posts.length]
     );
-    
+
     const keyExtractor = useCallback((_, index) => index.toString(), []);
 
     return (
@@ -344,6 +362,13 @@ const HomeScreen = () => {
                 posts.length !== 0 ? (
                     <AnimatedFlatList
                         style={{ paddingTop: 50 }}
+
+                        // removeClippedSubviews={true}
+                        // maxToRenderPerBatch={2}
+                        // updateCellsBatchingPeriod={10}
+                        // initialNumToRender={2}
+                        // windowSize={2}
+
                         onScrollBeginDrag={() => postOptionModal === true && setPostOptionModal(false)}
                         keyboardDismissMode="on-drag"
                         keyboardShouldPersistTaps='handled'
