@@ -60,6 +60,8 @@ const FromMessagesToSharedPost = ({ route }) => {
                             });
                         }
                     }
+                }, error => {
+                    return () => { };
                 })
             }
             else {
@@ -138,7 +140,7 @@ const FromMessagesToSharedPost = ({ route }) => {
 
 const PostHeader = ({ theme, t }) => {
     const navigation = useNavigation();
-    
+
     const handlePressBack = () => {
         navigation.goBack()
     }
