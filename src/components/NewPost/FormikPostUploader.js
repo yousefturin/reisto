@@ -23,23 +23,35 @@ const FormikPostUploader = ({ theme, t }) => {
     const [image, setImage] = useState(null);
     const [currentLoggedInUser, setCurrentLoggedInUser] = useState(null)
 
-    const getUsernameFromFirebase = () => {
+    const getUsernameFromFirebase = async () => {
         const user = firebase.auth().currentUser
         // get the user name 
-        const unsubscribe = db.collection('users').where('owner_uid', '==', user.uid).limit(1).onSnapshot(
+        return db.collection('users').where('owner_uid', '==', user.uid).limit(1).onSnapshot(
             snapshot => snapshot.docs.map(doc => {
                 setCurrentLoggedInUser({
                     username: doc.data().username,
                     profilePicture: doc.data().profile_picture,
                 }
                 )
+            }, error => {
+                return () => { };
             })
         )
-        return unsubscribe;
     }
 
     useEffect(() => {
-        getUsernameFromFirebase()
+        console.log("Subscribed to get Username.");
+        const subscription = getUsernameFromFirebase();
+
+        // Return cleanup function to unsubscribe when component unmounts or when dependencies change
+        return () => {
+            console.log("Unsubscribed from get Username.");
+            // Check if subscription object contains an unsubscribe function
+            if (subscription && typeof subscription.unsubscribe === 'function') {
+                // Call the unsubscribe function to stop listening to Firestore updates
+                subscription.unsubscribe();
+            }
+        };
     }, [])
 
     const postPostToFirebase = (caption, imageURL, category, timeOfMake, captionIngredients, captionInstructions) => {
