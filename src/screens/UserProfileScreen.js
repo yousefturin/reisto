@@ -13,7 +13,8 @@ import UseCustomTheme from '../utils/UseCustomTheme'
 import EmptyDataParma from '../components/CustomComponent/EmptyDataParma'
 import { View } from 'moti'
 import { Animated } from 'react-native'
-import { Divider } from 'react-native-elements'
+import LoadingPlaceHolder from '../components/Search/LoadingPlaceHolder'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const UserProfileScreen = () => {
     const { t } = useTranslation();
@@ -21,7 +22,9 @@ const UserProfileScreen = () => {
     const [userPosts, setUserPost] = useState([])
     const [refreshing, setRefreshing] = useState(false);
     const [_, setScrollToPostId] = useState(null)
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(null);
+    // it is false when loading is still not done from the promise if loading be comes false then it means that the data is fetched and the user has no posts
+    const [afterLoading, setAfterLoading] = useState(false);
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
 
@@ -35,30 +38,46 @@ const UserProfileScreen = () => {
     }
 
     useEffect(() => {
+        setLoading(true);
+
         const unsubscribe = fetchUserPosts();
+        console.log("Subscribed to user posts.")
         // Return cleanup function to unsubscribe when component unmounts
         return () => {
-            unsubscribe();
+            console.log("Unsubscribed from user posts.")
+            unsubscribe;
         };
     }, []);
 
-    const fetchUserPosts = () => {
+    const fetchUserPosts = async () => {
         const user = firebase.auth().currentUser;
         if (user) {
+            const cachedData = await AsyncStorage.getItem('userPostURLs');
+            if (cachedData) {
+                setLoading(false);
+                setUserPost(JSON.parse(cachedData));
+            }
             const query = db.collection('users').doc(user.email).collection('posts').orderBy('createdAt', 'desc');
             return query.onSnapshot(snapshot => {
-                const userPostData = snapshot.docs.map(post => ({
-                    id: post.id,
-                    ...post.data()
-                }))
-                if (userPostData.length === 0) {
-                    setLoading(null);
-                } else {
+                const postsProfilePictures = snapshot.docs.map(async post => {
+                    const dbPostData = post.data();
+                    const dbImageURL = dbPostData.imageURL
+                    // why tf i was fetching the user data and map the profile image! OMG!, only images are displayed of [posts]
+                    return {
+                        id: post.id,
+                        imageURL: dbImageURL,
+                    }
+                })
+                Promise.all(postsProfilePictures).then(posts => {
                     setLoading(false);
-                    setUserPost(userPostData)
-                }
+                    if (posts.length === 0) setAfterLoading(true);
+                    setUserPost(posts)
+                    AsyncStorage.setItem('userPostURLs', JSON.stringify(posts))
+                }).catch(error => {
+                    console.error("Error fetching Promise posts:", error);
+                })
             }, error => {
-                console.error("Error fetching posts:", error);
+                return () => { };
             });
         }
         else {
@@ -66,7 +85,7 @@ const UserProfileScreen = () => {
             return () => { };
         }
     };
-    
+
     // Function to handle scroll event
     const onRefresh = useCallback(() => {
         setRefreshing(true);
@@ -77,6 +96,7 @@ const UserProfileScreen = () => {
         }
         setRefreshing(false);
     }, []);
+
     const handlePostPress = (postId) => {
         setScrollToPostId(postId)
     }
@@ -184,19 +204,17 @@ const UserProfileScreen = () => {
                     scrollEventThrottle={4}
                 >
                     <ProfileContent userData={userData} userPosts={userPosts} theme={theme} t={t} opacityContent={opacityContent} />
-                    {loading === false ? (
+                    {loading === false && (
                         <ProfilePost posts={userPosts} userData={userData} onPostPress={handlePostPress} keyValue={"NavigationToMyProfile"} t={t} />
-                    ) : loading === null ? (
-                        <View style={{ minHeight: 550 }}>
-                            <EmptyDataParma SvgElement={"AddPostIllustration"} theme={theme} t={t} dataMessage={"You can share posts to tell your friends about your recipes."} TitleDataMessage={"Nothing shared yet"} />
-                        </View>
-                    ) :
-                        null}
-                    {/* null is placed instead of loadingPlaceHolder component to overcome the lag issue  */}
+                    )}
+                    {loading === true && (
+                        <LoadingPlaceHolder theme={theme} />
+                    )}
 
-                    {/* (
-                            <LoadingPlaceHolder condition={userPosts.length === 0} theme={theme} />
-                        )} */}
+                    {afterLoading === true && loading === false && (<View style={{ minHeight: 250, }}>
+                        <EmptyDataParma SvgElement={"AddPostIllustration"} theme={theme} t={t} dataMessage={"You can share posts to tell your friends about your recipes."} TitleDataMessage={"Nothing shared yet"} />
+                    </View>)}
+
                 </Animated.ScrollView>
             </>
         </SafeAreaView>
