@@ -1,9 +1,8 @@
-import { Dimensions, FlatList, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { Dimensions, VirtualizedList, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
+import React, { useContext, useRef } from 'react'
 import Post from '../components/Home/Post'
 import SvgComponent from '../utils/SvgComponents'
 import initializeScalingUtils from '../utils/NormalizeSize';
-import { db, firebase } from '../firebase';
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from '../context/UserDataProvider';
 import LoadingPlaceHolder from '../components/Home/LoadingPlaceHolder';
@@ -12,141 +11,26 @@ import { useTheme } from '../context/ThemeContext';
 
 import { useTranslation } from 'react-i18next';
 import UseCustomTheme from '../utils/UseCustomTheme';
+import useShare from '../hooks/useShare';
+import usePosts from '../hooks/usePosts';
 
 const { moderateScale } = initializeScalingUtils(Dimensions);
-const windowHeight = Dimensions.get('window').height;
 
 const OthersProfilePostScreen = ({ route }) => {
     const { t } = useTranslation();
     const { userDataToBeNavigated, scrollToPostId } = route.params;
-    const [posts, setPost] = useState([])
+    const { posts, loading } = usePosts("OthersProfilePostScreen", null, userDataToBeNavigated.id)
     const flatListRef = useRef();
-    const [initialScrollIndex, setInitialScrollIndex] = useState(null);
     const userData = useContext(UserContext);
-    const [usersForSharePosts, setUsersForSharePosts] = useState([]);
-
+    const { usersForSharePosts } = useShare();
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
 
     const handleScrollToIndexFailed = info => {
-        const wait = new Promise(resolve => setTimeout(resolve, 500));
-        wait.then(() => {
-            flatListRef.current?.scrollToIndex({ index: info.index, animated: true });
-        });
+        const offset = info.averageItemLength * info.index;
+        setTimeout(() => { flatListRef.current?.scrollToIndex({ index: info.index, animated: false, }); }, 10);
+        flatListRef.current?.scrollToOffset({ offset: offset, animated: false });
     };
-
-    useLayoutEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
-        try {
-            const querySnapshot = await db.collection('users').doc(firebase.auth().currentUser.email).collection('following_followers').limit(1).get();
-            if (!querySnapshot.empty) {
-                const doc = querySnapshot.docs[0];
-                const data = doc.data();
-
-                const fetchPromises = [];
-                const fetchPromisesSecond = [];
-
-                for (const follower of data.followers) {
-                    const fetchPromise = db.collection('users').doc(follower).get();
-                    fetchPromises.push(fetchPromise);
-                }
-
-                for (const following of data.following) {
-                    const fetchPromise = db.collection('users').doc(following).get();
-                    fetchPromisesSecond.push(fetchPromise);
-                }
-
-                const [followerDocs, followingDocs] = await Promise.all([Promise.all(fetchPromises), Promise.all(fetchPromisesSecond)]);
-
-                const followersData = followerDocs.filter(doc => doc.exists).map(doc => doc.data());
-                const followingData = followingDocs.filter(doc => doc.exists).map(doc => doc.data());
-
-                const allUsersData = [...followersData, ...followingData];
-                const uniqueUserIds = new Set();
-                const filteredUsersData = allUsersData.filter(user => {
-                    if (uniqueUserIds.has(user.owner_uid)) {
-                        return false;
-                    } else {
-                        uniqueUserIds.add(user.owner_uid);
-                        return true;
-                    }
-                });
-
-                setUsersForSharePosts(filteredUsersData);
-            } else {
-                console.log("No document found in the collection.");
-            }
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    };
-
-    useEffect(() => {
-        // Calculate initialScrollIndex only when posts are fetched
-        if (scrollToPostId && posts.length > 0) {
-            const index = posts.findIndex(post => post.id === scrollToPostId);
-            if (index !== -1) {
-                setInitialScrollIndex(index);
-                if (flatListRef.current) {
-                    // Scroll to the initial index
-                    flatListRef.current.scrollToIndex({ animated: true, index });
-                }
-            }
-        }
-    }, [posts, scrollToPostId]);
-
-    useEffect(() => {
-        let unsubscribe
-        const fetchUserPosts = () => {
-            const user = firebase.auth().currentUser;
-            if (user) {
-                const query = db.collection('users').doc(userDataToBeNavigated.id)
-                    .collection('posts')
-                    .orderBy('createdAt', 'desc');
-
-                unsubscribe = query.onSnapshot(snapshot => {
-                    const userPostsWithProfilePicture = snapshot.docs.map(async post => {
-                        const dbUserPostData = post.data();
-                        try {
-                            const userDoc = await db.collection('users').doc(dbUserPostData.owner_email).get()
-                            const dbUserData = userDoc.data()
-                            const dbUserProfilePicture = dbUserData.profile_picture
-                            return {
-                                id: post.id,
-                                profile_picture: dbUserProfilePicture,
-                                ...dbUserPostData
-                            }
-                        } catch (error) {
-                            console.error('Error fetching user document:', error)
-                            return {
-                                id: post.id,
-                                ...dbUserPostData
-                            }
-                        }
-                    })
-                    Promise.all(userPostsWithProfilePicture).then(posts => {
-                        setPost(posts)
-                    }).catch(error => {
-                        console.error('Error fetching posts with profile pictures:', error);
-                    })
-                }, error => {
-                    console.error("Error fetching posts:", error);
-                    return () => { };
-                });
-            }
-            else {
-                console.error("No authenticated user found.");
-                return () => { };
-            }
-        };
-        fetchUserPosts();
-        return () => {
-            unsubscribe && unsubscribe();
-        };
-    }, []);
 
     const renderItem = ({ item }) => (
         <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} theme={theme} />
@@ -156,17 +40,23 @@ const OthersProfilePostScreen = ({ route }) => {
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <OwnerProfileHeader t={t} userDataToBeNavigated={userDataToBeNavigated} theme={theme} />
             {posts.length !== 0 ? (
-                <FlatList
+                <VirtualizedList
+                    onContentSizeChange={() => {
+                        if (flatListRef.current && scrollToPostId && posts && posts.length) {
+                            flatListRef.current.scrollToIndex({ index: scrollToPostId });
+                        }
+                    }}
+                    viewabilityConfig={{ viewAreaCoveragePercentThreshold: 35 }}
+
                     keyboardDismissMode="on-drag"
+                    showsVerticalScrollIndicator={false}
                     keyboardShouldPersistTaps={'always'}
                     ref={flatListRef}
                     data={posts}
                     renderItem={renderItem}
                     keyExtractor={item => item.id.toString()}
-                    initialScrollIndex={initialScrollIndex}
-                    // this is a trick to allow the user to scroll, it needs more test to see if those values will work on
-                    // different devices the same way to remove the drop fame.
-                    getItemLayout={(data, index) => ({ length: windowHeight * 0.736, offset: windowHeight * 0.736 * index, index })}
+                    getItem={(data, index) => data[index]}
+                    getItemCount={data => data.length}
                     onScrollToIndexFailed={handleScrollToIndexFailed}
                 />
             ) : (
@@ -178,7 +68,7 @@ const OthersProfilePostScreen = ({ route }) => {
 
 const OwnerProfileHeader = ({ userDataToBeNavigated, theme, t }) => {
     const navigation = useNavigation();
-    
+
     const handlePressBack = () => {
         navigation.goBack()
     }

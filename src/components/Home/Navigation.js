@@ -37,7 +37,8 @@ const NavigationStack = ({ routeName, userData }) => {
             inhered: [
                 'Home',
                 'OtherUsersProfileScreen',
-                'OthersProfilePost',],
+                'OthersProfilePost',
+                'FollowingHome'],
             activeURL: 'HomeSVG',
             inActiveURL: 'HomeSVGInActive',
         },
@@ -45,7 +46,8 @@ const NavigationStack = ({ routeName, userData }) => {
             action: 'Search',
             inhered: [
                 'Search',
-                'SearchExplorePostTimeLine',],
+                'SearchExplorePostTimeLine',
+                'AdditionalSearchScreen'],
             activeURL: 'SearchSVG',
             inActiveURL: 'SearchSVGInActive',
         },
@@ -77,7 +79,7 @@ const NavigationStack = ({ routeName, userData }) => {
     const NavigationButtons = ({ routeName }) => {
         return (
             <>
-                <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary}/>
+                <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} />
                 <View style={{ flexDirection: "row", justifyContent: "space-around", height: 80, paddingTop: 5, }}>
                     {icons.slice(0, 4).map((icon, index) => (
                         <TouchableOpacity

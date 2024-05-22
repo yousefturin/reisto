@@ -8,12 +8,14 @@ import { extractDomain } from '../../utils/ExtractDomainFromLink';
 import { WebView } from 'react-native-webview';
 import { Divider } from 'react-native-elements';
 import { db, firebase } from '../../firebase';
+import useFollowing from '../../hooks/useFollowing';
+
 
 const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const { moderateScale } = initializeScalingUtils(Dimensions);
-    const [followersAndFollowing, setFollowersAndFollowing] = useState([])
-    const [followersAndFollowingForPassedUser, setFollowersAndFollowingForPassedUser] = useState([])
+    const { followersAndFollowing, followersAndFollowingForPassedUser } = useFollowing(userDataToBeNavigated.id);
+
     const [userDataAfterNavigation, setUserDataAfterNavigation] = useState(userDataToBeNavigated)
     const isUserFollowed = followersAndFollowing?.following?.includes(userDataToBeNavigated.id)
 
@@ -45,79 +47,6 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
         GetPostOwnerData(userDataToBeNavigated);
     }, []);
 
-    useEffect(() => {
-        let unsubscribe;
-        const getFollowersAndFollowingDataForCurrentUser = async () => {
-            const querySnapshot = await db.collection('users')
-                .doc(firebase.auth().currentUser.email)
-                .collection('following_followers')
-                .limit(1) // Limit query to one document
-                .get();
-
-            if (!querySnapshot.empty) {
-                const doc = querySnapshot.docs[0];
-                const docRef = doc.ref;
-
-                unsubscribe = docRef.onSnapshot((snapshot) => {
-                    const data = snapshot.data();
-                    setFollowersAndFollowing({
-                        id: snapshot.id,
-                        followers: data.followers,
-                        following: data.following,
-                    });
-                }, (error) => {
-                    console.error("Error listening to document:", error);
-                    return () => { };
-                });
-
-            } else {
-                // No documents found
-                console.log("No document found in the collection.");
-            }
-        };
-        getFollowersAndFollowingDataForCurrentUser();
-        return () => {
-            // Unsubscribe when component unmounts
-            unsubscribe && unsubscribe();
-        };
-    }, []);
-
-
-    useEffect(() => {
-        let unsubscribe;
-        const getFollowersAndFollowingDataForPassedUser = async () => {
-            const querySnapshot = await db.collection('users')
-                .doc(userDataAfterNavigation.id)
-                .collection('following_followers')
-                .limit(1) // Limit query to one document
-                .get();
-
-            if (!querySnapshot.empty) {
-                const doc = querySnapshot.docs[0];
-                const docRef = doc.ref;
-
-                unsubscribe = docRef.onSnapshot((snapshot) => {
-                    const data = snapshot.data();
-                    setFollowersAndFollowingForPassedUser({
-                        id: snapshot.id,
-                        followers: data.followers,
-                        following: data.following,
-                    });
-                }, (error) => {
-                    console.error("Error listening to document:", error);
-                    return () => { };
-                });
-            } else {
-                // No documents found
-                console.log("No document found in the collection.");
-            }
-        };
-        getFollowersAndFollowingDataForPassedUser();
-        return () => {
-            // Unsubscribe when component unmounts
-            unsubscribe && unsubscribe();
-        };
-    }, []);
 
     // there is issue in this part of code when making the user follow another user for first time.
     const handleFollowing = () => {
@@ -151,7 +80,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
                 console.error('Error updating document: ', error)
             })
     }
-    
+
     return (
         <View style={{ flexDirection: "column", }}>
             <View style={{ flexDirection: "row", }}>

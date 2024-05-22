@@ -12,7 +12,7 @@ import {
     Animated,
     Alert,
 } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SvgComponent from "../../utils/SvgComponents";
 import initializeScalingUtils from "../../utils/NormalizeSize"
 import { Divider } from 'react-native-elements';
@@ -46,6 +46,7 @@ const Icons = [
         notActive: 'BookmarkNotActiveSVG'
     },
 ]
+
 //#region Post
 const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme }) => {
     const { t } = useTranslation();
@@ -56,7 +57,6 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
     const [commentText, setCommentText] = useState("");
     const [savedPosts, setSavedPosts] = useState([])
     const [sharePostModal, setSharePostModal] = useState(false);
-
     const [selectedPostToShare, setSelectedPostToShare] = useState({});
     const [isButtonSharePressed, setIsButtonSharePressed] = useState(false);
     const [userToBeSharedPostWith, setUserToBeSharedPostWith] = useState({});
@@ -69,6 +69,10 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
     const toggleContainer = () => {
         setContainerVisible(!isContainerVisible);
     };
+
+    useEffect(() => {
+        getUserSavedPosts();
+    }, []);
 
     // if the currentUser is included in the likes_by_users array then negate the state otherwise make it positive 
     const handleLike = post => {
@@ -116,10 +120,6 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
                 console.error('Error updating document: ', error)
             })
     }
-
-    useEffect(() => {
-        getUserSavedPosts();
-    }, []);
 
     const getUserSavedPosts = async () => {
         try {
@@ -204,7 +204,7 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
             Alert.alert(error.message);
         }
     }
-    
+
     const handleShareMessage = async () => {
         // this is the function that will be used to share the post to the user
         // the post that is selected to be shared is selectedPostToShare
@@ -223,7 +223,7 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
             const DocRef = db.collection('messages').doc(roomId)
             const messagesRef = collection(DocRef, "private_messages");
             //clear the message after it send
-            const newDoc = await addDoc(messagesRef, {
+            await addDoc(messagesRef, {
                 owner_id: userData?.owner_uid,
                 text: message,
                 type_of_message: messagePurpose,
@@ -241,7 +241,6 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
         }
     }
 
-
     return (
         <View style={{ paddingBottom: isLastPost ? 55 : 30 }}>
             <PostHeader post={post} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}
@@ -257,10 +256,10 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
                 <Likes post={post} theme={theme} t={t} />
                 <CategoryAndTime post={post} theme={theme} t={t} />
                 <Caption post={post} isExpanded={isExpanded} toggleCaption={toggleCaption} theme={theme} t={t} />
-                {!!post.comments.length ?
+                {!!post.comments.length &&
                     <TouchableOpacity onPress={toggleContainer}>
                         <CommentSection post={post} theme={theme} t={t} />
-                    </TouchableOpacity> : null
+                    </TouchableOpacity>
                 }
 
                 <Comments post={post} setContainerVisible={setContainerVisible} handleComment={handleComment}
@@ -580,7 +579,7 @@ const Caption = ({ post, isExpanded, toggleCaption, theme, t }) => (
         <View style={{ flexDirection: "row", marginTop: 5 }}>
             <Text style={{ color: theme.textPrimary }} onPress={toggleCaption}>
                 <Text style={{ fontWeight: "700" }}>{post.user} </Text>
-                {isExpanded ? post.caption : post.caption.slice(0, 100) + '... '}
+                {isExpanded ? post.caption : post.caption.slice(0, 30) + '... '}
                 <Text style={{ color: theme.textSecondary }}>
                     {isExpanded ? '' : t('screens.home.text.CaptionExpand')}
                 </Text>

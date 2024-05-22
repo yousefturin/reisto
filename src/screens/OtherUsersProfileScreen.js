@@ -1,69 +1,38 @@
-import { ScrollView, SafeAreaView } from 'react-native'
-import React, { useCallback, useEffect, useState } from 'react'
+import { ScrollView, SafeAreaView, View } from 'react-native'
+import React, { useCallback, useState } from 'react'
 import ProfilePost from '../components/Profile/ProfilePost'
 import { RefreshControl } from 'react-native-gesture-handler'
-import { db, firebase } from '../firebase'
 import OthersProfileHeader from '../components/OthersProfile/OthersProfileHeader'
 import OthersProfileContent from '../components/OthersProfile/OthersProfileContent'
 import LoadingPlaceHolder from '../components/Search/LoadingPlaceHolder'
 import { colorPalette } from '../Config/Theme'
 import { useTheme } from '../context/ThemeContext'
-
+import EmptyDataParma from '../components/CustomComponent/EmptyDataParma'
 import { useTranslation } from 'react-i18next'
 import UseCustomTheme from '../utils/UseCustomTheme'
+import useFastPosts from '../hooks/useFastPosts'
 
 const OtherUsersProfileScreen = ({ route }) => {
     const { userDataToBeNavigated } = route.params
     const { t } = useTranslation()
-    const [userPosts, setUserPost] = useState([])
     const [refreshing, setRefreshing] = useState(false);
     const [_, setScrollToPostId] = useState(null)
-
+    const { userPosts, loading, afterLoading, fetchUserSavedPosts } = useFastPosts(null, userDataToBeNavigated.id)
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
 
 
-    useEffect(() => {
-        const unsubscribe = fetchUserPosts();
-        // Return cleanup function to unsubscribe when component unmounts
-        return () => {
-            unsubscribe();
-        };
-    }, []);
-
-    const fetchUserPosts = () => {
-        const user = firebase.auth().currentUser;
-        if (user) {
-            const query = db.collection('users').doc(userDataToBeNavigated.id)
-                .collection('posts')
-                .orderBy('createdAt', 'desc');
-            // this is a multi used component so now when from search it is id and from userData it is email and when now from post explore it is owner_email
-            // this need ot be generalized to one variable.
-            return query.onSnapshot(snapshot => {
-                setUserPost(snapshot.docs.map(post => ({
-                    id: post.id,
-                    ...post.data()
-                })))
-            }, error => {
-                console.error("Error fetching posts:", error);
-                return () => { };
-            });
-        }
-        else {
-            console.error("No authenticated user found.");
-            return () => { };
-        }
-    };
-
     // Function to handle scroll event
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        try {
-            fetchUserPosts(); // Your function to fetch posts
-        } catch (error) {
-            console.error('Error refreshing posts:', error);
-        }
+        const subscription = fetchUserSavedPosts();
         setRefreshing(false);
+        return () => {
+            if (subscription && typeof subscription.unsubscribe === 'function') {
+                // Call the unsubscribe function to stop listening to Firestore updates
+                subscription.unsubscribe();
+            }
+        };
     }, []);
 
     const handlePostPress = (postId) => {
@@ -78,20 +47,24 @@ const OtherUsersProfileScreen = ({ route }) => {
                     keyboardDismissMode="on-drag"
                     keyboardShouldPersistTaps={'always'}
                     showsVerticalScrollIndicator={false}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={onRefresh}
-                        />
-                    }
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
                 >
                     <OthersProfileContent t={t} userDataToBeNavigated={userDataToBeNavigated} userPosts={userPosts} theme={theme} />
-                    {/* i don't understand how this is working it must be userPosts.id?.length === 0 then it must show the profile without rendering the Loader */}
-                    {userPosts.length !== 0 || userPosts.id?.length !== 0 ? (
+                    {loading === false && (
                         <ProfilePost t={t} posts={userPosts} userDataToBeNavigated={userDataToBeNavigated} onPostPress={handlePostPress} keyValue={"NavigationToOtherProfile"} />
-                    ) : (
+                    )}
+                    {loading === true && (
                         <LoadingPlaceHolder condition={userPosts.length === 0} theme={theme} />
                     )}
+
+                    {afterLoading === true && loading === false && (<View style={{ minHeight: 250, }}>
+                        <EmptyDataParma SvgElement={"DeletedPostIllustration"} theme={theme} t={t} dataMessage={"This user has not share any post recently."} TitleDataMessage={"Nothing shared yet"} />
+                    </View>)}
                 </ScrollView>
             </>
         </SafeAreaView>

@@ -1,5 +1,5 @@
 import { Dimensions, Keyboard, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState, useRef } from 'react'
 import { Divider, SearchBar } from "react-native-elements";
 import initializeScalingUtils from '../utils/NormalizeSize';
 import { db, firebase } from '../firebase';
@@ -7,7 +7,7 @@ import { blurHash } from '../../assets/HashBlurData';
 import { Image } from 'expo-image';
 import SavedPostsGrid from '../components/SavedPosts/SavedPostsGrid';
 import { UserContext } from '../context/UserDataProvider';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 const { moderateScale } = initializeScalingUtils(Dimensions);
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SvgComponent from '../utils/SvgComponents';
@@ -20,11 +20,16 @@ import UseCustomTheme from '../utils/UseCustomTheme';
 import EmptyDataParma from '../components/CustomComponent/EmptyDataParma';
 import { Animated } from 'react-native';
 import SearchSuggestion from '../components/Search/SearchSuggestion';
+import useFastSearchPosts from '../hooks/useFastSearchPosts';
 
 
-
+// performance are so Badge, this screen need optimization and refactoring
 const SearchScreen = () => {
     const { t } = useTranslation()
+    const route = useRoute();
+    const searchBarRef = useRef(null);
+    const { posts, loading, fetchPost } = useFastSearchPosts();
+    const shouldKeyboardOpen = route.params?.shouldKeyboardOpen ?? 'default value';
     const [searchQuery, setSearchQuery] = useState("");
     const [searchMode, setSearchMode] = useState(false);
     const [searchedItems, setSearchedItems] = useState([]);
@@ -33,10 +38,8 @@ const SearchScreen = () => {
     const [RightIconContainerStyle, setRightIconContainerStyle] = useState(1);
     const [clearedManually, setClearedManually] = useState(true); // Add a state to track if search query was cleared manually
     const userData = useContext(UserContext);
-    const [posts, setPosts] = useState([])
     const navigation = useNavigation();
     const [clickedUsers, setClickedUsers] = useState([]);
-    const [loading, setLoading] = useState(true);
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
 
@@ -49,6 +52,19 @@ const SearchScreen = () => {
         navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated });
     }
 
+    useEffect(() => {
+        if (shouldKeyboardOpen === true) {
+            setSearchMode(true);
+            setTimeout(() => {
+                if (searchBarRef.current) {
+                    searchBarRef.current.focus();
+                }
+            }, 300);
+        }
+        navigation.setParams({ shouldKeyboardOpen: false });
+    }, [route.params?.shouldKeyboardOpen]);
+
+    //#region Async Users For search
     const saveClickedUser = async (user) => {
         try {
             let clickedUsersList = await AsyncStorage.getItem('clickedUsers');
@@ -66,7 +82,7 @@ const SearchScreen = () => {
             console.error('Error saving clicked user:', error);
         }
     };
-    
+
     const handleRemoveFromAsync = async (item) => {
         try {
             let clickedUsersList = await AsyncStorage.getItem('clickedUsers');
@@ -99,6 +115,10 @@ const SearchScreen = () => {
         loadClickedUsers();
     }, []);
 
+
+    //#endregion
+
+    //#region Fetch Users
     useEffect(() => {
         fetchUsers();
     }, []);
@@ -124,7 +144,9 @@ const SearchScreen = () => {
             return () => { };
         }
     }
+    //#endregion
 
+    //#region search bar
     const handleSearch = (query) => {
         setSearchQuery(query);
         setRightIconContainerStyle(1);
@@ -156,88 +178,17 @@ const SearchScreen = () => {
     const handleSearchBarClick = () => {
         setSearchMode(true);
     };
-
-    useEffect(() => {
-        let unsubscribe;
-        // this is only for testing the UI,UX and it will be changed for random posts to be displayedF
-        const fetchPost = () => {
-            const query = db.collectionGroup('posts').orderBy('createdAt', 'desc');
-            // get the id of each post, and destructure the posts then order them based on createdAt as desc
-            unsubscribe = query.onSnapshot(snapshot => {
-                const postsWithProfilePictures = snapshot.docs.map(async post => {
-                    const dbPostData = post.data();
-                    if (dbPostData.length === 0) { setLoading(null); }
-                    try {
-                        const userDoc = await db.collection('users').doc(dbPostData.owner_email).get()
-                        const dbUserData = userDoc.data()
-                        const dbProfilePicture = dbUserData.profile_picture
-                        return {
-                            id: post.id,
-                            profile_picture: dbProfilePicture, // this is work the picture is from the current logged in user not the one that is mapped to the post!
-                            ...dbPostData
-                        }
-                    } catch (error) {
-                        console.error('Error fetching user document:', error)
-                        return {
-                            id: post.id,
-                            ...dbPostData // Fallback to original post data if user document fetch fails
-                        }
-                    }
-                })
-                Promise.all(postsWithProfilePictures).then(posts => {
-                    setLoading(false)
-                    setPosts(posts)
-                }).catch(error => {
-                    console.error('Error fetching posts with profile pictures:', error);
-                })
-            });
-        };
-        fetchPost()
-        return () => {
-            unsubscribe && unsubscribe();
-        };
-    }, []);
+    //#endregion
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        let unsubscribe;
-        // this is only for testing the UI,UX and it will be changed for random posts to be displayedF
-        const fetchPost = () => {
-            const query = db.collectionGroup('posts').orderBy('createdAt', 'desc');
-            // get the id of each post, and destructure the posts then order them based on createdAt as desc
-            unsubscribe = query.onSnapshot(snapshot => {
-                const postsWithProfilePictures = snapshot.docs.map(async post => {
-                    const dbPostData = post.data();
-                    if (dbPostData.length === 0) { setLoading(null); }
-                    try {
-                        const userDoc = await db.collection('users').doc(dbPostData.owner_email).get()
-                        const dbUserData = userDoc.data()
-                        const dbProfilePicture = dbUserData.profile_picture
-                        return {
-                            id: post.id,
-                            profile_picture: dbProfilePicture, // this is work the picture is from the current logged in user not the one that is mapped to the post!
-                            ...dbPostData
-                        }
-                    } catch (error) {
-                        console.error('Error fetching user document:', error)
-                        return {
-                            id: post.id,
-                            ...dbPostData // Fallback to original post data if user document fetch fails
-                        }
-                    }
-                })
-                Promise.all(postsWithProfilePictures).then(posts => {
-                    setLoading(false)
-                    setRefreshing(false)
-                    setPosts(posts)
-                }).catch(error => {
-                    console.error('Error fetching posts with profile pictures:', error);
-                })
-            });
-        };
-        fetchPost()
+        const subscription = fetchPost();
+        setRefreshing(false);
         return () => {
-            unsubscribe && unsubscribe();
+            if (subscription && typeof subscription.unsubscribe === 'function') {
+                // Call the unsubscribe function to stop listening to Firestore updates
+                subscription.unsubscribe();
+            }
         };
     }, []);
 
@@ -315,6 +266,7 @@ const SearchScreen = () => {
                 zIndex: 1,
             }}>
                 <SearchBar
+                    ref={searchBarRef}
                     placeholder={t('screens.messages.searchPlaceHolder') + "..."}
                     onChangeText={handleSearch}
                     onPressIn={handleSearchBarClick}
@@ -336,7 +288,7 @@ const SearchScreen = () => {
                             backgroundColor: theme.SubPrimary
                         },
                     ]}
-                    showCancel={searchMode? true : false}
+                    showCancel={searchMode ? true : false}
                     clearIcon={{ type: "ionicon", name: "close-circle" }}
                     onClear={handleClear}
                     cancelButtonProps={{
@@ -363,7 +315,9 @@ const SearchScreen = () => {
                         keyboardDismissMode="on-drag"
                         keyboardShouldPersistTaps='handled'
                         style={{ paddingTop: 50, paddingBottom: 50 }}>
-                        {shouldDisplaySearchedItems && searchQuery !== null && <SearchSuggestion searchQuery={searchQuery} theme={theme} />}
+
+                        {shouldDisplaySearchedItems && searchQuery !== null && <SearchSuggestion navigation={navigation} searchQuery={searchQuery} theme={theme} />}
+
                         {shouldDisplaySearchedItems ? searchedItems.map((item, index) => (
                             <TouchableOpacity style={{ flexDirection: "row" }} key={index} onPress={() => { handleNavigationToProfile(item) }}>
                                 <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
@@ -422,6 +376,7 @@ const SearchScreen = () => {
                     <>
                         {loading === false ? (
                             <SavedPostsGrid
+                                fromWhere={"Search"}
                                 fromWhereValue={60}
                                 posts={posts}
                                 userData={userData}
@@ -437,7 +392,7 @@ const SearchScreen = () => {
                                 <EmptyDataParma SvgElement={"BookmarkIllustration"} theme={theme} t={t} dataMessage={"You can save posts across Reisto and organize them into collections."} TitleDataMessage={"Nothing saved yet"} />
                             </View>
                         ) : (
-                            <LoadingPlaceHolder condition={loading === false} theme={theme} />
+                            null
                         )}
 
                     </>

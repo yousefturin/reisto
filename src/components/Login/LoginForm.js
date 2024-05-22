@@ -39,10 +39,12 @@ const LoginForm = ({ navigation, theme }) => {
         } catch (error) {
             let msg = error.message
             if (msg.includes('(auth/invalid-credential)')) msg = 'Invalid email or password'
+            if (msg.includes('(auth/user-not-found)')) msg = 'User not found'
+            if (msg.includes('(auth/too-many-requests)')) msg = 'Too many requests. Try again later'
+            if (msg.includes('(auth/network-request-failed)')) msg = 'Network error. Try again later'
             Alert.alert(msg)
         }
     }
-
     return (
         <Formik
             initialValues={{ email: '', password: '' }}

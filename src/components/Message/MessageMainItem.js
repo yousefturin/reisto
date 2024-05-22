@@ -1,81 +1,27 @@
-import { View, Text, TouchableOpacity, Alert, Dimensions } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
+import { View, Text, TouchableOpacity, Dimensions } from 'react-native'
+import React, { useContext, useEffect } from 'react'
 import { Image } from 'expo-image';
 import { blurHash } from '../../../assets/HashBlurData';
 import { useNavigation } from '@react-navigation/native'
-import { GenerateRoomId } from '../../utils/GenerateChatId';
-import { collection, doc, onSnapshot, orderBy, query } from 'firebase/firestore';
-import { db, firebase } from '../../firebase';
 import { Skeleton } from 'moti/skeleton';
 import calculateTimeDifference from '../../utils/TimeDifferenceCalculator';
 import SvgComponent from '../../utils/SvgComponents';
 import initializeScalingUtils from '../../utils/NormalizeSize';
 import { MessagesNumContext } from '../../context/MessagesNumProvider';
+import useLastMessage from '../../hooks/useLastMessage';
 
 
 const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag, theme, t }) => {
     const navigation = useNavigation();
     const { setMessagesNum } = useContext(MessagesNumContext);
-    const [lastMessage, setLastMessage] = useState(null);
-    const [loading, setLoading] = useState(true);
     const { moderateScale } = initializeScalingUtils(Dimensions);
-
+    const { loading, lastMessage } = useLastMessage(userData, item, onUpdateLastMessage, flag, setMessagesNum);
     const SkeletonCommonProps = {
         colorMode: theme.Primary === '#050505' ? 'dark' : 'light',
         backgroundColor: theme.Secondary,
         transition: {
             type: 'timing',
             duration: 2000,
-        }
-    }
-
-    useEffect(() => {
-        console.log("Subscribed to messages.");
-
-        const subscription = fetchMassages();
-
-        return () => {
-            console.log("Unsubscribed from messages.");
-            // Check if subscription object contains an unsubscribe function
-            if (subscription && typeof subscription.unsubscribe === 'function') {
-                // Call the unsubscribe function to stop listening to Firestore updates
-                subscription.unsubscribe();
-            }
-        };
-    }, []);
-
-    const fetchMassages = async () => {
-        const user = firebase.auth().currentUser;
-        if (user) {
-            let roomId = GenerateRoomId(userData.owner_uid, item.owner_uid);
-            const DocRef = doc(db, 'messages', roomId);
-            const messagesRef = collection(DocRef, "private_messages");
-            const qu = query(messagesRef, orderBy('createdAt', 'desc'));
-
-            return onSnapshot(qu, (snapshot) => {
-                try {
-                    let unseenMessages = 0;
-                    let allMessages = snapshot.docs.map(doc => doc.data());
-                    const latestMessage = allMessages[0] || null;
-                    //this code need more observation for behavior
-                    unseenMessages = allMessages.filter(message => !message.seenBy.includes(userData.owner_uid));
-                    setLoading(false);
-                    setMessagesNum(unseenMessages.length);
-                    setLastMessage(latestMessage);
-                    if (flag === "FromMain") onUpdateLastMessage(item.owner_uid, latestMessage);
-
-                } catch (error) {
-                    console.error('Error fetching messages:', error);
-                    Alert.alert(error.message);
-                    setLoading(false);
-                }
-            }, error => {
-                return () => { };
-            });
-
-        } else {
-            console.error("No authenticated user found.");
-            return () => { }; // Return null if user is not authenticated
         }
     }
 

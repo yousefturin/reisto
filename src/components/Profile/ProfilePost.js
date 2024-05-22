@@ -13,13 +13,20 @@ const ProfilePost = ({ posts, userData, keyValue, userDataToBeNavigated }) => {
     const navigation = useNavigation();
 
     const handleNavigationToPost = (postId) => {
+        let scrollToIndex 
+        if (posts.length > 0) {
+            const index = posts.findIndex(post => post.id === postId);
+            if (index !== -1) {
+                scrollToIndex = index;
+            }
+        }
         if (keyValue === "NavigationToMyProfile") {
             navigation.navigate('UserProfilePost', {
-                userData, scrollToPostId: postId,
+                userData, scrollToPostId: scrollToIndex,
             });
         } else if (keyValue === "NavigationToOtherProfile") {
             navigation.navigate('OthersProfilePost', {
-                userDataToBeNavigated, scrollToPostId: postId,
+                userDataToBeNavigated, scrollToPostId: scrollToIndex,
             });
         }
     }

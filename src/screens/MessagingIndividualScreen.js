@@ -77,7 +77,6 @@ const MessagingIndividualScreen = ({ route }) => {
             scrollViewRef?.current?.scrollToEnd({ animated: true })
         }, 100)
     }
-    
     // Function to update the seen status of a message
     const updateMessageSeenStatus = async (roomId, messageId) => {
         try {
@@ -134,7 +133,7 @@ const MessagingIndividualScreen = ({ route }) => {
             //clear the message after it send
             textRef.current = "";
             if (inputRef) inputRef?.current?.clear()
-            const newDoc = await addDoc(messagesRef, {
+            await addDoc(messagesRef, {
                 owner_id: userData?.owner_uid,
                 text: message,
                 type_of_message: messagePurpose,
@@ -153,11 +152,6 @@ const MessagingIndividualScreen = ({ route }) => {
     const handleChangeText = (value) => {
         textRef.current = value;
         forceUpdate();
-    };
-
-    const forceUpdate = () => {
-        // Update the dummy state to trigger a re-render
-        setDummyState({});
     };
 
     const handleSelectImage = async () => {
@@ -194,6 +188,11 @@ const MessagingIndividualScreen = ({ route }) => {
                 handleSendMessage("image", base64Image);
             }
         }
+    };
+
+    const forceUpdate = () => {
+        // Update the dummy state to trigger a re-render
+        setDummyState({});
     };
 
     return (
