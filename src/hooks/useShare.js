@@ -5,9 +5,10 @@ const useShare = (fromWhere = null, ParamCondition = null) => {
     const [usersForSharePosts, setUsersForSharePosts] = useState([]);
     const [followingUsers, setFollowingUsers] = useState([]);
     const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         fetchData();
-    }, [fromWhere]);
+    }, [fromWhere, usersForSharePosts]);
 
     const fetchData = useCallback(async () => {
         try {

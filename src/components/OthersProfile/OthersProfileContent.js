@@ -32,7 +32,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
                         bio: data.bio,
                         link: data.link,
                         id: data.email,
-                        owner_uid: userDataToBeNavigated.owner_uid
+                        owner_uid: data.owner_uid
                     };
                     // this was the only way to do it otherwise the useStat wil not be updated when it pass the Params to navigation
                     setUserDataAfterNavigation(userDataNew);

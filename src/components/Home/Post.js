@@ -402,7 +402,7 @@ const PostHeader = ({ post, isModalVisible, setIsModalVisible, userData, theme }
                     bio: data.bio,
                     link: data.link,
                     id: data.email,
-                    owner_uid: post.owner_uid
+                    owner_uid: data.owner_uid
                 };
                 // this was the only way to do it otherwise the useStat wil not be updated when it pass the Params to navigation
                 navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated });
