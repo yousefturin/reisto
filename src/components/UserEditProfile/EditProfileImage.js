@@ -6,11 +6,12 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { db, firebase } from '../../firebase';
 import { Image } from 'expo-image';
-
+import DeleteImageFromStorage from '../../utils/DeleteImageFromStorage';
+const DEFAULT_IMAGE = "https://firebasestorage.googleapis.com/v0/b/reisto-dev.appspot.com/o/ProfileImages%2FimagePlcaeHolder%20(Custom).png?alt=media&token=5b62cde4-d4cc-423c-8bc5-950efe565574"
 
 const EditProfileImage = ({ userData, theme, t }) => {
     const [image, setImage] = useState(null);
-    
+
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -26,7 +27,8 @@ const EditProfileImage = ({ userData, theme, t }) => {
                 [{ resize: { width: 300 } }],
                 { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
             );
-            const base64Image = await UploadImageToStorage(compressedImage.uri);
+            const base64Image = await UploadImageToStorage(compressedImage.uri, "/ProfileImages/");
+            if(userData.profile_picture !== DEFAULT_IMAGE )  await DeleteImageFromStorage(userData.profile_picture);
             if (base64Image) {
                 const unsubscribe = db.collection('users').doc(firebase.auth().currentUser.email)
                     .update({
@@ -41,7 +43,7 @@ const EditProfileImage = ({ userData, theme, t }) => {
             }
         }
     };
-    
+
     return (
         <View style={{ justifyContent: "center", alignItems: "center" }}>
             <TouchableOpacity activeOpacity={0.9} onPress={() => pickImage()}>
