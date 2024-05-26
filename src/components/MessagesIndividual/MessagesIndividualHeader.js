@@ -29,13 +29,14 @@ const MessagesIndividualHeader = ({ header, theme }) => {
                 owner_uid: data.owner_uid,
                 id: data.email
             });
-            navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated: userDataUid })
+            navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated: userDataUid ,justSeenPost: null})
         }, error => {
+            console.error("Error listening to document:", error);
             return () => { };
         });
         return () => unsubscribe()
     }
-    
+
     return (
         <>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10, }}>
