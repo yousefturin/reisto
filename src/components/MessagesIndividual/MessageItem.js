@@ -35,7 +35,7 @@ const MessageItem = ({ message, currentUser, theme }) => {
     }
 
 
-    
+
     if (currentUser?.owner_uid == message.owner_id) {
         //this message is sent by me
         if (message?.type_of_message === "text") {
@@ -139,7 +139,6 @@ const MessageItem = ({ message, currentUser, theme }) => {
                                 />
                                 <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16, }}>{message?.shared_data?.user}</Text>
                             </TouchableOpacity>
-
                             <View style={{ height: 260, width: 260, overflow: 'hidden' }}>
                                 <Image
                                     source={{ uri: message?.shared_data?.imageURL, cache: "force-cache" }}
@@ -153,15 +152,15 @@ const MessageItem = ({ message, currentUser, theme }) => {
                                     transition={50}
                                 />
                             </View>
-                            <View style={{ backgroundColor: theme.SubPrimary, borderBottomRightRadius: 20, borderBottomLeftRadius: 20, flexDirection: "row", maxWidth: 260, marginBottom: 10 }}>
-                                <Text style={{ color: theme.textPrimary, margin: 10 }} numberOfLines={2} ellipsizeMode="tail">
-                                    <Text style={{ fontWeight: "700" }}>{message?.shared_data?.user} </Text>
-                                    <Text style={{ color: theme.textSecondary }} >
-                                        {message?.shared_data?.caption}
-                                    </Text>
-                                </Text>
-                            </View>
                         </TouchableOpacity>
+                        <View style={{ backgroundColor: theme.SubPrimary, borderBottomRightRadius: 20, borderBottomLeftRadius: 20, flexDirection: "row", maxWidth: 260, marginBottom: 10,width:"100%" }}>
+                            <Text style={{ color: theme.textPrimary, margin: 10 }} numberOfLines={2} ellipsizeMode="tail">
+                                <Text style={{ fontWeight: "700" }}>{message?.shared_data?.user} </Text>
+                                <Text style={{ color: theme.textSecondary }} >
+                                    {message?.shared_data?.caption}
+                                </Text>
+                            </Text>
+                        </View>
                     </View>
                 </View>
             )
@@ -280,15 +279,15 @@ const MessageItem = ({ message, currentUser, theme }) => {
                                     transition={50}
                                 />
                             </View>
-                            <View style={{ backgroundColor: theme.SubPrimary, borderBottomRightRadius: 20, borderBottomLeftRadius: 20, flexDirection: "row", maxWidth: 260, marginBottom: 10 }}>
-                                <Text style={{ color: theme.textPrimary, margin: 10 }} numberOfLines={2} ellipsizeMode="tail">
-                                    <Text style={{ fontWeight: "700" }}>{message?.shared_data?.user} </Text>
-                                    <Text style={{ color: theme.textSecondary }} >
-                                        {message?.shared_data?.caption}
-                                    </Text>
-                                </Text>
-                            </View>
                         </TouchableOpacity>
+                        <View style={{ backgroundColor: theme.SubPrimary, borderBottomRightRadius: 20, borderBottomLeftRadius: 20, flexDirection: "row", maxWidth: 260, marginBottom: 10,width:"100%" }}>
+                            <Text style={{ color: theme.textPrimary, margin: 10 }} numberOfLines={2} ellipsizeMode="tail">
+                                <Text style={{ fontWeight: "700" }}>{message?.shared_data?.user} </Text>
+                                <Text style={{ color: theme.textSecondary }} >
+                                    {message?.shared_data?.caption}
+                                </Text>
+                            </Text>
+                        </View>
                     </View>
                 </View>
             )
