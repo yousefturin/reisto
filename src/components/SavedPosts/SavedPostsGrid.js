@@ -33,6 +33,7 @@ const SavedPostsGrid = ({
                 scrollToIndex = index;
             }
         }
+        // console.log("scrollToIndex", scrollToIndex)
         
         if (navigateToScreen === "SavedPosts") {
             navigation.navigate('UserSavedPostTimeLine', {
