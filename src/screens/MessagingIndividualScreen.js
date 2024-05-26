@@ -54,6 +54,7 @@ const MessagingIndividualScreen = ({ route }) => {
                 })
                 setMessages([...allMessages]);
             }, error => {
+                console.error("Error listening to document:", error);
                 return () => { };
             });
             const keyboardDidShowListener = Keyboard.addListener(
@@ -183,7 +184,7 @@ const MessagingIndividualScreen = ({ route }) => {
                 [{ resize: { width: width } }],
                 { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
             );
-            const base64Image = await UploadImageToStorage(compressedImage.uri);
+            const base64Image = await UploadImageToStorage(compressedImage.uri, "/MessageImages/");
             if (base64Image) {
                 handleSendMessage("image", base64Image);
             }
