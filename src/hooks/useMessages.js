@@ -8,17 +8,22 @@ const useMessages = (Param) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-
-        const subscription = fetchData();
-
+        let unsubscribe;
+        const user = firebase.auth().currentUser.email
+        if (!user) {
+            console.error("No authenticated user found.");
+            return () => { }; // Return null if user is not authenticated
+        } else {
+            unsubscribe = fetchData();
+        }
         // Return cleanup function to unsubscribe when component unmounts
         return () => {
-            if (subscription && typeof subscription.unsubscribe === 'function') {
+            if (unsubscribe ) {
                 // Call the unsubscribe function to stop listening to Firestore updates
-                subscription.unsubscribe();
+                unsubscribe.unsubscribe;
             }
         };
-    }, [Param])
+    }, [fetchData])
 
     const fetchData = useCallback(async () => {
         try {
@@ -88,15 +93,17 @@ const useMessages = (Param) => {
                         });
                 });
             }, error => {
+                console.error("Error listening to document:", error);
                 return () => { };
             }, error => {
+                console.error("Error listening to document:", error);
                 return () => { };
             });
         } catch (error) {
-            console.error("Error fetching data:", error);
+            console.error("Error fetching data from Messages:", error);
             return () => { };
         }
-    }, []);
+    }, [Param]);
 
     return { usersForMessaging, excludedUsers, loading }
 }
