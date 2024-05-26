@@ -26,7 +26,7 @@ const MessageItem = ({ message, currentUser, theme }) => {
                 id: data.owner_email, // Replace email with id
                 username: data.user
             };
-            navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated: userDataToBeNavigated });
+            navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated: userDataToBeNavigated, justSeenPost: null });
         }
     }
 
@@ -34,6 +34,8 @@ const MessageItem = ({ message, currentUser, theme }) => {
         navigation.navigate("FromMessagesToSharedPost", { postId: postId, userID: userID });
     }
 
+
+    
     if (currentUser?.owner_uid == message.owner_id) {
         //this message is sent by me
         if (message?.type_of_message === "text") {
@@ -69,7 +71,7 @@ const MessageItem = ({ message, currentUser, theme }) => {
                 </View>
             )
         }
-
+        // need to add a text message incase the image was deleted by the user=> (soon will be implemented) or an issue happened with server.
         if (message?.type_of_message === "image") {
             return (
                 <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 10, marginRight: 10 }}>
@@ -87,6 +89,7 @@ const MessageItem = ({ message, currentUser, theme }) => {
                                 placeholder={blurHash}
                                 cachePolicy={"memory-disk"}
                                 transition={50}
+                            // onError={(error) => console.log("error", error)}
                             />
                             <View style={{ position: "absolute", bottom: 7, right: 0, zIndex: 100 }}>
                                 {message?.seenBy.length === 2 ? (
@@ -137,14 +140,14 @@ const MessageItem = ({ message, currentUser, theme }) => {
                                 <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16, }}>{message?.shared_data?.user}</Text>
                             </TouchableOpacity>
 
-                            <View style={{ height: 259, overflow: 'hidden' }}>
+                            <View style={{ height: 260, width: 260, overflow: 'hidden' }}>
                                 <Image
                                     source={{ uri: message?.shared_data?.imageURL, cache: "force-cache" }}
                                     style={{
-                                        width: 260,
-                                        height: 260,
+                                        height: "100%",
+                                        overflow: "hidden",
                                     }}
-                                    contentFit="contain"
+                                    contentFit="cover"
                                     placeholder={blurHash}
                                     cachePolicy={"memory-disk"}
                                     transition={50}
@@ -239,7 +242,7 @@ const MessageItem = ({ message, currentUser, theme }) => {
                 </View>
             )
         }
-        
+
         if (message?.type_of_message === "share_post") {
             return (
                 <View style={{ flexDirection: "row", justifyContent: "flex-start", marginBottom: 10, marginLeft: 10 }}>
@@ -264,14 +267,14 @@ const MessageItem = ({ message, currentUser, theme }) => {
                                 <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16, }}>{message?.shared_data?.user}</Text>
                             </TouchableOpacity>
 
-                            <View style={{ height: 259, overflow: 'hidden' }}>
+                            <View style={{ height: 260, width: 260, overflow: 'hidden' }}>
                                 <Image
                                     source={{ uri: message?.shared_data?.imageURL, cache: "force-cache" }}
                                     style={{
-                                        width: 260,
-                                        height: 260,
+                                        height: "100%",
+                                        overflow: "hidden",
                                     }}
-                                    contentFit="contain"
+                                    contentFit="cover"
                                     placeholder={blurHash}
                                     cachePolicy={"memory-disk"}
                                     transition={50}
