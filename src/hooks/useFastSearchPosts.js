@@ -1,4 +1,4 @@
-import { db } from "../firebase";
+import { db, firebase } from "../firebase";
 import { useCallback, useEffect, useState } from 'react';
 
 const useFastSearchPosts = () => {
@@ -7,15 +7,22 @@ const useFastSearchPosts = () => {
 
 
     useEffect(() => {
+        let unsubscribe
+        const user = firebase.auth().currentUser.email
 
-        const subscription = fetchPost();
+        if (!user) {
+            console.error("No authenticated user found.");
+            return () => { }; // Return null if user is not authenticated
+        } else {
+            unsubscribe = fetchPost();
+        }
 
         // Return cleanup function to unsubscribe when component unmounts
         return () => {
-            if (subscription && typeof subscription.unsubscribe === 'function') {
+            if (unsubscribe) {
                 // Call the unsubscribe function to stop listening to Firestore updates
-                subscription.unsubscribe();
-            }
+                unsubscribe.unsubscribe;
+            } 
         };
     }, [])
 
@@ -34,12 +41,19 @@ const useFastSearchPosts = () => {
                 }
             })
             Promise.all(postsWithProfilePictures).then(posts => {
-                setLoading(false)
-                setPosts(posts)
+                if(postsWithProfilePictures.length === 0) {
+                    setLoading(null)
+                }else{
+                    setLoading(false)
+                    setPosts(posts)
+                }
             }).catch(error => {
                 console.error("Error fetching Promise posts:", error);
+                setLoading(null)
             })
         }, error => {
+            console.error("Error listening to document:", error);
+            setLoading(null)
             return () => { };
         });
     }, []);
