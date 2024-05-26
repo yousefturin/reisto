@@ -12,7 +12,7 @@ const AddPostScreen = () => {
     const { t } = useTranslation();
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
-    const { userData } = useContext(UserContext);
+    const userData = useContext(UserContext);
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
