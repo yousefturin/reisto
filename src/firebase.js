@@ -30,5 +30,9 @@ const firebaseConfig = {
 initializeAuth(firebase.initializeApp(firebaseConfig), {
     persistence: getReactNativePersistence(AsyncStorage),
 });
+firebase.firestore().settings({
+    cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,// or specify your preferred cache size
+    merge: true
+});
 const db = firebase.firestore()
 export { firebase, db } 
