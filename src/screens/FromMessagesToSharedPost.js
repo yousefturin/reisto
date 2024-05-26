@@ -19,7 +19,7 @@ const FromMessagesToSharedPost = ({ route }) => {
     const { postId, userID } = route.params; // Get the postId from the route params
     const userData = useContext(UserContext);
     const { usersForSharePosts } = useShare();
-    const { post, loading } = usePostFromMessages( userID, postId);
+    const { post, loading } = usePostFromMessages(userID, postId);
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
 
@@ -31,7 +31,9 @@ const FromMessagesToSharedPost = ({ route }) => {
             ) : loading === null ? (
                 <EmptyDataParma SvgElement={"DeletedPostIllustration"} theme={theme} t={t} TitleDataMessage={"Post No Longer Available"} dataMessage={"It seems that this post has been removed by the owner."} />
             ) :
-                (<LoadingPlaceHolder fromWhere={"sharedPost"} theme={theme} />)}
+                /* (<LoadingPlaceHolder fromWhere={"sharedPost"} theme={theme} />)<------------(removed due to moti internal error) */
+                null
+            }
         </SafeAreaView>
     )
 }
