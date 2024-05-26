@@ -6,10 +6,8 @@ const usePostFromMessages = (searchQuery = null, QueryParam = null) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-
         const subscription = fetchThePost();
         return () => {
-            console.log("Unsubscribed from the post posts.");
             if (subscription && typeof subscription.unsubscribe === 'function') {
                 subscription.unsubscribe();
             }
