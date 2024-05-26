@@ -16,9 +16,11 @@ const LoadingPlaceHolder = ({ fromWhere, theme, isPaddingNeeded }) => {
     const SkeletonCommonProps = {
         colorMode: theme.Primary === '#050505' ? 'dark' : 'light', // if the primary color is dark then the skeleton will be dark
         backgroundColor: theme.Secondary,
-        transition: {
-            type: 'timing',
-            duration: 2000,
+        transition:{
+            opacity: {
+                type: "timing",
+                duration: 1000,
+            }
         }
     }
     return (
