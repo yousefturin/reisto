@@ -23,10 +23,11 @@ import { blurHash } from '../../../assets/HashBlurData';
 import { Image } from 'expo-image';
 import { useNavigation } from '@react-navigation/native';
 import ReactNativeModal from 'react-native-modal';
-import { ModalContentForUserWithDifferentSameId, ModalContentForUserWithSameId, ModalHeader } from './Modals';
+import { ModalContentForUserWithDifferentSameId, ModalContentForUserWithSameId, ModalHeader, ModalReport } from './Modals';
 import { GenerateRoomId } from '../../utils/GenerateChatId';
 import { addDoc, collection } from 'firebase/firestore';
 import { useTranslation } from 'react-i18next';
+
 
 const screenHeight = Dimensions.get('window').height;
 const { moderateScale } = initializeScalingUtils(Dimensions);
@@ -54,6 +55,7 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
     const [isContainerVisible, setContainerVisible] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isAlertModaVisible, setIsAlertModaVisible] = useState(false);
+    const [isModalReportVisible, setIsModalReportVisible] = useState(false);
     const [commentText, setCommentText] = useState("");
     const [savedPosts, setSavedPosts] = useState([])
     const [sharePostModal, setSharePostModal] = useState(false);
@@ -240,6 +242,13 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
             console.log("Message Sent")
         }
     }
+    // will be implemented<------------------(under construction)
+    const handleReport = (post) => {
+        // time is needed to remove collision between main modal and the report modal
+        setTimeout(() => {
+            setIsModalReportVisible(true);
+        }, 500);
+    }
 
     return (
         <View style={{ paddingBottom: isLastPost ? 55 : 30 }}>
@@ -294,11 +303,12 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
                                 isAlertModaVisible={isAlertModaVisible} setIsAlertModaVisible={setIsAlertModaVisible} t={t} />
                         ) : (
                             <ModalContentForUserWithDifferentSameId handleSavedPost={handleSavedPost} savedPosts={savedPosts}
-                                post={post} setIsModalVisible={setIsModalVisible} theme={theme} t={t} />
+                                post={post} setIsModalVisible={setIsModalVisible} theme={theme} t={t} handleReport={handleReport} setIsModalReportVisible={setIsModalReportVisible} />
                         )
                         }
                     </View>
                 </ReactNativeModal>
+
                 <ReactNativeModal
                     isVisible={sharePostModal}
                     onSwipeComplete={() => setSharePostModal(false)}
@@ -369,6 +379,11 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
                         </View>
                     </View>
                 </ReactNativeModal>
+
+                <ModalReport isModalReportVisible={isModalReportVisible}
+                    setIsModalReportVisible={setIsModalReportVisible}
+                    theme={theme}
+                />
             </View>
         </View>
     )
@@ -405,7 +420,10 @@ const PostHeader = ({ post, isModalVisible, setIsModalVisible, userData, theme }
                     owner_uid: data.owner_uid
                 };
                 // this was the only way to do it otherwise the useStat wil not be updated when it pass the Params to navigation
-                navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated });
+                navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated, justSeenPost: post.id });
+            }, error => {
+                console.error("Error listening to document:", error);
+                return () => { };
             });
             return () => unsubscribe();
         });
@@ -490,11 +508,12 @@ const PostImage = ({ post, handleLike, theme }) => {
             <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} />
             <Image
                 source={{ uri: post.imageURL, cache: 'force-cache' }}
-                style={{ height: '100%' }}
+                style={{ height: '100%', }}
                 placeholder={blurHash}
                 contentFit="cover"
                 cachePolicy={'memory-disk'}
-                transition={50}
+                // transition={50}
+                recyclingKey={post.imageURL}
             />
             <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} />
             {showHeart && (
@@ -520,7 +539,7 @@ const PostFooter = ({ toggleContainer, handleLike, post, handleSavedPost, savedP
     const isPostSaved = savedPosts?.saved_post_id?.includes(post.id) || false;
     const isPostLiked = post?.likes_by_users?.includes(firebase.auth().currentUser.email)
     return (
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row", }}>
             <View style={styles.leftFooterIconsContainer}>
                 <TouchableOpacity onPress={() => handleLike(post)}>
                     <Icon svgKey={isPostLiked ? Icons[0].active : Icons[0].notActive} theme={theme} />
@@ -559,7 +578,7 @@ const Likes = ({ post, theme, t }) => (
 
 //#region Category and Time Display
 const CategoryAndTime = ({ post, theme, t }) => (
-    <View style={{ flexDirection: "row", marginTop: 5, gap: 10 }}>
+    <View style={{ flexDirection: "row", marginTop: 5, gap: 10, }}>
         <LinearGradient
             colors={[theme.appGradientPrimary, theme.appGradientSecondary, theme.appGradientTertiary]}
             style={{ minWidth: "20%", maxWidth: "30%", padding: 5, borderRadius: 50, justifyContent: "center", alignItems: "center" }}>
