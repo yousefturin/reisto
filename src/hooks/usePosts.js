@@ -7,25 +7,24 @@ const usePosts = (fromWhere, searchQuery = null, QueryParam = null, shouldFetch 
 
     useEffect(() => {
         if (!shouldFetch) return;
-        let subscription;
+        let unsubscribe;
         if (fromWhere === "Search" || fromWhere === "Home") {
-            subscription = fetchSearchPost();
+            unsubscribe = fetchSearchPost();
         } else if (fromWhere === "AdditionalSearchScreen") {
-            subscription = fetchCustomPost(searchQuery);
+            unsubscribe = fetchCustomPost(searchQuery);
         } else if (fromWhere === "UserProfilePostScreen" || fromWhere === "OthersProfilePostScreen") {
-            subscription = fetchUserPosts();
+            unsubscribe = fetchUserPosts();
         } else if (fromWhere === "MessagesToSharedPost") {
-            subscription = fetchThePost();
+            unsubscribe = fetchThePost();
         }
         return () => {
-            console.log("Unsubscribed from posts.");
             // Check if subscription object contains an unsubscribe function
-            if (subscription && typeof subscription.unsubscribe === 'function') {
+            if (unsubscribe) {
                 // Call the unsubscribe function to stop listening to Firestore updates
-                subscription.unsubscribe();
+                unsubscribe.unsubscribe;
             }
         };
-    }, [fromWhere, searchQuery]);
+    }, []);
 
     const fetchPosts = useCallback(async (query) => {
         const user = firebase.auth().currentUser;
@@ -52,16 +51,25 @@ const usePosts = (fromWhere, searchQuery = null, QueryParam = null, shouldFetch 
                     }
                 })
                 Promise.all(postsWithProfilePictures).then(posts => {
-                    setLoading(false);
-                    setPosts(posts)
+                    if (postsWithProfilePictures.length === 0) {
+                        setLoading(null);
+                    } else {
+                        // removed the flicker of being loading false but the data is about to be set
+                        setPosts(posts)
+                        setLoading(false);
+                    }
                 }).catch(error => {
                     console.error('Error fetching posts with profile pictures:', error);
+                    setLoading(null);
                 })
             }, error => {
+                console.error("Error listening to document:", error);
+                setLoading(null);
                 return () => { };
             });
         } else {
             console.error("No authenticated user found.");
+            setLoading(null);
             return () => { };
         }
     }, []);
