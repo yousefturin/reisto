@@ -11,7 +11,6 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 const { moderateScale } = initializeScalingUtils(Dimensions);
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SvgComponent from '../utils/SvgComponents';
-import LoadingPlaceHolder from '../components/Search/LoadingPlaceHolder';
 import { colorPalette } from '../Config/Theme';
 import { useTheme } from '../context/ThemeContext';
 
@@ -49,7 +48,7 @@ const SearchScreen = () => {
     const handleNavigationToProfile = (item) => {
         let userDataToBeNavigated = item
         saveClickedUser(userDataToBeNavigated);
-        navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated });
+        navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated, justSeenPost: null });
     }
 
     useEffect(() => {
@@ -389,7 +388,7 @@ const SearchScreen = () => {
                             />
                         ) : loading === null ? (
                             <View style={{ minHeight: 800 }}>
-                                <EmptyDataParma SvgElement={"BookmarkIllustration"} theme={theme} t={t} dataMessage={"You can save posts across Reisto and organize them into collections."} TitleDataMessage={"Nothing saved yet"} />
+                                <EmptyDataParma SvgElement={"DeletedPostIllustration"} theme={theme} t={t} dataMessage={"Check your internet connection, and refresh the page."} TitleDataMessage={"Something went wrong"} />
                             </View>
                         ) : (
                             null
