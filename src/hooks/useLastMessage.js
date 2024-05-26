@@ -13,7 +13,7 @@ const useLastMessage = (userData, item, onUpdateLastMessage, flag, setMessagesNu
 
         return () => {
             if (subscription && typeof subscription === 'function') {
-                subscription();
+                subscription.subscription();
             }
         }
     }, []);
