@@ -21,18 +21,16 @@ const UserSavedPostScreen = () => {
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
     const savedPostHeader = t('screens.profile.profileSavedHeader')
 
-    const handlePostPress = (postId) => {
-        setScrollToPostId(postId)
-    }
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <>
                 <SavedPostsHeader header={savedPostHeader} theme={theme} />
                 {loading === true ? (
-                    <LoadingPlaceHolder theme={theme} />
+                    /* <LoadingPlaceHolder theme={theme} /> <------------(removed due to moti internal error)*/
+                    null
                 ) : (
-                    <SavedPostsGrid fromWhereValue={0} posts={savedPosts} userData={userData} onPostPress={handlePostPress} navigateToScreen={"SavedPosts"} />
+                    <SavedPostsGrid fromWhereValue={0} posts={savedPosts} userData={userData} navigateToScreen={"SavedPosts"} />
                 )}
 
                 {afterLoading === true && loading === false && (
