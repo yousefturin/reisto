@@ -11,17 +11,28 @@ import EmptyDataParma from '../components/CustomComponent/EmptyDataParma'
 import { useTranslation } from 'react-i18next'
 import UseCustomTheme from '../utils/UseCustomTheme'
 import useFastPosts from '../hooks/useFastPosts'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 
 const OtherUsersProfileScreen = ({ route }) => {
-    const { userDataToBeNavigated } = route.params
+    const { userDataToBeNavigated, justSeenPost } = route.params
     const { t } = useTranslation()
     const [refreshing, setRefreshing] = useState(false);
-    const [_, setScrollToPostId] = useState(null)
     const { userPosts, loading, afterLoading, fetchUserSavedPosts } = useFastPosts(null, userDataToBeNavigated.id)
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
-
-
+    // const navigation = useNavigation();
+    // // remove the justSeenPost from the navigation params so that it doesn't show up again
+    // useFocusEffect( // This hook is used to handle the screen focus event<---need fix to remove development error (The action 'SET_PARAMS' with payload {"params":{"justSeenPost":null}} was not handled by any navigator.)
+    //     React.useCallback(() => {
+    //         // This will be called when the screen is focused
+    //         return () => {
+    //             if (route.params?.justSeenPost !== undefined) {
+    //                 navigation.setParams({ justSeenPost: null });
+    //             }
+    //             // This will be called when the screen is unfocused
+    //         };
+    //     }, [navigation])
+    // );
     // Function to handle scroll event
     const onRefresh = useCallback(() => {
         setRefreshing(true);
@@ -35,9 +46,7 @@ const OtherUsersProfileScreen = ({ route }) => {
         };
     }, []);
 
-    const handlePostPress = (postId) => {
-        setScrollToPostId(postId)
-    }
+
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
@@ -47,19 +56,20 @@ const OtherUsersProfileScreen = ({ route }) => {
                     keyboardDismissMode="on-drag"
                     keyboardShouldPersistTaps={'always'}
                     showsVerticalScrollIndicator={false}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                    />
-                }
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
                 >
                     <OthersProfileContent t={t} userDataToBeNavigated={userDataToBeNavigated} userPosts={userPosts} theme={theme} />
                     {loading === false && (
-                        <ProfilePost t={t} posts={userPosts} userDataToBeNavigated={userDataToBeNavigated} onPostPress={handlePostPress} keyValue={"NavigationToOtherProfile"} />
+                        <ProfilePost t={t} posts={userPosts} justSeenPost={justSeenPost} userDataToBeNavigated={userDataToBeNavigated} keyValue={"NavigationToOtherProfile"} />
                     )}
                     {loading === true && (
-                        <LoadingPlaceHolder condition={userPosts.length === 0} theme={theme} />
+                        /* <LoadingPlaceHolder condition={userPosts.length === 0} theme={theme} /><------------(removed due to moti internal error) */
+                        null
                     )}
 
                     {afterLoading === true && loading === false && (<View style={{ minHeight: 250, }}>
