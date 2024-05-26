@@ -24,7 +24,7 @@ const MessagesNumProvider = ({ children }) => {
 
         const privateMessagesPromises = [];
 
-        const unsubscribe1 = messagesQuery1.onSnapshot(async (snapshot1) => {
+        const unsubscribe = messagesQuery1.onSnapshot(async (snapshot1) => {
             snapshot1.forEach(async (messageDoc) => {
                 const privateMessagesRef = messageDoc.ref.collection('private_messages')
                     .orderBy('createdAt', 'desc')
@@ -56,12 +56,13 @@ const MessagesNumProvider = ({ children }) => {
             setMessagesNum(uniquePrivateMessages.size);
             setLoading(false);
         }, error => {
+            console.error("Error listening to document:", error);
             return () => { };
         });
 
         // Clean up the subscription when the component unmounts
         return () => {
-            unsubscribe1();
+            unsubscribe();
         };
     }, [messagesNum]);
 
