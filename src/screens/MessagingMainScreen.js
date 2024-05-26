@@ -1,10 +1,8 @@
-import { Dimensions, SafeAreaView, StyleSheet, Text, Keyboard } from 'react-native'
+import { Dimensions, SafeAreaView, StyleSheet, Text, Keyboard, View } from 'react-native'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import MessageMainHeader from '../components/Message/MessageMainHeader'
 import { UserContext } from '../context/UserDataProvider'
-import { db } from '../firebase'
 import MessageMainList from '../components/Message/MessageMainList'
-import { View } from 'moti'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Image } from 'expo-image'
 import { blurHash } from '../../assets/HashBlurData'
@@ -154,7 +152,7 @@ const MessagingMainScreen = () => {
             }}>
                 <SearchBar
                     disabled={loading === null}
-                    placeholder={t('screens.messages.searchPlaceHolder') + "..."}
+                    placeholder={t('screens.messages.searchPlaceHolder')}
                     onChangeText={handleSearch}
                     onPressIn={loading === null ? null : handleSearchBarClick}
                     value={searchQuery}
@@ -204,8 +202,8 @@ const MessagingMainScreen = () => {
                                 <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
                                     <Image source={{ uri: item.profile_picture, cache: "force-cache", }}
                                         style={{
-                                            width: 50,
-                                            height: 50,
+                                            width: 60,
+                                            height: 60,
                                             borderRadius: 50,
                                             margin: 7,
                                             borderWidth: 1.5,
@@ -246,12 +244,6 @@ export const SearchScreenStyles = StyleSheet.create({
         borderTopColor: "transparent",
     },
     searchBarInputContainer: {
-        shadowOffset: {
-            width: 0,
-            height: 2.2,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
         height: 40,
         borderRadius: 10
     },
