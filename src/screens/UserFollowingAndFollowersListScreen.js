@@ -29,7 +29,7 @@ const UserFollowingAndFollowersListScreen = ({ route }) => {
             ...item, // Copy all properties from item
             id: item.email // Replace email with id
         };
-        navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated });
+        navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated, justSeenPost: null });
     }
 
     const handleDataSwitch = (param) => {
@@ -108,7 +108,7 @@ const UserFollowingAndFollowersListScreen = ({ route }) => {
                 )}
                 {paramFollowing.length === 0 && paramFlag === "following" && (
                     <EmptyDataParma SvgElement={"ConnectionIllustration"} theme={theme} t={t} dataMessage={"Once people follow you, you'll see theme here."} TitleDataMessage={"People who follow you"} />
-                )} 
+                )}
                 {paramFlag === "followers" ? (
                     <>
                         {paramFollower?.map((item, index) => (
