@@ -22,24 +22,33 @@ const FormikPostUploader = ({ theme, t, userData }) => {
     const [image, setImage] = useState(null);
 
 
-    const postPostToFirebase = (caption, imageURL, category, timeOfMake, captionIngredients, captionInstructions) => {
-        const unsubscribe = db.collection('users').doc(firebase.auth().currentUser.email).collection('posts').add({
-            imageURL: imageURL,
-            user: userData.username,
-            // profile_picture: currentLoggedInUser.profilePicture,
-            owner_uid: firebase.auth().currentUser.uid,
-            owner_email: firebase.auth().currentUser.email,
-            caption: caption,
-            category: category,
-            timeOfMake: timeOfMake,
-            captionIngredients: captionIngredients,
-            captionInstructions: captionInstructions,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            likes_by_users: [],
-            comments: [],
-        })
-            .then(() => navigation.goBack())
-        return unsubscribe
+
+    const postPostToFirebase = async (caption, imageURL, category, timeOfMake, captionIngredients, captionInstructions) => {
+        navigation.goBack()
+        try {
+            console.log("Only now the image is uploaded to the database")
+            const dbImage = await UploadImageToStorage(imageURL, "/PostImages/");
+
+            const unsubscribe = db.collection('users').doc(firebase.auth().currentUser.email).collection('posts').add({
+                imageURL: dbImage,
+                user: userData.username,
+                // profile_picture: currentLoggedInUser.profilePicture,
+                owner_uid: firebase.auth().currentUser.uid,
+                owner_email: firebase.auth().currentUser.email,
+                caption: caption,
+                category: category,
+                timeOfMake: timeOfMake,
+                captionIngredients: captionIngredients,
+                captionInstructions: captionInstructions,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                likes_by_users: [],
+                comments: [],
+            })
+            return unsubscribe
+        } catch (error) {
+            console.error("Error uploading image to the database", error)
+        }
+
     }
 
     // this must be fixed not every image is selected needs to be stored on the cloud this is shit<<<<<<<<<<-
@@ -61,7 +70,7 @@ const FormikPostUploader = ({ theme, t, userData }) => {
 
             let width = originalWidth;
             let height = originalHeight;
-
+            // fuck me still cant find how to cut the image into 700X700
             if (originalWidth > maxWidth) {
                 width = maxWidth;
                 // the issue with white border is that the height is for example 700.2314814814815 and that will make a problem 
@@ -74,11 +83,11 @@ const FormikPostUploader = ({ theme, t, userData }) => {
                 [{ resize: { width, height } }],
                 { compress: 0.9, format: ImageManipulator.SaveFormat.JPEG }
             );
+            // const compressesImage = compressedImage.uri
+            // const dbImage = await UploadImageToStorage(compressedImage.uri);
 
-            const dbImage = await UploadImageToStorage(compressedImage.uri);
-
-            if (dbImage) {
-                setFieldValue('imageURL', dbImage);
+            if (compressedImage.uri) {
+                setFieldValue('imageURL', compressedImage.uri);
             }
         } else if (result.canceled) {
             setFieldTouched('imageURL', true);
