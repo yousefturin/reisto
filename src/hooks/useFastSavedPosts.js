@@ -9,14 +9,22 @@ const useFastSavedPosts = () => {
 
     
     useEffect(() => {
+        let unsubscribe
 
-        const subscription = fetchUserSavedPosts();
+        const user = firebase.auth().currentUser.email
+        
+        if (!user) {
+            console.error("No authenticated user found.");
+            return () => { }; // Return null if user is not authenticated
+        } else {
+            unsubscribe = fetchUserSavedPosts();
+        }
 
         // Return cleanup function to unsubscribe when component unmounts
         return () => {
-            if (subscription && typeof subscription.unsubscribe === 'function') {
+            if (unsubscribe) {
                 // Call the unsubscribe function to stop listening to Firestore updates
-                subscription.unsubscribe();
+                unsubscribe.unsubscribe;
             }
         };
     }, [])
@@ -57,7 +65,6 @@ const useFastSavedPosts = () => {
                             setLoading(false);
                             if (savedPostsData.length === 0) setAfterLoading(true);
 
-                            console.log("Saved posts fetched successfully");
                             setSavedPosts(savedPostsData);
                             AsyncStorage.setItem('userSavedPostURLs', JSON.stringify(savedPostsData));
                         } else {
@@ -70,6 +77,7 @@ const useFastSavedPosts = () => {
                     console.error("Error fetching saved posts:", error);
                 });
             }, error => {
+                console.error("Error listening to document:", error);
                 return () => { };
             })
         } else {
