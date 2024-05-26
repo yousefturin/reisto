@@ -1,4 +1,4 @@
-import { RefreshControl, SafeAreaView } from 'react-native'
+import { RefreshControl, SafeAreaView, View } from 'react-native'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { db, firebase } from '../firebase'
 import ProfileHeader from '../components/Profile/ProfileHeader'
@@ -11,7 +11,6 @@ import { useTheme } from '../context/ThemeContext'
 import { useTranslation } from 'react-i18next'
 import UseCustomTheme from '../utils/UseCustomTheme'
 import EmptyDataParma from '../components/CustomComponent/EmptyDataParma'
-import { View } from 'moti'
 import { Animated } from 'react-native'
 import LoadingPlaceHolder from '../components/Search/LoadingPlaceHolder'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -21,7 +20,6 @@ const UserProfileScreen = () => {
     const { t } = useTranslation();
     const userData = useContext(UserContext);
     const [refreshing, setRefreshing] = useState(false);
-    const [_, setScrollToPostId] = useState(null)
     const { userPosts, loading, afterLoading, fetchUserSavedPosts } = useFastPosts(true, firebase.auth().currentUser.email)
 
     const { selectedTheme } = useTheme();
@@ -48,10 +46,6 @@ const UserProfileScreen = () => {
             }
         };
     }, []);
-
-    const handlePostPress = (postId) => {
-        setScrollToPostId(postId)
-    }
 
     //#region  animated header
     const scrollY = new Animated.Value(0);
@@ -157,10 +151,11 @@ const UserProfileScreen = () => {
                 >
                     <ProfileContent userData={userData} userPosts={userPosts} theme={theme} t={t} opacityContent={opacityContent} />
                     {loading === false && (
-                        <ProfilePost posts={userPosts} userData={userData} onPostPress={handlePostPress} keyValue={"NavigationToMyProfile"} t={t} />
+                        <ProfilePost posts={userPosts} userData={userData} keyValue={"NavigationToMyProfile"} t={t} />
                     )}
                     {loading === true && (
-                        <LoadingPlaceHolder theme={theme} />
+                        /* <LoadingPlaceHolder theme={theme} /> <------------(removed due to moti internal error)*/
+                        null
                     )}
 
                     {afterLoading === true && loading === false && (<View style={{ minHeight: 250, }}>

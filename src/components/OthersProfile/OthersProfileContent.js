@@ -9,12 +9,13 @@ import { WebView } from 'react-native-webview';
 import { Divider } from 'react-native-elements';
 import { db, firebase } from '../../firebase';
 import useFollowing from '../../hooks/useFollowing';
+import { Skeleton } from 'moti/skeleton';
 
 
 const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const { moderateScale } = initializeScalingUtils(Dimensions);
-    const { followersAndFollowing, followersAndFollowingForPassedUser } = useFollowing(userDataToBeNavigated.id);
+    const { loading, followersAndFollowing, followersAndFollowingForPassedUser } = useFollowing(userDataToBeNavigated.id);
 
     const [userDataAfterNavigation, setUserDataAfterNavigation] = useState(userDataToBeNavigated)
     const isUserFollowed = followersAndFollowing?.following?.includes(userDataToBeNavigated.id)
@@ -37,6 +38,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
                     // this was the only way to do it otherwise the useStat wil not be updated when it pass the Params to navigation
                     setUserDataAfterNavigation(userDataNew);
                 }, error => {
+                    console.error("Error listening to document:", error);
                     return () => { };
                 });
                 return () => unsubscribe();
@@ -80,7 +82,14 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
                 console.error('Error updating document: ', error)
             })
     }
-
+    const SkeletonCommonProps = {
+        colorMode: theme.Primary === '#050505' ? 'dark' : 'light',
+        backgroundColor: theme.Secondary,
+        transition: {
+            type: 'timing',
+            duration: 2000,
+        }
+    }
     return (
         <View style={{ flexDirection: "column", }}>
             <View style={{ flexDirection: "row", }}>
@@ -151,51 +160,73 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
                     <SvgComponent svgKey="LinkSVG" width={moderateScale(18)} height={moderateScale(18)} stroke={theme.textURL} />
                 </TouchableOpacity>
             }
-            <View style={{
-                justifyContent: "space-around",
-                flexDirection: "row",
-                marginHorizontal: 20,
-                gap: 10,
-            }} >
-                {/* this must handle the followers. */}
-                <TouchableOpacity activeOpacity={0.8} onPress={() => handleFollowing()}>
-                    <View style={{
-                        marginTop: 20,
-                        backgroundColor: isUserFollowed ? theme.Quinary : theme.appPrimary,
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        borderColor: isUserFollowed ? theme.Quinary : theme.appPrimary,
-                        paddingVertical: 8,
-                        width: 180,
-                    }}>
-                        <Text style={{
-                            fontSize: 16,
-                            fontWeight: "500",
-                            // if user is following and it is white theme make text back, if user does not follow make text white
-                            color: theme.Primary === '#050505' ? theme.textPrimary : isUserFollowed ? theme.textPrimary : theme.Primary,
-                            textAlign: "center"
-                        }}> {isUserFollowed ? t('screens.profile.text.profileContent.unfollow') : t('screens.profile.text.profileContent.follow')}</Text>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity activeOpacity={0.8}>
-                    <View style={{
-                        marginTop: 20,
-                        backgroundColor: theme.Quinary,
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        borderColor: theme.Quinary,
-                        paddingVertical: 8,
-                        width: 180,
-                    }}>
-                        <Text style={{
-                            fontSize: 16,
-                            fontWeight: "500",
-                            color: theme.textPrimary,
-                            textAlign: "center"
-                        }}>{t('screens.profile.text.profileContent.shareProfile')}</Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
+
+            {/* this must handle the followers. */}
+            {loading === false ? (
+                <View style={{
+                    justifyContent: "space-around",
+                    flexDirection: "row",
+                    marginHorizontal: 20,
+                    gap: 10,
+                }} >
+                    <TouchableOpacity activeOpacity={0.8} onPress={() => handleFollowing()}>
+                        <View style={{
+                            marginTop: 20,
+                            backgroundColor: isUserFollowed ? theme.Quinary : theme.appPrimary,
+                            borderWidth: 1,
+                            borderRadius: 8,
+                            borderColor: isUserFollowed ? theme.Quinary : theme.appPrimary,
+                            paddingVertical: 8,
+                            width: 180,
+                        }}>
+                            <Text style={{
+                                fontSize: 16,
+                                fontWeight: "500",
+                                // if user is following and it is white theme make text back, if user does not follow make text white
+                                color: theme.Primary === '#050505' ? theme.textPrimary : isUserFollowed ? theme.textPrimary : theme.Primary,
+                                textAlign: "center"
+                            }}> {isUserFollowed ? t('screens.profile.text.profileContent.unfollow') : t('screens.profile.text.profileContent.follow')}</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity activeOpacity={0.8}>
+                        <View style={{
+                            marginTop: 20,
+                            backgroundColor: theme.Quinary,
+                            borderWidth: 1,
+                            borderRadius: 8,
+                            borderColor: theme.Quinary,
+                            paddingVertical: 8,
+                            width: 180,
+                        }}>
+                            <Text style={{
+                                fontSize: 16,
+                                fontWeight: "500",
+                                color: theme.textPrimary,
+                                textAlign: "center"
+                            }}>{t('screens.profile.text.profileContent.shareProfile')}</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            ) : (
+                /* <View style={{<------------(removed due to moti internal error)
+                    marginTop: 20,
+                    borderRadius: 8,
+                    width: 360,
+                    height: 35,
+                    marginHorizontal: 20,
+                    alignSelf: "center",
+                }} >
+                    <Skeleton
+                        show
+                        height={33}
+                        width={"100%"}
+                        {...SkeletonCommonProps}
+                    />
+                </View> */
+                null
+            )}
+
+
             <Modal
                 visible={isModalVisible}
                 animationType="slide"

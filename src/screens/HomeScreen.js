@@ -17,6 +17,7 @@ import usePosts from '../hooks/usePosts'
 import useAnimation from '../hooks/useAnimation'
 import { useNavigation } from '@react-navigation/native'
 import EmptyDataParma from '../components/CustomComponent/EmptyDataParma'
+import { useTranslation } from 'react-i18next'
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
@@ -24,8 +25,8 @@ const HomeScreen = () => {
     const [refreshing, setRefreshing] = useState(false);
     const [postOptionModal, setPostOptionModal] = useState(false)
     const postOption = ({ Text: "Following", SVG: "followingSVG" })
-
-
+    const { t } = useTranslation();
+    
     const { moderateScale } = initializeScalingUtils(Dimensions);
     const { usersForSharePosts } = useShare()
     const { posts, loading, fetchPosts } = usePosts("Home")
@@ -37,7 +38,6 @@ const HomeScreen = () => {
 
     // statusBarColorTheme is move from auth to give access to the theme values and based on that the status bar color will be changed
     const statusBarColorTheme = UseCustomTheme(selectedTheme, { colorPaletteDark: "light-content", colorPaletteLight: "dark-content" })
-
 
     const handleShowPostOptions = () => {
         setPostOptionModal(!postOptionModal)
@@ -85,7 +85,6 @@ const HomeScreen = () => {
             }}>
                 <Header theme={theme} onButtonClick={handleShowPostOptions} opacity={opacity} />
             </Animated.View>
-
             {headerTranslate !== -65 && <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} />}
             {postOptionModal && <TouchableOpacity activeOpacity={0.8} onPress={() => {
                 setPostOptionModal(false)
@@ -131,7 +130,8 @@ const HomeScreen = () => {
                     <EmptyDataParma SvgElement={"DeletedPostIllustration"} theme={theme} t={t} dataMessage={"Check your internet connection, and refresh the page."} TitleDataMessage={"Something went wrong"} />
                 </View>
             ) : (
-                <LoadingPlaceHolder theme={theme} isPaddingNeeded={true} />
+                /* <LoadingPlaceHolder theme={theme} isPaddingNeeded={true} /> {<------------(removed due to moti internal error)*/
+                null
             )
             }
             <StatusBar

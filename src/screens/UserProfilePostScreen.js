@@ -1,5 +1,5 @@
 import { Dimensions, SafeAreaView, Text, TouchableOpacity, View, VirtualizedList } from 'react-native'
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import Post from '../components/Home/Post'
 import SvgComponent from '../utils/SvgComponents'
 import initializeScalingUtils from '../utils/NormalizeSize';
@@ -16,11 +16,13 @@ import useShare from '../hooks/useShare';
 import usePosts from '../hooks/usePosts';
 
 
+
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
 const UserProfilePostScreen = ({ route }) => {
     const { t } = useTranslation();
     const { userData, scrollToPostId } = route.params;
+
     const flatListRef = useRef();
     const { usersForSharePosts } = useShare();
     const user = firebase.auth().currentUser;
@@ -38,22 +40,36 @@ const UserProfilePostScreen = ({ route }) => {
 
     const renderItem = useCallback(({ item }) => {
         return (
-            <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} theme={theme} />
+            <View style={{ height: 660 }}>
+                <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} theme={theme} />
+            </View>
         )
-    }, []);
+    }, [posts]);
+
+    useEffect(() => {
+        if (flatListRef.current && scrollToPostId && posts && posts.length) {
+            flatListRef.current.scrollToIndex({
+                index: scrollToPostId, viewOffset: 0,
+                viewPosition: 0
+            });
+        }
+    }, [scrollToPostId])
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <OwnerProfileHeader userData={userData} theme={theme} t={t} />
             {loading === false ? (
                 <VirtualizedList
+                    pagingEnabled
+                    snapToInterval={660}
+                    snapToAlignment="start"
+                    decelerationRate="fast"
                     onContentSizeChange={() => {
                         if (flatListRef.current && scrollToPostId && posts && posts.length) {
                             flatListRef.current.scrollToIndex({ index: scrollToPostId });
                         }
                     }}
                     viewabilityConfig={{ viewAreaCoveragePercentThreshold: 35 }}
-
                     keyboardDismissMode="on-drag"
                     showsVerticalScrollIndicator={false}
                     keyboardShouldPersistTaps={'always'}
@@ -64,13 +80,20 @@ const UserProfilePostScreen = ({ route }) => {
                     getItem={(data, index) => data[index]}
                     getItemCount={data => data.length}
                     onScrollToIndexFailed={handleScrollToIndexFailed}
+                    initialScrollIndex={scrollToPostId}
+                    getItemLayout={(data, index) => ({
+                        length: 660,
+                        offset: 660 * index,
+                        index
+                    })}
                 />
             ) : loading === null ? (
                 <View style={{ minHeight: 800 }}>
                     <EmptyDataParma SvgElement={"DeletedPostIllustration"} theme={theme} t={t} dataMessage={"Check your internet connection, and refresh the page."} TitleDataMessage={"Something went wrong"} />
                 </View>
             ) : (
-                <LoadingPlaceHolder theme={theme} />
+                /* <LoadingPlaceHolder theme={theme} /> <------------(removed due to moti internal error)*/
+                null
             )
             }
         </SafeAreaView>

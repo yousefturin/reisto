@@ -33,11 +33,12 @@ const FollowingHomeScreen = () => {
             console.log("Subscribed to following posts.");
             // Return a cleanup function to unsubscribe when the component unmounts
             return () => {
-                console.log("Unsubscribed from following posts.");
                 // Check if subscription object contains an unsubscribe function
                 if (subscription && typeof subscription.unsubscribe === 'function') {
-                    // Call the unsubscribe function to stop listening to Firestore updates
-                    subscription.unsubscribe();
+                    console.log("Unsubscribed from following posts.");
+                    subscription.unsubscribe;
+                } else {
+                    console.log("Unsubscribed from following posts was unavailable.");
                 }
             };
         }
@@ -76,6 +77,7 @@ const FollowingHomeScreen = () => {
                     console.error('Error fetching posts with profile pictures:', error);
                 })
             }, error => {
+                console.error("Error listening to document:", error);
                 return () => { };
             })
         } else {
@@ -154,7 +156,8 @@ const FollowingHomeScreen = () => {
                     scrollEventThrottle={4}
                 />
             ) : (
-                <LoadingPlaceHolder theme={theme} isPaddingNeeded={true} />
+                /* <LoadingPlaceHolder theme={theme} isPaddingNeeded={true} /> <------------(removed due to moti internal error)*/
+                null
             )}
         </SafeAreaView>
     )
