@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 const useFollowing = (QueryParam) => {
     const [followersAndFollowing, setFollowersAndFollowing] = useState(null);
     const [followersAndFollowingForPassedUser, setFollowersAndFollowingForPassedUser] = useState({ id: "", followers: "", following: "", });
-
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
         let unsubscribeCurrentUser, unsubscribePassedUser;
 
@@ -37,22 +37,25 @@ const useFollowing = (QueryParam) => {
                             followers: data.followers,
                             following: data.following,
                         });
+                        setLoading(false)
                     }, (error) => {
                         console.error("Error listening to current user's document:", error);
+                        return () => { };
                     });
                 } else {
                     console.log("No document found in the current user's collection.");
                     db.collection('users').doc(currentUserEmail)
-                    .collection('following_followers').add({
-                        following: [],
-                        followers: [],
-                        owner_email: currentUserEmail
-                    })
+                        .collection('following_followers').add({
+                            following: [],
+                            followers: [],
+                            owner_email: currentUserEmail
+                        })
                     setFollowersAndFollowing({
                         id: 0,
                         followers: [0],
                         following: [0],
                     });
+                    setLoading(false)
                 }
 
                 if (!passedUserSnapshot.empty) {
@@ -67,7 +70,9 @@ const useFollowing = (QueryParam) => {
                             following: data.following,
                         });
                     }, (error) => {
+                        setLoading(null)
                         console.error("Error listening to passed user's document:", error);
+                        return () => { };
                     });
                 } else {
                     console.log("No document found in the passed user's collection.");
@@ -86,10 +91,25 @@ const useFollowing = (QueryParam) => {
 
             } catch (error) {
                 console.error("Error fetching data:", error);
+                setLoading(null)
+                // Handle the error based on the type of error (network issue, permission issue, etc.)
+                if (error.code === 'unavailable') {
+                    console.error("Firestore service is currently unavailable.");
+                } else {
+                    console.error("An unexpected error occurred:", error);
+                }
             }
         };
 
-        getFollowersAndFollowingData();
+        const user = firebase.auth().currentUser.email
+
+        if (!user) {
+            console.error("No authenticated user found.");
+            return () => { }; // Return null if user is not authenticated
+        } else {
+            getFollowersAndFollowingData();
+        }
+
 
         return () => {
             // Unsubscribe when component unmounts
@@ -98,7 +118,7 @@ const useFollowing = (QueryParam) => {
         };
     }, [QueryParam]);
 
-    return { followersAndFollowing, followersAndFollowingForPassedUser };
+    return { followersAndFollowing, followersAndFollowingForPassedUser, loading };
 }
 
 export default useFollowing
