@@ -19,7 +19,7 @@ const { moderateScale } = initializeScalingUtils(Dimensions);
 const OthersProfilePostScreen = ({ route }) => {
     const { t } = useTranslation();
     const { userDataToBeNavigated, scrollToPostId } = route.params;
-    
+
     const { posts, loading } = usePosts("OthersProfilePostScreen", null, userDataToBeNavigated.id)
     const flatListRef = useRef();
     const userData = useContext(UserContext);
@@ -61,8 +61,8 @@ const OthersProfilePostScreen = ({ route }) => {
                     onScrollToIndexFailed={handleScrollToIndexFailed}
                 />
             ) : (
-                /* <LoadingPlaceHolder theme={theme} /> <------------(removed due to moti internal error)*/
-                null
+                <LoadingPlaceHolder theme={theme} /> 
+                
             )}
         </SafeAreaView>
     )

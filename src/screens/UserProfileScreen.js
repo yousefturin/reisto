@@ -154,8 +154,8 @@ const UserProfileScreen = () => {
                         <ProfilePost posts={userPosts} userData={userData} keyValue={"NavigationToMyProfile"} t={t} />
                     )}
                     {loading === true && (
-                        /* <LoadingPlaceHolder theme={theme} /> <------------(removed due to moti internal error)*/
-                        null
+                      <LoadingPlaceHolder theme={theme} /> 
+                      
                     )}
 
                     {afterLoading === true && loading === false && (<View style={{ minHeight: 250, }}>

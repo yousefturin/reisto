@@ -27,8 +27,8 @@ const UserSavedPostScreen = () => {
             <>
                 <SavedPostsHeader header={savedPostHeader} theme={theme} />
                 {loading === true ? (
-                    /* <LoadingPlaceHolder theme={theme} /> <------------(removed due to moti internal error)*/
-                    null
+                     <LoadingPlaceHolder theme={theme} /> 
+                    
                 ) : (
                     <SavedPostsGrid fromWhereValue={0} posts={savedPosts} userData={userData} navigateToScreen={"SavedPosts"} />
                 )}

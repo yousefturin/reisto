@@ -31,8 +31,8 @@ const FromMessagesToSharedPost = ({ route }) => {
             ) : loading === null ? (
                 <EmptyDataParma SvgElement={"DeletedPostIllustration"} theme={theme} t={t} TitleDataMessage={"Post No Longer Available"} dataMessage={"It seems that this post has been removed by the owner."} />
             ) :
-                /* (<LoadingPlaceHolder fromWhere={"sharedPost"} theme={theme} />)<------------(removed due to moti internal error) */
-                null
+                (<LoadingPlaceHolder fromWhere={"sharedPost"} theme={theme} />)
+
             }
         </SafeAreaView>
     )

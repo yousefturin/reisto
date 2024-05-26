@@ -68,8 +68,8 @@ const OtherUsersProfileScreen = ({ route }) => {
                         <ProfilePost t={t} posts={userPosts} justSeenPost={justSeenPost} userDataToBeNavigated={userDataToBeNavigated} keyValue={"NavigationToOtherProfile"} />
                     )}
                     {loading === true && (
-                        /* <LoadingPlaceHolder condition={userPosts.length === 0} theme={theme} /><------------(removed due to moti internal error) */
-                        null
+                        <LoadingPlaceHolder condition={userPosts.length === 0} theme={theme} />
+                        
                     )}
 
                     {afterLoading === true && loading === false && (<View style={{ minHeight: 250, }}>

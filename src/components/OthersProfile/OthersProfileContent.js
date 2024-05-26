@@ -208,7 +208,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
                     </TouchableOpacity>
                 </View>
             ) : (
-                /* <View style={{<------------(removed due to moti internal error)
+                <View style={{
                     marginTop: 20,
                     borderRadius: 8,
                     width: 360,
@@ -222,8 +222,8 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
                         width={"100%"}
                         {...SkeletonCommonProps}
                     />
-                </View> */
-                null
+                </View>
+
             )}
 
 

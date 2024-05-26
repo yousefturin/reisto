@@ -28,7 +28,7 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
     useEffect(() => {
         console.log("loading: ", loading);
     }, [loading]);
-    
+
     const renderItem = useCallback(
         ({ item }) => {
             return (
@@ -116,8 +116,8 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
                     />
                 </View>
             ) : (
-                /* <LoadingPlaceHolder theme={theme} /> <------------(removed due to moti internal error)*/
-                null
+                <LoadingPlaceHolder theme={theme} />
+
             )}
         </SafeAreaView>
     );

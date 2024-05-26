@@ -126,13 +126,12 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag, theme, t }
 
                     <Text style={{ color: theme.textPrimary, fontWeight: lastMessage && lastMessage.seenBy?.includes(userData.owner_uid) ? "700" : "900", fontSize: 16 }}>{item.username}</Text>
                     {loading ? (
-                        /* <Skeleton{<------------(removed due to moti internal error)
+                        <Skeleton
                             show
                             height={10}
                             width={120}
                             {...SkeletonCommonProps}
-                        /> */
-                        null
+                        />
                     ) : (
                         <>
                             {lastMessage ? renderLastMessage() : <Text style={{ color: theme.textSecondary, fontSize: 13, fontWeight: "500" }}>{t('screens.messages.defaultMessage')}</Text>}

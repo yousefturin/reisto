@@ -92,8 +92,8 @@ const UserProfilePostScreen = ({ route }) => {
                     <EmptyDataParma SvgElement={"DeletedPostIllustration"} theme={theme} t={t} dataMessage={"Check your internet connection, and refresh the page."} TitleDataMessage={"Something went wrong"} />
                 </View>
             ) : (
-                /* <LoadingPlaceHolder theme={theme} /> <------------(removed due to moti internal error)*/
-                null
+                <LoadingPlaceHolder theme={theme} />
+
             )
             }
         </SafeAreaView>

@@ -156,8 +156,7 @@ const FollowingHomeScreen = () => {
                     scrollEventThrottle={4}
                 />
             ) : (
-                /* <LoadingPlaceHolder theme={theme} isPaddingNeeded={true} /> <------------(removed due to moti internal error)*/
-                null
+                <LoadingPlaceHolder theme={theme} isPaddingNeeded={true} />
             )}
         </SafeAreaView>
     )

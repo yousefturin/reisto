@@ -130,8 +130,7 @@ const HomeScreen = () => {
                     <EmptyDataParma SvgElement={"DeletedPostIllustration"} theme={theme} t={t} dataMessage={"Check your internet connection, and refresh the page."} TitleDataMessage={"Something went wrong"} />
                 </View>
             ) : (
-                /* <LoadingPlaceHolder theme={theme} isPaddingNeeded={true} /> {<------------(removed due to moti internal error)*/
-                null
+                <LoadingPlaceHolder theme={theme} isPaddingNeeded={true} /> 
             )
             }
             <StatusBar
