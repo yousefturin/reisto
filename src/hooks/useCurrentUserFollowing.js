@@ -8,27 +8,34 @@ const useCurrentUserFollowing = (QueryParam) => {
     const [followersAndFollowing, setFollowersAndFollowing] = useState({ followers: '', following: '', id: '' })
 
     useEffect(() => {
-
-        const subscription = fetchDataFollowingAndFollowersList();
-
+        const unsubscribe = fetchDataFollowingAndFollowersList();
         // Return cleanup function to unsubscribe when component unmounts
         return () => {
-            if (subscription && typeof subscription.unsubscribe === 'function') {
+            if (unsubscribe ) {
                 // Call the unsubscribe function to stop listening to Firestore updates
-                subscription.unsubscribe();
+                unsubscribe.unsubscribe;
             }
+
         };
-    }, [QueryParam])
+    }, [fetchDataFollowingAndFollowersList])
 
     useEffect(() => {
+        let unsubscribe
 
-        const subscription = fetchData();
+        const user = firebase.auth().currentUser.email
+        
+        if (!user) {
+            console.error("No authenticated user found.");
+            return () => { }; // Return null if user is not authenticated
+        } else {
+            unsubscribe = fetchData();
+        }
 
         // Return cleanup function to unsubscribe when component unmounts
         return () => {
-            if (subscription && typeof subscription.unsubscribe === 'function') {
+            if (unsubscribe) {
                 // Call the unsubscribe function to stop listening to Firestore updates
-                subscription.unsubscribe();
+                unsubscribe.unsubscribe;
             }
         };
     }, [])
@@ -71,9 +78,9 @@ const useCurrentUserFollowing = (QueryParam) => {
                 console.log("No document found in the collection.");
             }
         } catch (error) {
-            console.error("Error fetching data:", error);
+            console.error("Error fetching data from Current Following:", error);
         }
-    }, []);
+    }, [QueryParam]);
 
     const fetchData = useCallback(async () => {
         const cachedData = await AsyncStorage.getItem('followersAndFollowing');
