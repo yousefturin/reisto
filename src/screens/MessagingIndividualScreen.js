@@ -45,12 +45,13 @@ const MessagingIndividualScreen = ({ route }) => {
             const unsubscribe = onSnapshot(qu, (snapshot) => {
                 let allMessages = snapshot.docs.map(doc => {
                     let messageData = doc.data();
+                    const id = doc.id
                     // Check if the current user is the recipient of the message
                     if (messageData.owner_id === userDataUid.owner_uid) {
                         // Mark the message as seen by the recipient
                         updateMessageSeenStatus(roomId, doc.id);
                     }
-                    return messageData;
+                    return { ...messageData, id };
                 })
                 setMessages([...allMessages]);
             }, error => {
