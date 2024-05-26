@@ -7,8 +7,18 @@ const useShare = (fromWhere = null, ParamCondition = null) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchData();
-    }, [fromWhere, usersForSharePosts]);
+
+        const user = firebase.auth().currentUser.email
+        
+        if (!user) {
+            console.error("No authenticated user found.");
+            return () => { }; // Return null if user is not authenticated
+        } else {
+            fetchData();
+        }
+
+
+    }, [fetchData]);
 
     const fetchData = useCallback(async () => {
         try {
@@ -65,9 +75,11 @@ const useShare = (fromWhere = null, ParamCondition = null) => {
                 console.log("No document found in the collection.");
             }
         } catch (error) {
-            console.error("Error fetching data:", error);
+            console.error("Error fetching data from Share:", error);
         }
-    }, []);
+    }, [fromWhere, ParamCondition]);
+
+
     return { usersForSharePosts, followingUsers, loading };
 }
 
