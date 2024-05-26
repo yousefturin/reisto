@@ -21,12 +21,12 @@ const SinginForm = ({ navigation, theme }) => {
                 link: "",
                 displayed_name: "",
                 email: userCredential.user.email,
-                profile_picture: "https://firebasestorage.googleapis.com/v0/b/reisto-dev.appspot.com/o/imagePlcaeHolder%20(Custom).png?alt=media&token=b8bfe053-e9e7-452e-9223-6967309ac5b0",
+                profile_picture: "https://firebasestorage.googleapis.com/v0/b/reisto-dev.appspot.com/o/ProfileImages%2FimagePlcaeHolder%20(Custom).png?alt=media&token=5b62cde4-d4cc-423c-8bc5-950efe565574",
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             });
 
             savedPostCreation(userCredential);
-            followersAndFollowingUserCreation(userCredential);
+            // followersAndFollowingUserCreation(userCredential);
         } catch (error) {
             let msg = error.message
             if (msg.includes('(auth/email-already-in-use)')) msg = 'This email already has an account'
