@@ -1,4 +1,4 @@
-import React, {  useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, Keyboard, TouchableOpacity } from 'react-native';
 import EditProfileHeader from '../components/UserEditProfile/EditProfileHeader';
 import { useNavigation } from '@react-navigation/native';
@@ -45,6 +45,12 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
     }
 
     const handleSearch = (query) => {
+        if (query === "") {
+            setSearchMode(false);
+        } else {
+            setSearchMode(true);
+        }
+
         setSearchQuery(query);
         setRightIconContainerStyle(1);
         const normalizedQuery = query.toLowerCase().replace(/[أإِ]/g, "ا");
@@ -76,7 +82,7 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
         setClearedManually(true); // Set clearedManually flag to true when clearing manually
     }
     //#endregion
-
+    
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <View style={{ position: "absolute", top: 0, left: 0, width: "100%", backgroundColor: theme.Primary, height: 48, zIndex: 3, }}></View>
@@ -101,38 +107,41 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
                 left: 0,
                 zIndex: 1,
             }}>
-                <SearchBar
-                    disabled={loading === null}
-                    placeholder={t('screens.messages.searchPlaceHolder') + "..."}
-                    onChangeText={handleSearch}
-                    // had to do this since even the search is disabled, the onPressIn event is still triggered
-                    onPressIn={loading === null ? null : handleSearchBarClick}
-                    value={searchQuery}
-                    platform="ios"
-                    containerStyle={[SearchScreenStyles.searchBarContainer, { backgroundColor: theme.Primary, }]} inputContainerStyle={[
-                        SearchScreenStyles.searchBarInputContainer,
-                        searchMode && SearchScreenStyles.searchBarInputContainerTop, // when searchMode is true
-                        { backgroundColor: theme.SubPrimary, opacity: opacitySearchBar }
-                    ]}
-                    rightIconContainerStyle={{ opacity: RightIconContainerStyle }}
-                    inputStyle={[
-                        SearchScreenStyles.searchBarInput,
-                        {
-                            textAlign: "left",
-                            borderColor: theme.SubPrimary,
-                            backgroundColor: theme.SubPrimary
-                        },
-                    ]}
-                    clearIcon={{ type: "ionicon", name: "close-circle" }}
-                    onClear={handleClear}
-                    cancelButtonProps={{
-                        style: { paddingRight: 10 },
-                        onPress: handleCancel,
-                    }}
-                    keyboardAppearance={"default"}
-                    searchIcon={{ type: "ionicon", name: "search" }}
-                    cancelButtonTitle={t('screens.messages.searchCancel')}
-                />
+                <View style={{ flexDirection: "row-reverse", }}>
+                    <SearchBar
+                        disabled={loading === null}
+                        placeholder={t('screens.messages.searchPlaceHolder')}
+                        onChangeText={handleSearch}
+                        // had to do this since even the search is disabled, the onPressIn event is still triggered
+                        onPressIn={loading === null ? null : handleSearchBarClick}
+                        value={searchQuery}
+                        platform="ios"
+                        containerStyle={[SearchScreenStyles.searchBarContainer, { backgroundColor: theme.Primary, width: "90%", paddingHorizontal: 0, paddingRight: 10 }]} inputContainerStyle={[
+                            SearchScreenStyles.searchBarInputContainer,
+                            searchMode && SearchScreenStyles.searchBarInputContainerTop, // when searchMode is true
+                            { backgroundColor: theme.Primary, opacity: opacitySearchBar }
+                        ]}
+                        rightIconContainerStyle={{ opacity: RightIconContainerStyle }}
+                        inputStyle={[
+                            SearchScreenStyles.searchBarInput,
+                            {
+                                textAlign: "left",
+                                borderColor: theme.Primary,
+                                backgroundColor: theme.Primary,
+                                color: theme.textPrimary
+                            },
+                        ]}
+                        clearIcon={null}
+                        keyboardAppearance={"default"}
+                        searchIcon={null}
+                        cancelButtonTitle={null}
+                    />
+                    <View style={{ width: "10%", justifyContent: "center", alignItems: "flex-end", height: 40, alignSelf: "center" }}>
+                        <Text style={{ color: theme.textSecondary, fontSize: 18, fontWeight: "400" }} >To:</Text>
+                    </View>
+
+                </View>
+
             </Animated.View>
             <View>
                 {searchMode ? (
@@ -147,12 +156,12 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
                         style={{ paddingTop: 100, paddingBottom: 50 }}>
                         {shouldDisplaySearchedItems ? (
                             searchedItems.map((item, index) => (
-                                <TouchableOpacity style={{ flexDirection: "row" }} key={index} onPress={() => { handleNavigationToMessages(item) }}>
+                                <TouchableOpacity style={{ flexDirection: "row", marginHorizontal: 10 }} key={index} onPress={() => { handleNavigationToMessages(item) }}>
                                     <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
                                         <Image source={{ uri: item.profile_picture, cache: "force-cache", }}
                                             style={{
-                                                width: 50,
-                                                height: 50,
+                                                width: 60,
+                                                height: 60,
                                                 borderRadius: 50,
                                                 margin: 7,
                                                 borderWidth: 1.5,
