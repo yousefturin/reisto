@@ -1,8 +1,10 @@
-import { View, Text, ScrollView } from 'react-native'
+import { ScrollView } from 'react-native'
 import React from 'react'
 import MessageItem from './MessageItem'
-
-const MessageList = ({ messages, currentUser, scrollViewRef,theme }) => {
+import { TouchableOpacity } from 'react-native-gesture-handler'
+// import * as Haptics from 'expo-haptics';
+// onPress={() => { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft) }}
+const MessageList = ({ messages, currentUser, scrollViewRef, theme }) => {
     return (
         <ScrollView
             ref={scrollViewRef}
@@ -15,7 +17,9 @@ const MessageList = ({ messages, currentUser, scrollViewRef,theme }) => {
             {
                 messages.map((message, index) => {
                     return (
-                        <MessageItem message={message} key={index} currentUser={currentUser} theme={theme} />
+                        <TouchableOpacity key={index} >
+                            <MessageItem message={message} key={index} currentUser={currentUser} theme={theme} />
+                        </TouchableOpacity>
                     )
                 })
             }
