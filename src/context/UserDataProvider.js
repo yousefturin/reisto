@@ -22,12 +22,15 @@ const UserProviderComponent = ({ children }) => {
                     owner_uid: data.owner_uid,
                     email: data.email
                 });
+            }, error => {
+                console.error("Error listening to document:", error);
+                return () => { };
             });
-            return () =>{
+            return () => {
                 console.log("Unsubscribed from user data.")
                 unsubscribe();
             }  // Unsubscribe on unmount
-        }else{
+        } else {
             console.error("No authenticated user found.");
             return () => { };
         }
