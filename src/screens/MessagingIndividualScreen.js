@@ -146,6 +146,10 @@ const MessagingIndividualScreen = ({ route }) => {
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 seenBy: [userData?.owner_uid]
             })
+            
+            await DocRef.update({
+                lastAccess: firebase.firestore.FieldValue.serverTimestamp(),
+            })
         } catch (error) {
             Alert.alert(error.message);
         }
@@ -196,7 +200,6 @@ const MessagingIndividualScreen = ({ route }) => {
         // Update the dummy state to trigger a re-render
         setDummyState({});
     };
-
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <MessagesIndividualHeader header={userDataUid} theme={theme} />
@@ -214,7 +217,7 @@ const MessagingIndividualScreen = ({ route }) => {
                     keyboardShouldPersistTaps={'always'}>
                     <View style={{ flex: 1, backgroundColor: theme.Primary, justifyContent: "space-between" }}>
                         <View style={{ flex: 1 }}>
-                            <MessageList scrollViewRef={scrollViewRef} messages={messages} currentUser={userData} theme={theme} />
+                            <MessageList scrollViewRef={scrollViewRef} messages={messages} currentUser={userData} theme={theme} forwarded={userDataUid} />
                         </View>
                         <View style={{ marginBottom: 10, paddingTop: 20, }}>
                             <View style={{ flexDirection: "row", marginHorizontal: 10, justifyContent: "space-between", backgroundColor: theme.Primary, borderRadius: 50, borderWidth: 1, borderColor: theme.Secondary }}>

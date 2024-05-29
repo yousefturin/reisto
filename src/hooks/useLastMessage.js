@@ -33,6 +33,8 @@ const useLastMessage = (userData, item, onUpdateLastMessage, flag, setMessagesNu
                     setLoading(false);
                     setMessagesNum(unseenMessages.length);
                     setLastMessage(latestMessage);
+                    // using indexing from firebase currently for the messages, but this is still needed
+                    // messages are indexed in firebase without considering the user's id, so second sort is needed.
                     if (flag === "FromMain") onUpdateLastMessage(item.owner_uid, latestMessage);
 
                 } catch (error) {

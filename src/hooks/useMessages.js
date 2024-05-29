@@ -29,9 +29,9 @@ const useMessages = (Param) => {
         try {
             // search the messages based on the current user id and fetch those messages
             const messagesQuery1 = db.collection('messages')
-                .where('owner1', '==', Param);
+                .where('owner1', '==', Param).orderBy('lastAccess', 'desc');
             const messagesQuery2 = db.collection('messages')
-                .where('owner2', '==', Param);
+                .where('owner2', '==', Param).orderBy('lastAccess', 'desc');
 
             // Subscribe to the query snapshot to receive real-time updates
             return messagesQuery1.onSnapshot((snapshot1) => {

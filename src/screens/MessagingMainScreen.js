@@ -84,6 +84,8 @@ const MessagingMainScreen = () => {
     }
     //#endregion
 
+    // This function is used to update the last message of the user,
+    // even the firebase indexing is used but it will not give the sort for the current user.<--(process of sorting is improved with firebase indexing)
     //#region Update last message
     const updateLastMessage = useCallback((userId, message) => {
         // this was moved from the MainMessageList.js to here to make the 
