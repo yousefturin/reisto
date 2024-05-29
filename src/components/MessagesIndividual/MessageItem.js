@@ -40,10 +40,10 @@ const MessageItem = ({ message, currentUser, theme }) => {
         //this message is sent by me
         if (message?.type_of_message === "text") {
             return (
-                <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 10, marginRight: 10 }}>
+                <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 10, marginRight: 10, }}>
                     <View style={{ alignItems: 'flex-end', maxWidth: '80%', }}>
                         <View style={{ zIndex: 999, backgroundColor: theme.appPrimary, borderRadius: 15, borderBottomRightRadius: 10, alignItems: "center" }}>
-                            <Text style={{ color: theme.Primary === "#050505" ? theme.textPrimary : theme.Primary, fontSize: 16, padding: 10, paddingBottom: 0, letterSpacing: -0.1, }}>
+                            <Text style={{ color: theme.Primary === "#050505" ? theme.textPrimary : theme.Primary, fontSize: 16, padding: 10, paddingBottom: 0, letterSpacing: -0.1, minWidth: 80 }}>
                                 {message?.text}
                             </Text>
                             {/* this is a sketchy way of doing it, but it works */}
@@ -67,6 +67,10 @@ const MessageItem = ({ message, currentUser, theme }) => {
                             transform: [{ rotate: '90deg' }], marginTop: -20,
                             marginRight: -1
                         }} />
+                        {message?.emoji &&
+                            <View style={{ justifyContent: "center", alignItems: "center", marginRight: 15, marginTop: -3, zIndex: 999, width: 30, height: 20, backgroundColor: theme.Tertiary, borderRadius: 20, borderWidth: 1, borderColor: theme.Primary }}>
+                                <SvgComponent svgKey={message.emoji} width={moderateScale(13)} height={moderateScale(13)} />
+                            </View>}
                     </View>
                 </View>
             )
@@ -153,7 +157,7 @@ const MessageItem = ({ message, currentUser, theme }) => {
                                 />
                             </View>
                         </TouchableOpacity>
-                        <View style={{ backgroundColor: theme.SubPrimary, borderBottomRightRadius: 20, borderBottomLeftRadius: 20, flexDirection: "row", maxWidth: 260, marginBottom: 10,width:"100%" }}>
+                        <View style={{ backgroundColor: theme.SubPrimary, borderBottomRightRadius: 20, borderBottomLeftRadius: 20, flexDirection: "row", maxWidth: 260, marginBottom: 10, width: "100%" }}>
                             <Text style={{ color: theme.textPrimary, margin: 10 }} numberOfLines={2} ellipsizeMode="tail">
                                 <Text style={{ fontWeight: "700" }}>{message?.shared_data?.user} </Text>
                                 <Text style={{ color: theme.textSecondary }} >
@@ -173,7 +177,7 @@ const MessageItem = ({ message, currentUser, theme }) => {
                 <View style={{ flexDirection: "row", justifyContent: "flex-start", marginBottom: 10, marginLeft: 10 }}>
                     <View style={{ alignItems: 'flex-start', maxWidth: '80%', }}>
                         <View style={{ zIndex: 999, backgroundColor: theme.SubPrimary, borderRadius: 15, borderBottomLeftRadius: 10, }}>
-                            <Text style={{ color: theme.textPrimary, fontSize: 16, padding: 10, paddingBottom: 0, letterSpacing: -0.1, alignSelf: "flex-start" }}>
+                            <Text style={{ color: theme.textPrimary, fontSize: 16, padding: 10, paddingBottom: 0, letterSpacing: -0.1, alignSelf: "flex-start", minWidth: 80 }}>
                                 {message?.text}
                             </Text>
                             {/* this is a sketchy way of doing it, but it works */}
@@ -195,6 +199,10 @@ const MessageItem = ({ message, currentUser, theme }) => {
                             transform: [{ rotate: '90deg' }], marginTop: -20,
                             marginLeft: -1
                         }} />
+                        {message?.emoji &&
+                            <View style={{ justifyContent: "center", alignItems: "center", marginLeft: 15, marginTop: -3, zIndex: 999, width: 30, height: 20, backgroundColor: theme.Tertiary, borderRadius: 20, borderWidth: 1, borderColor: theme.Primary }}>
+                                <SvgComponent svgKey={message.emoji} width={moderateScale(13)} height={moderateScale(13)} />
+                            </View>}
                     </View>
                 </View>
             )
@@ -280,7 +288,7 @@ const MessageItem = ({ message, currentUser, theme }) => {
                                 />
                             </View>
                         </TouchableOpacity>
-                        <View style={{ backgroundColor: theme.SubPrimary, borderBottomRightRadius: 20, borderBottomLeftRadius: 20, flexDirection: "row", maxWidth: 260, marginBottom: 10,width:"100%" }}>
+                        <View style={{ backgroundColor: theme.SubPrimary, borderBottomRightRadius: 20, borderBottomLeftRadius: 20, flexDirection: "row", maxWidth: 260, marginBottom: 10, width: "100%" }}>
                             <Text style={{ color: theme.textPrimary, margin: 10 }} numberOfLines={2} ellipsizeMode="tail">
                                 <Text style={{ fontWeight: "700" }}>{message?.shared_data?.user} </Text>
                                 <Text style={{ color: theme.textSecondary }} >
