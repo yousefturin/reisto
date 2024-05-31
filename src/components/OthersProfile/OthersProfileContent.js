@@ -50,18 +50,20 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
     }, []);
 
 
-    // there is issue in this part of code when making the user follow another user for first time.
+    // there is issue in this part of code when making the user follow another user for first time.<---(FIXED)
     const handleFollowing = () => {
         const currentFollowingStatus = !followersAndFollowing?.following?.includes(
             userDataAfterNavigation?.id
         )
+
         const currentFollowingStatusForPassedUser = !followersAndFollowingForPassedUser.followers.includes(
             firebase.auth().currentUser.email
         )
         db.collection('users')
+        // values need to be check with true, so then it does not give true when there is no value
             .doc(firebase.auth().currentUser.email)
             .collection('following_followers').doc(followersAndFollowing.id).update({
-                following: currentFollowingStatus ? firebase.firestore.FieldValue.arrayUnion(
+                following: currentFollowingStatus === true ? firebase.firestore.FieldValue.arrayUnion(
                     userDataAfterNavigation.id
                 )
                     : firebase.firestore.FieldValue.arrayRemove(
@@ -71,7 +73,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
                 db.collection('users')
                     .doc(userDataAfterNavigation.id)
                     .collection('following_followers').doc(followersAndFollowingForPassedUser.id).update({
-                        followers: currentFollowingStatusForPassedUser ? firebase.firestore.FieldValue.arrayUnion(
+                        followers: currentFollowingStatusForPassedUser === true ? firebase.firestore.FieldValue.arrayUnion(
                             firebase.auth().currentUser.email
                         )
                             : firebase.firestore.FieldValue.arrayRemove(

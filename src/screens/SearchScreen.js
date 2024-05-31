@@ -313,7 +313,7 @@ const SearchScreen = () => {
                         onScrollEndDrag={onScrollEndDrag}
                         keyboardDismissMode="on-drag"
                         keyboardShouldPersistTaps='handled'
-                        style={{ paddingTop: 50, paddingBottom: 50 }}>
+                        style={{ paddingTop: moderateScale(50), paddingBottom: moderateScale(50) }}>
 
                         {shouldDisplaySearchedItems && searchQuery !== null && <SearchSuggestion navigation={navigation} searchQuery={searchQuery} theme={theme} />}
 
@@ -322,11 +322,11 @@ const SearchScreen = () => {
                                 <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
                                     <Image source={{ uri: item.profile_picture, cache: "force-cache", }}
                                         style={{
-                                            width: 50,
-                                            height: 50,
-                                            borderRadius: 50,
-                                            margin: 7,
-                                            borderWidth: 1.5,
+                                            width: moderateScale(50),
+                                            height: moderateScale(50),
+                                            borderRadius: moderateScale(50),
+                                            margin: moderateScale(7),
+                                            borderWidth: moderateScale(1.5),
                                             borderColor: theme.Secondary
                                         }}
                                         placeholder={blurHash}
@@ -346,11 +346,11 @@ const SearchScreen = () => {
                                     <View style={{ width: "20%", justifyContent: "center", alignItems: "center" }}>
                                         <Image source={{ uri: item.profile_picture, cache: "force-cache" }}
                                             style={{
-                                                width: 50,
-                                                height: 50,
-                                                borderRadius: 50,
-                                                margin: 7,
-                                                borderWidth: 1.5,
+                                                width: moderateScale(50),
+                                                height: moderateScale(50),
+                                                borderRadius: moderateScale(50),
+                                                margin: moderateScale(7),
+                                                borderWidth: moderateScale(1.5),
                                                 borderColor: theme.Secondary
                                             }}
                                             placeholder={blurHash}

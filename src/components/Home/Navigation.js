@@ -111,7 +111,7 @@ const NavigationStack = ({ routeName, userData }) => {
                             style={{
                                 width: moderateScale(25),
                                 height: moderateScale(25),
-                                borderRadius: 50,
+                                borderRadius: moderateScale(50),
                                 borderWidth: icons[4].action.includes(routeName) ? 1.5 : 1,
                                 borderColor: icons[4].action.includes(routeName) ? theme.textPrimary : theme.Secondary
                             }}

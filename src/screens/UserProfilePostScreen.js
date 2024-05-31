@@ -37,10 +37,10 @@ const UserProfilePostScreen = ({ route }) => {
         setTimeout(() => { flatListRef.current?.scrollToIndex({ index: info.index, animated: false, }); }, 10);
         flatListRef.current?.scrollToOffset({ offset: offset, animated: false });
     };
-
+        // (ToDo) when click to see more is clicked, it goes under the post due to the height of the post being fixed to 660, which is used for scroll to index        
     const renderItem = useCallback(({ item }) => {
         return (
-            <View style={{ height: 660 }}>
+            <View style={{   }}>
                 <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} theme={theme} />
             </View>
         )
@@ -54,21 +54,21 @@ const UserProfilePostScreen = ({ route }) => {
             });
         }
     }, [scrollToPostId])
-
+    // (ToDo) onContentSizeChange must be removed from VirtualizedList.
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <OwnerProfileHeader userData={userData} theme={theme} t={t} />
             {loading === false ? (
                 <VirtualizedList
-                    pagingEnabled
-                    snapToInterval={660}
-                    snapToAlignment="start"
-                    decelerationRate="fast"
-                    onContentSizeChange={() => {
-                        if (flatListRef.current && scrollToPostId && posts && posts.length) {
-                            flatListRef.current.scrollToIndex({ index: scrollToPostId });
-                        }
-                    }}
+                    // pagingEnabled
+                    // snapToInterval={660}
+                    // snapToAlignment="start"
+                    // decelerationRate="fast"
+                    // onContentSizeChange={() => {
+                    //     if (flatListRef.current && scrollToPostId && posts && posts.length) {
+                    //         flatListRef.current.scrollToIndex({ index: scrollToPostId });
+                    //     }
+                    // }}
                     viewabilityConfig={{ viewAreaCoveragePercentThreshold: 35 }}
                     keyboardDismissMode="on-drag"
                     showsVerticalScrollIndicator={false}
@@ -84,7 +84,7 @@ const UserProfilePostScreen = ({ route }) => {
                     getItemLayout={(data, index) => ({
                         length: 660,
                         offset: 660 * index,
-                        index
+                        index,
                     })}
                 />
             ) : loading === null ? (

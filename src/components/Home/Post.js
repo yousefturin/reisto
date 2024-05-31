@@ -448,7 +448,7 @@ const PostHeader = ({ post, isModalVisible, setIsModalVisible, userData, theme }
             <TouchableOpacity style={{ flexDirection: "row", alignItems: "center" }} activeOpacity={0.7} onPress={() => handlePostNavigationFromHome(post)}>
                 <Image
                     source={{ uri: post.profile_picture, cache: "force-cache" }}
-                    style={[styles.userImage, { borderColor: theme.textTertiary }]}
+                    style={[styles.userImage, { borderColor: theme.textTertiary, borderRadius: moderateScale(50), }]}
                     placeholder={blurHash}
                     contentFit="cover"
                     transition={50}
@@ -503,7 +503,7 @@ const PostImage = ({ post, handleLike, theme }) => {
     return (
         <TouchableOpacity
             activeOpacity={1}
-            style={{ width: '100%', height: 450 }}
+            style={{ width: '100%', height:  moderateScale(400) }}
             onPress={(event) => handleDoubleTapImage(post, event)}>
             <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} />
             <Image
@@ -822,7 +822,7 @@ const styles = StyleSheet.create({
     userImage: {
         width: 35,
         height: 35,
-        borderRadius: 50,
+
         marginLeft: 6,
         borderWidth: 1,
     },
