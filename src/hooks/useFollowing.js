@@ -2,7 +2,7 @@ import { db, firebase } from "../firebase";
 import { useEffect, useState } from 'react';
 
 const useFollowing = (QueryParam) => {
-    const [followersAndFollowing, setFollowersAndFollowing] = useState(null);
+    const [followersAndFollowing, setFollowersAndFollowing] = useState([]);
     const [followersAndFollowingForPassedUser, setFollowersAndFollowingForPassedUser] = useState({ id: "", followers: "", following: "", });
     const [loading, setLoading] = useState(true);
     useEffect(() => {
