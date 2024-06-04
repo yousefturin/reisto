@@ -822,7 +822,7 @@ const styles = StyleSheet.create({
     userImage: {
         width: 35,
         height: 35,
-
+        borderRadius: 50,
         marginLeft: 6,
         borderWidth: 1,
     },
