@@ -11,7 +11,7 @@ const columnCount = 3;
 
 const ProfilePost = ({ posts, userData, keyValue, userDataToBeNavigated, justSeenPost }) => {
     const navigation = useNavigation();
-    console.log("justSeenPost", justSeenPost)
+    // console.log("justSeenPost", justSeenPost)
 
     const handleNavigationToPost = (postId) => {
         let scrollToIndex
