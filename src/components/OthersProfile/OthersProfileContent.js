@@ -50,12 +50,17 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
     }, []);
 
 
-    // there is issue in this part of code when making the user follow another user for first time.<---(FIXED)
+    // there is issue in this part of code when making the user follow another user for first time.<---(not fixed)
     const handleFollowing = () => {
+        // console.log("current following:",currentFollowingStatus)
+        // console.log("following and follower:",followersAndFollowing.following)
         const currentFollowingStatus = !followersAndFollowing?.following?.includes(
             userDataAfterNavigation?.id
         )
+        // console.log("current nav id: ",userDataAfterNavigation?.id)
+        // console.log("current following stat: ",currentFollowingStatusForPassedUser)
 
+        // console.log("passedUser:",followersAndFollowingForPassedUser?.followers)
         const currentFollowingStatusForPassedUser = !followersAndFollowingForPassedUser.followers.includes(
             firebase.auth().currentUser.email
         )
