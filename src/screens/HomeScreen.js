@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import { SafeAreaView, RefreshControl, FlatList, View, Text, Dimensions, Animated, TouchableOpacity } from 'react-native'
 import React, { useState, useCallback, useContext } from 'react'
 import Header from '../components/Home/Header'

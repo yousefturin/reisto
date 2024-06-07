@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import {
     View,
     Text,
@@ -251,7 +257,7 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
     }
 
     return (
-        <View style={{ paddingBottom: isLastPost ? 55 : 30 }}>
+        <View style={{ paddingBottom: isLastPost ? 55 : 30, height: isExpanded === false ? 660 : null }}>
             <PostHeader post={post} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}
                 userData={userData} handleSavedPost={handleSavedPost}
                 savedPosts={savedPosts}
@@ -503,7 +509,7 @@ const PostImage = ({ post, handleLike, theme }) => {
     return (
         <TouchableOpacity
             activeOpacity={1}
-            style={{ width: '100%', height:  moderateScale(400) }}
+            style={{ width: '100%', height: moderateScale(400) }}
             onPress={(event) => handleDoubleTapImage(post, event)}>
             <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} />
             <Image

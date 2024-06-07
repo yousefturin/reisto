@@ -32,7 +32,7 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
     const renderItem = useCallback(
         ({ item }) => {
             return (
-                <View style={{ height: 660 }}>
+                <View style={{ }}>
                     <Post
                         post={item}
                         userData={userData}
@@ -71,20 +71,20 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
             <SavedPostsHeader header={searchHeader} theme={theme} />
             {loading === false ? (
                 <VirtualizedList
-                    pagingEnabled
-                    snapToInterval={660}
-                    snapToAlignment="start"
-                    decelerationRate="fast"
-                    onContentSizeChange={() => {
-                        if (
-                            flatListRef.current &&
-                            scrollToPostId &&
-                            posts &&
-                            posts.length
-                        ) {
-                            flatListRef.current.scrollToIndex({ index: scrollToPostId });
-                        }
-                    }}
+                    // pagingEnabled
+                    // snapToInterval={660}
+                    // snapToAlignment="start"
+                    // decelerationRate="fast"
+                    // onContentSizeChange={() => {
+                    //     if (
+                    //         flatListRef.current &&
+                    //         scrollToPostId &&
+                    //         posts &&
+                    //         posts.length
+                    //     ) {
+                    //         flatListRef.current.scrollToIndex({ index: scrollToPostId });
+                    //     }
+                    // }}
                     viewabilityConfig={{ viewAreaCoveragePercentThreshold: 35 }}
                     keyboardDismissMode="on-drag"
                     showsVerticalScrollIndicator={false}

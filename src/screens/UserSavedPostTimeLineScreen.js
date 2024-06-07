@@ -32,7 +32,7 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
 
     const renderItem = useCallback(({ item }) => {
         return (
-            <View style={{ height: 660 }}>
+            <View style={{  }}>
                 <Post post={item} userData={userData} usersForSharePosts={usersForSharePosts} theme={theme} />
             </View>
         )
@@ -52,15 +52,15 @@ const UserSavedPostTimeLineScreen = ({ route }) => {
             <SavedPostsHeader header={profileSavedPostsTimeLineHeader} theme={theme} />
             {loading === false ? (
                 <VirtualizedList
-                    pagingEnabled
-                    snapToInterval={660}
-                    snapToAlignment="start"
-                    decelerationRate="fast"
-                    onContentSizeChange={() => {
-                        if (flatListRef.current && scrollToPostId && savedPosts && savedPosts.length) {
-                            flatListRef.current.scrollToIndex({ index: scrollToPostId });
-                        }
-                    }}
+                    // pagingEnabled
+                    // snapToInterval={660}
+                    // snapToAlignment="start"
+                    // decelerationRate="fast"
+                    // onContentSizeChange={() => {
+                    //     if (flatListRef.current && scrollToPostId && savedPosts && savedPosts.length) {
+                    //         flatListRef.current.scrollToIndex({ index: scrollToPostId });
+                    //     }
+                    // }}
                     viewabilityConfig={{ viewAreaCoveragePercentThreshold: 35 }}
                     keyboardDismissMode="on-drag"
                     showsVerticalScrollIndicator={false}

@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import { SafeAreaView, View } from 'react-native'
 import React, { useContext, useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native';
@@ -46,13 +52,14 @@ const AdditionalSearchScreen = ({ route }) => {
             }
         };
     }, [searchQuery])
-    
     const fetchDataOfSearchQuery = async (searchQuery) => {
         try {
+            // need to store  the caption in small and upper case to enhance search and make it wider.
             const user = firebase.auth().currentUser;
             if (user) {
                 const querySnapshot = query(collectionGroup(db, 'posts'), where
-                    ('caption', '==', `${searchQuery}`));
+                    ('category', '>=', `${searchQuery}`), where
+                    ('category', '<=', `${searchQuery}+"\uf8ff"`));
                 const querySnapshotAwait = await getDocs(querySnapshot);
                 if (querySnapshotAwait.empty) {
                     console.log("No matching documents found.");

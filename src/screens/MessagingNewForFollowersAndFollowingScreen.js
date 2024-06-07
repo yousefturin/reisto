@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import React, { useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, Keyboard, TouchableOpacity } from 'react-native';
 import EditProfileHeader from '../components/UserEditProfile/EditProfileHeader';

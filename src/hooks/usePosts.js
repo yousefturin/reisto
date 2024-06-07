@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import { db, firebase } from "../firebase";
 import { useCallback, useEffect, useState } from 'react';
 
@@ -80,7 +86,7 @@ const usePosts = (fromWhere, searchQuery = null, QueryParam = null, shouldFetch 
     };
 
     const fetchCustomPost = async (searchQuery) => {
-        const query = db.collectionGroup('posts').where('caption', '==', searchQuery);
+        const query = db.collectionGroup('posts').where('category', '>=', searchQuery).where('category', '<=', searchQuery+"\uf8ff");
         fetchPosts(query);
     };
     const fetchUserPosts = async () => {
