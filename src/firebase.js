@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import firebase from "firebase/compat/app";
@@ -29,6 +35,10 @@ const firebaseConfig = {
 // getReactNativePersistence was pain in the ass to keep teh user logged in 2 day were spent
 initializeAuth(firebase.initializeApp(firebaseConfig), {
     persistence: getReactNativePersistence(AsyncStorage),
+});
+firebase.firestore().settings({
+    cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,// or specify your preferred cache size
+    merge: true
 });
 const db = firebase.firestore()
 export { firebase, db } 

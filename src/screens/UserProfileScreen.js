@@ -1,4 +1,10 @@
-import { RefreshControl, SafeAreaView } from 'react-native'
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
+import { RefreshControl, SafeAreaView, View } from 'react-native'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { db, firebase } from '../firebase'
 import ProfileHeader from '../components/Profile/ProfileHeader'
@@ -11,20 +17,17 @@ import { useTheme } from '../context/ThemeContext'
 import { useTranslation } from 'react-i18next'
 import UseCustomTheme from '../utils/UseCustomTheme'
 import EmptyDataParma from '../components/CustomComponent/EmptyDataParma'
-import { View } from 'moti'
 import { Animated } from 'react-native'
 import LoadingPlaceHolder from '../components/Search/LoadingPlaceHolder'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import useFastPosts from '../hooks/useFastPosts'
 
 const UserProfileScreen = () => {
     const { t } = useTranslation();
     const userData = useContext(UserContext);
-    const [userPosts, setUserPost] = useState([])
     const [refreshing, setRefreshing] = useState(false);
-    const [_, setScrollToPostId] = useState(null)
-    const [loading, setLoading] = useState(null);
-    // it is false when loading is still not done from the promise if loading be comes false then it means that the data is fetched and the user has no posts
-    const [afterLoading, setAfterLoading] = useState(false);
+    const { userPosts, loading, afterLoading, fetchUserSavedPosts } = useFastPosts(true, firebase.auth().currentUser.email)
+
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
 
@@ -37,69 +40,18 @@ const UserProfileScreen = () => {
         }
     }
 
-    useEffect(() => {
-        setLoading(true);
-
-        const unsubscribe = fetchUserPosts();
-        console.log("Subscribed to user posts.")
-        // Return cleanup function to unsubscribe when component unmounts
-        return () => {
-            console.log("Unsubscribed from user posts.")
-            unsubscribe;
-        };
-    }, []);
-
-    const fetchUserPosts = async () => {
-        const user = firebase.auth().currentUser;
-        if (user) {
-            const cachedData = await AsyncStorage.getItem('userPostURLs');
-            if (cachedData) {
-                setLoading(false);
-                setUserPost(JSON.parse(cachedData));
-            }
-            const query = db.collection('users').doc(user.email).collection('posts').orderBy('createdAt', 'desc');
-            return query.onSnapshot(snapshot => {
-                const postsProfilePictures = snapshot.docs.map(async post => {
-                    const dbPostData = post.data();
-                    const dbImageURL = dbPostData.imageURL
-                    // why tf i was fetching the user data and map the profile image! OMG!, only images are displayed of [posts]
-                    return {
-                        id: post.id,
-                        imageURL: dbImageURL,
-                    }
-                })
-                Promise.all(postsProfilePictures).then(posts => {
-                    setLoading(false);
-                    if (posts.length === 0) setAfterLoading(true);
-                    setUserPost(posts)
-                    AsyncStorage.setItem('userPostURLs', JSON.stringify(posts))
-                }).catch(error => {
-                    console.error("Error fetching Promise posts:", error);
-                })
-            }, error => {
-                return () => { };
-            });
-        }
-        else {
-            console.error("No authenticated user found.");
-            return () => { };
-        }
-    };
-
     // Function to handle scroll event
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        try {
-            fetchUserPosts(); // Your function to fetch posts
-        } catch (error) {
-            console.error('Error refreshing posts:', error);
-        }
+        const subscription = fetchUserSavedPosts();
         setRefreshing(false);
+        return () => {
+            if (subscription && typeof subscription.unsubscribe === 'function') {
+                // Call the unsubscribe function to stop listening to Firestore updates
+                subscription.unsubscribe();
+            }
+        };
     }, []);
-
-    const handlePostPress = (postId) => {
-        setScrollToPostId(postId)
-    }
 
     //#region  animated header
     const scrollY = new Animated.Value(0);
@@ -205,16 +157,16 @@ const UserProfileScreen = () => {
                 >
                     <ProfileContent userData={userData} userPosts={userPosts} theme={theme} t={t} opacityContent={opacityContent} />
                     {loading === false && (
-                        <ProfilePost posts={userPosts} userData={userData} onPostPress={handlePostPress} keyValue={"NavigationToMyProfile"} t={t} />
+                        <ProfilePost posts={userPosts} userData={userData} keyValue={"NavigationToMyProfile"} t={t} />
                     )}
                     {loading === true && (
-                        <LoadingPlaceHolder theme={theme} />
+                      <LoadingPlaceHolder theme={theme} /> 
+                      
                     )}
 
                     {afterLoading === true && loading === false && (<View style={{ minHeight: 250, }}>
                         <EmptyDataParma SvgElement={"AddPostIllustration"} theme={theme} t={t} dataMessage={"You can share posts to tell your friends about your recipes."} TitleDataMessage={"Nothing shared yet"} />
                     </View>)}
-
                 </Animated.ScrollView>
             </>
         </SafeAreaView>

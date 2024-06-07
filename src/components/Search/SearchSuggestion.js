@@ -1,13 +1,19 @@
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import { View, Text, TouchableOpacity, Dimensions } from 'react-native'
 import React from 'react'
 import SvgComponent from '../../utils/SvgComponents'
 import initializeScalingUtils from '../../utils/NormalizeSize';
 
-const SearchSuggestion = ({ searchQuery, theme }) => {
+const SearchSuggestion = ({ searchQuery, theme, navigation }) => {
     const { moderateScale } = initializeScalingUtils(Dimensions);
 
     return (
-        <TouchableOpacity style={{ flexDirection: "row" ,paddingTop: 10,}} onPress={() => { }}>
+        <TouchableOpacity style={{ flexDirection: "row", paddingTop: 10, }} onPress={() => { navigation.navigate('AdditionalSearchScreen', { searchQuery: searchQuery }) }}>
             <View style={{ width: "20%", justifyContent: "center", alignItems: "center", }}>
                 <View style={{
                     width: 50,
@@ -21,7 +27,7 @@ const SearchSuggestion = ({ searchQuery, theme }) => {
                     <SvgComponent svgKey="SearchSVGInActive" width={moderateScale(20)} height={moderateScale(20)} stroke={theme.textPrimary} />
                 </View>
             </View>
-            <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start"}}>
+            <View style={{ flexDirection: "column", width: "80%", justifyContent: "center", alignItems: "flex-start" }}>
                 <Text style={{ color: theme.textPrimary, fontWeight: "500", fontSize: 16 }}>{searchQuery}</Text>
             </View>
         </TouchableOpacity>

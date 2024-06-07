@@ -1,4 +1,9 @@
-
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import { FlatList, StyleSheet, Dimensions, TouchableOpacity, Animated, View, RefreshControl } from 'react-native';
 import React, { useCallback } from 'react'
 import { Image } from 'expo-image';
@@ -11,6 +16,8 @@ const columnCount = 3;
 
 
 const SavedPostsGrid = ({
+    searchQuery,
+    fromWhere,
     fromWhereValue,
     posts, userData,
     navigateToScreen, onRefresh,
@@ -21,15 +28,25 @@ const SavedPostsGrid = ({
     onScrollEndDrag }) => {
 
     const navigation = useNavigation();
+    const searchParams = fromWhere === "AdditionalSearchScreen" ? searchQuery : null
 
     const handleNavigationToPost = (postId) => {
+        let scrollToIndex 
+        if (posts.length > 0) {
+            const index = posts.findIndex(post => post.id === postId);
+            if (index !== -1) {
+                scrollToIndex = index;
+            }
+        }
+        // console.log("scrollToIndex", scrollToIndex)
+        
         if (navigateToScreen === "SavedPosts") {
             navigation.navigate('UserSavedPostTimeLine', {
-                userData, scrollToPostId: postId
+                userData, scrollToPostId: scrollToIndex
             });
         } else if (navigateToScreen === "SearchExplore") {
             navigation.navigate('SearchExplorePostTimeLine', {
-                userData, scrollToPostId: postId
+                userData, scrollToPostId: scrollToIndex, fromWhere: fromWhere, searchQuery: searchParams
             });
         }
     }
@@ -84,13 +101,6 @@ const SavedPostsGrid = ({
                 renderItem={renderItem}
                 keyExtractor={keyExtractor}
                 numColumns={columnCount}
-
-                // removeClippedSubviews={true}
-                // maxToRenderPerBatch={2}
-                // updateCellsBatchingPeriod={10}
-                // initialNumToRender={2}
-                // windowSize={2}
-
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}

@@ -2,7 +2,7 @@
 
 # dependencies
 node_modules/
-
+package-lock.json
 # Expo
 .expo/
 dist/
@@ -17,7 +17,7 @@ web-build/
 *.mobileprovision
 
 # Metro
-.metro-health-check*
+.metro-health-check* 
 
 # debug
 npm-debug.*
@@ -34,3 +34,5 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+/%ProgramData%/

@@ -1,6 +1,12 @@
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import React, { createContext, useEffect, useState } from 'react';
 import { db, firebase } from '../firebase';
-import { limit } from 'firebase/firestore/lite';
+
 
 // Create a new context
 const MessagesNumContext = createContext();
@@ -24,7 +30,7 @@ const MessagesNumProvider = ({ children }) => {
 
         const privateMessagesPromises = [];
 
-        const unsubscribe1 = messagesQuery1.onSnapshot(async (snapshot1) => {
+        const unsubscribe = messagesQuery1.onSnapshot(async (snapshot1) => {
             snapshot1.forEach(async (messageDoc) => {
                 const privateMessagesRef = messageDoc.ref.collection('private_messages')
                     .orderBy('createdAt', 'desc')
@@ -56,12 +62,13 @@ const MessagesNumProvider = ({ children }) => {
             setMessagesNum(uniquePrivateMessages.size);
             setLoading(false);
         }, error => {
+            console.error("Error listening to document:", error);
             return () => { };
         });
 
         // Clean up the subscription when the component unmounts
         return () => {
-            unsubscribe1();
+            unsubscribe();
         };
     }, [messagesNum]);
 

@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import { View, Text, TouchableOpacity, Dimensions, Modal } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { blurHash } from '../../../assets/HashBlurData';
@@ -8,12 +14,15 @@ import { extractDomain } from '../../utils/ExtractDomainFromLink';
 import { WebView } from 'react-native-webview';
 import { Divider } from 'react-native-elements';
 import { db, firebase } from '../../firebase';
+import useFollowing from '../../hooks/useFollowing';
+import { Skeleton } from 'moti/skeleton';
+
 
 const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const { moderateScale } = initializeScalingUtils(Dimensions);
-    const [followersAndFollowing, setFollowersAndFollowing] = useState([])
-    const [followersAndFollowingForPassedUser, setFollowersAndFollowingForPassedUser] = useState([])
+    const { loading, followersAndFollowing, followersAndFollowingForPassedUser } = useFollowing(userDataToBeNavigated.id);
+
     const [userDataAfterNavigation, setUserDataAfterNavigation] = useState(userDataToBeNavigated)
     const isUserFollowed = followersAndFollowing?.following?.includes(userDataToBeNavigated.id)
 
@@ -30,11 +39,12 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
                         bio: data.bio,
                         link: data.link,
                         id: data.email,
-                        owner_uid: userDataToBeNavigated.owner_uid
+                        owner_uid: data.owner_uid
                     };
                     // this was the only way to do it otherwise the useStat wil not be updated when it pass the Params to navigation
                     setUserDataAfterNavigation(userDataNew);
                 }, error => {
+                    console.error("Error listening to document:", error);
                     return () => { };
                 });
                 return () => unsubscribe();
@@ -45,92 +55,26 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
         GetPostOwnerData(userDataToBeNavigated);
     }, []);
 
-    useEffect(() => {
-        let unsubscribe;
-        const getFollowersAndFollowingDataForCurrentUser = async () => {
-            const querySnapshot = await db.collection('users')
-                .doc(firebase.auth().currentUser.email)
-                .collection('following_followers')
-                .limit(1) // Limit query to one document
-                .get();
 
-            if (!querySnapshot.empty) {
-                const doc = querySnapshot.docs[0];
-                const docRef = doc.ref;
-
-                unsubscribe = docRef.onSnapshot((snapshot) => {
-                    const data = snapshot.data();
-                    setFollowersAndFollowing({
-                        id: snapshot.id,
-                        followers: data.followers,
-                        following: data.following,
-                    });
-                }, (error) => {
-                    console.error("Error listening to document:", error);
-                    return () => { };
-                });
-
-            } else {
-                // No documents found
-                console.log("No document found in the collection.");
-            }
-        };
-        getFollowersAndFollowingDataForCurrentUser();
-        return () => {
-            // Unsubscribe when component unmounts
-            unsubscribe && unsubscribe();
-        };
-    }, []);
-
-
-    useEffect(() => {
-        let unsubscribe;
-        const getFollowersAndFollowingDataForPassedUser = async () => {
-            const querySnapshot = await db.collection('users')
-                .doc(userDataAfterNavigation.id)
-                .collection('following_followers')
-                .limit(1) // Limit query to one document
-                .get();
-
-            if (!querySnapshot.empty) {
-                const doc = querySnapshot.docs[0];
-                const docRef = doc.ref;
-
-                unsubscribe = docRef.onSnapshot((snapshot) => {
-                    const data = snapshot.data();
-                    setFollowersAndFollowingForPassedUser({
-                        id: snapshot.id,
-                        followers: data.followers,
-                        following: data.following,
-                    });
-                }, (error) => {
-                    console.error("Error listening to document:", error);
-                    return () => { };
-                });
-            } else {
-                // No documents found
-                console.log("No document found in the collection.");
-            }
-        };
-        getFollowersAndFollowingDataForPassedUser();
-        return () => {
-            // Unsubscribe when component unmounts
-            unsubscribe && unsubscribe();
-        };
-    }, []);
-
-    // there is issue in this part of code when making the user follow another user for first time.
+    // there is issue in this part of code when making the user follow another user for first time.<---(not fixed)
     const handleFollowing = () => {
+        // console.log("current following:",currentFollowingStatus)
+        // console.log("following and follower:",followersAndFollowing.following)
         const currentFollowingStatus = !followersAndFollowing?.following?.includes(
             userDataAfterNavigation?.id
         )
+        // console.log("current nav id: ",userDataAfterNavigation?.id)
+        // console.log("current following stat: ",currentFollowingStatusForPassedUser)
+
+        // console.log("passedUser:",followersAndFollowingForPassedUser?.followers)
         const currentFollowingStatusForPassedUser = !followersAndFollowingForPassedUser.followers.includes(
             firebase.auth().currentUser.email
         )
         db.collection('users')
+        // values need to be check with true, so then it does not give true when there is no value
             .doc(firebase.auth().currentUser.email)
             .collection('following_followers').doc(followersAndFollowing.id).update({
-                following: currentFollowingStatus ? firebase.firestore.FieldValue.arrayUnion(
+                following: currentFollowingStatus === true ? firebase.firestore.FieldValue.arrayUnion(
                     userDataAfterNavigation.id
                 )
                     : firebase.firestore.FieldValue.arrayRemove(
@@ -140,7 +84,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
                 db.collection('users')
                     .doc(userDataAfterNavigation.id)
                     .collection('following_followers').doc(followersAndFollowingForPassedUser.id).update({
-                        followers: currentFollowingStatusForPassedUser ? firebase.firestore.FieldValue.arrayUnion(
+                        followers: currentFollowingStatusForPassedUser === true ? firebase.firestore.FieldValue.arrayUnion(
                             firebase.auth().currentUser.email
                         )
                             : firebase.firestore.FieldValue.arrayRemove(
@@ -151,7 +95,14 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
                 console.error('Error updating document: ', error)
             })
     }
-    
+    const SkeletonCommonProps = {
+        colorMode: theme.Primary === '#050505' ? 'dark' : 'light',
+        backgroundColor: theme.Secondary,
+        transition: {
+            type: 'timing',
+            duration: 2000,
+        }
+    }
     return (
         <View style={{ flexDirection: "column", }}>
             <View style={{ flexDirection: "row", }}>
@@ -222,51 +173,73 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
                     <SvgComponent svgKey="LinkSVG" width={moderateScale(18)} height={moderateScale(18)} stroke={theme.textURL} />
                 </TouchableOpacity>
             }
-            <View style={{
-                justifyContent: "space-around",
-                flexDirection: "row",
-                marginHorizontal: 20,
-                gap: 10,
-            }} >
-                {/* this must handle the followers. */}
-                <TouchableOpacity activeOpacity={0.8} onPress={() => handleFollowing()}>
-                    <View style={{
-                        marginTop: 20,
-                        backgroundColor: isUserFollowed ? theme.Quinary : theme.appPrimary,
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        borderColor: isUserFollowed ? theme.Quinary : theme.appPrimary,
-                        paddingVertical: 8,
-                        width: 180,
-                    }}>
-                        <Text style={{
-                            fontSize: 16,
-                            fontWeight: "500",
-                            // if user is following and it is white theme make text back, if user does not follow make text white
-                            color: theme.Primary === '#050505' ? theme.textPrimary : isUserFollowed ? theme.textPrimary : theme.Primary,
-                            textAlign: "center"
-                        }}> {isUserFollowed ? t('screens.profile.text.profileContent.unfollow') : t('screens.profile.text.profileContent.follow')}</Text>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity activeOpacity={0.8}>
-                    <View style={{
-                        marginTop: 20,
-                        backgroundColor: theme.Quinary,
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        borderColor: theme.Quinary,
-                        paddingVertical: 8,
-                        width: 180,
-                    }}>
-                        <Text style={{
-                            fontSize: 16,
-                            fontWeight: "500",
-                            color: theme.textPrimary,
-                            textAlign: "center"
-                        }}>{t('screens.profile.text.profileContent.shareProfile')}</Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
+
+            {/* this must handle the followers. */}
+            {loading === false ? (
+                <View style={{
+                    justifyContent: "space-around",
+                    flexDirection: "row",
+                    marginHorizontal: 20,
+                    gap: 10,
+                }} >
+                    <TouchableOpacity activeOpacity={0.8} onPress={() => handleFollowing()}>
+                        <View style={{
+                            marginTop: 20,
+                            backgroundColor: isUserFollowed ? theme.Quinary : theme.appPrimary,
+                            borderWidth: 1,
+                            borderRadius: 8,
+                            borderColor: isUserFollowed ? theme.Quinary : theme.appPrimary,
+                            paddingVertical: 8,
+                            width: 180,
+                        }}>
+                            <Text style={{
+                                fontSize: 16,
+                                fontWeight: "500",
+                                // if user is following and it is white theme make text back, if user does not follow make text white
+                                color: theme.Primary === '#050505' ? theme.textPrimary : isUserFollowed ? theme.textPrimary : theme.Primary,
+                                textAlign: "center"
+                            }}> {isUserFollowed ? t('screens.profile.text.profileContent.unfollow') : t('screens.profile.text.profileContent.follow')}</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity activeOpacity={0.8}>
+                        <View style={{
+                            marginTop: 20,
+                            backgroundColor: theme.Quinary,
+                            borderWidth: 1,
+                            borderRadius: 8,
+                            borderColor: theme.Quinary,
+                            paddingVertical: 8,
+                            width: 180,
+                        }}>
+                            <Text style={{
+                                fontSize: 16,
+                                fontWeight: "500",
+                                color: theme.textPrimary,
+                                textAlign: "center"
+                            }}>{t('screens.profile.text.profileContent.shareProfile')}</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            ) : (
+                <View style={{
+                    marginTop: 20,
+                    borderRadius: 8,
+                    width: 360,
+                    height: 35,
+                    marginHorizontal: 20,
+                    alignSelf: "center",
+                }} >
+                    <Skeleton
+                        show
+                        height={33}
+                        width={"100%"}
+                        {...SkeletonCommonProps}
+                    />
+                </View>
+
+            )}
+
+
             <Modal
                 visible={isModalVisible}
                 animationType="slide"

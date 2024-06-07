@@ -1,3 +1,10 @@
+
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import { View, Text, Dimensions } from 'react-native'
 import React from 'react'
 import SvgComponent from '../../utils/SvgComponents'
@@ -26,7 +33,7 @@ const MessageItem = ({ message, currentUser, theme }) => {
                 id: data.owner_email, // Replace email with id
                 username: data.user
             };
-            navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated: userDataToBeNavigated });
+            navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated: userDataToBeNavigated, justSeenPost: null });
         }
     }
 
@@ -34,14 +41,16 @@ const MessageItem = ({ message, currentUser, theme }) => {
         navigation.navigate("FromMessagesToSharedPost", { postId: postId, userID: userID });
     }
 
+
+
     if (currentUser?.owner_uid == message.owner_id) {
         //this message is sent by me
         if (message?.type_of_message === "text") {
             return (
-                <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 10, marginRight: 10 }}>
+                <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 10, marginRight: 10, }}>
                     <View style={{ alignItems: 'flex-end', maxWidth: '80%', }}>
                         <View style={{ zIndex: 999, backgroundColor: theme.appPrimary, borderRadius: 15, borderBottomRightRadius: 10, alignItems: "center" }}>
-                            <Text style={{ color: theme.Primary === "#050505" ? theme.textPrimary : theme.Primary, fontSize: 16, padding: 10, paddingBottom: 0, letterSpacing: -0.1, }}>
+                            <Text style={{ color: theme.Primary === "#050505" ? theme.textPrimary : theme.Primary, fontSize: 16, padding: 10, paddingBottom: 0, letterSpacing: -0.1, minWidth: 80 }}>
                                 {message?.text}
                             </Text>
                             {/* this is a sketchy way of doing it, but it works */}
@@ -65,11 +74,15 @@ const MessageItem = ({ message, currentUser, theme }) => {
                             transform: [{ rotate: '90deg' }], marginTop: -20,
                             marginRight: -1
                         }} />
+                        {message?.emoji &&
+                            <View style={{ justifyContent: "center", alignItems: "center", marginRight: 15, marginTop: -3, zIndex: 999, width: 30, height: 20, backgroundColor: theme.Tertiary, borderRadius: 20, borderWidth: 1, borderColor: theme.Primary }}>
+                                <SvgComponent svgKey={message.emoji} width={moderateScale(13)} height={moderateScale(13)} />
+                            </View>}
                     </View>
                 </View>
             )
         }
-
+        // need to add a text message incase the image was deleted by the user=> (soon will be implemented) or an issue happened with server.
         if (message?.type_of_message === "image") {
             return (
                 <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 10, marginRight: 10 }}>
@@ -87,6 +100,7 @@ const MessageItem = ({ message, currentUser, theme }) => {
                                 placeholder={blurHash}
                                 cachePolicy={"memory-disk"}
                                 transition={50}
+                            // onError={(error) => console.log("error", error)}
                             />
                             <View style={{ position: "absolute", bottom: 7, right: 0, zIndex: 100 }}>
                                 {message?.seenBy.length === 2 ? (
@@ -136,29 +150,28 @@ const MessageItem = ({ message, currentUser, theme }) => {
                                 />
                                 <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16, }}>{message?.shared_data?.user}</Text>
                             </TouchableOpacity>
-
-                            <View style={{ height: 259, overflow: 'hidden' }}>
+                            <View style={{ height: 260, width: 260, overflow: 'hidden' }}>
                                 <Image
                                     source={{ uri: message?.shared_data?.imageURL, cache: "force-cache" }}
                                     style={{
-                                        width: 260,
-                                        height: 260,
+                                        height: "100%",
+                                        overflow: "hidden",
                                     }}
-                                    contentFit="contain"
+                                    contentFit="cover"
                                     placeholder={blurHash}
                                     cachePolicy={"memory-disk"}
                                     transition={50}
                                 />
                             </View>
-                            <View style={{ backgroundColor: theme.SubPrimary, borderBottomRightRadius: 20, borderBottomLeftRadius: 20, flexDirection: "row", maxWidth: 260, marginBottom: 10 }}>
-                                <Text style={{ color: theme.textPrimary, margin: 10 }} numberOfLines={2} ellipsizeMode="tail">
-                                    <Text style={{ fontWeight: "700" }}>{message?.shared_data?.user} </Text>
-                                    <Text style={{ color: theme.textSecondary }} >
-                                        {message?.shared_data?.caption}
-                                    </Text>
-                                </Text>
-                            </View>
                         </TouchableOpacity>
+                        <View style={{ backgroundColor: theme.SubPrimary, borderBottomRightRadius: 20, borderBottomLeftRadius: 20, flexDirection: "row", maxWidth: 260, marginBottom: 10, width: "100%" }}>
+                            <Text style={{ color: theme.textPrimary, margin: 10 }} numberOfLines={2} ellipsizeMode="tail">
+                                <Text style={{ fontWeight: "700" }}>{message?.shared_data?.user} </Text>
+                                <Text style={{ color: theme.textSecondary }} >
+                                    {message?.shared_data?.caption}
+                                </Text>
+                            </Text>
+                        </View>
                     </View>
                 </View>
             )
@@ -171,7 +184,7 @@ const MessageItem = ({ message, currentUser, theme }) => {
                 <View style={{ flexDirection: "row", justifyContent: "flex-start", marginBottom: 10, marginLeft: 10 }}>
                     <View style={{ alignItems: 'flex-start', maxWidth: '80%', }}>
                         <View style={{ zIndex: 999, backgroundColor: theme.SubPrimary, borderRadius: 15, borderBottomLeftRadius: 10, }}>
-                            <Text style={{ color: theme.textPrimary, fontSize: 16, padding: 10, paddingBottom: 0, letterSpacing: -0.1, alignSelf: "flex-start" }}>
+                            <Text style={{ color: theme.textPrimary, fontSize: 16, padding: 10, paddingBottom: 0, letterSpacing: -0.1, alignSelf: "flex-start", minWidth: 80 }}>
                                 {message?.text}
                             </Text>
                             {/* this is a sketchy way of doing it, but it works */}
@@ -193,6 +206,10 @@ const MessageItem = ({ message, currentUser, theme }) => {
                             transform: [{ rotate: '90deg' }], marginTop: -20,
                             marginLeft: -1
                         }} />
+                        {message?.emoji &&
+                            <View style={{ justifyContent: "center", alignItems: "center", marginLeft: 15, marginTop: -3, zIndex: 999, width: 30, height: 20, backgroundColor: theme.Tertiary, borderRadius: 20, borderWidth: 1, borderColor: theme.Primary }}>
+                                <SvgComponent svgKey={message.emoji} width={moderateScale(13)} height={moderateScale(13)} />
+                            </View>}
                     </View>
                 </View>
             )
@@ -239,7 +256,7 @@ const MessageItem = ({ message, currentUser, theme }) => {
                 </View>
             )
         }
-        
+
         if (message?.type_of_message === "share_post") {
             return (
                 <View style={{ flexDirection: "row", justifyContent: "flex-start", marginBottom: 10, marginLeft: 10 }}>
@@ -264,28 +281,28 @@ const MessageItem = ({ message, currentUser, theme }) => {
                                 <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 16, }}>{message?.shared_data?.user}</Text>
                             </TouchableOpacity>
 
-                            <View style={{ height: 259, overflow: 'hidden' }}>
+                            <View style={{ height: 260, width: 260, overflow: 'hidden' }}>
                                 <Image
                                     source={{ uri: message?.shared_data?.imageURL, cache: "force-cache" }}
                                     style={{
-                                        width: 260,
-                                        height: 260,
+                                        height: "100%",
+                                        overflow: "hidden",
                                     }}
-                                    contentFit="contain"
+                                    contentFit="cover"
                                     placeholder={blurHash}
                                     cachePolicy={"memory-disk"}
                                     transition={50}
                                 />
                             </View>
-                            <View style={{ backgroundColor: theme.SubPrimary, borderBottomRightRadius: 20, borderBottomLeftRadius: 20, flexDirection: "row", maxWidth: 260, marginBottom: 10 }}>
-                                <Text style={{ color: theme.textPrimary, margin: 10 }} numberOfLines={2} ellipsizeMode="tail">
-                                    <Text style={{ fontWeight: "700" }}>{message?.shared_data?.user} </Text>
-                                    <Text style={{ color: theme.textSecondary }} >
-                                        {message?.shared_data?.caption}
-                                    </Text>
-                                </Text>
-                            </View>
                         </TouchableOpacity>
+                        <View style={{ backgroundColor: theme.SubPrimary, borderBottomRightRadius: 20, borderBottomLeftRadius: 20, flexDirection: "row", maxWidth: 260, marginBottom: 10, width: "100%" }}>
+                            <Text style={{ color: theme.textPrimary, margin: 10 }} numberOfLines={2} ellipsizeMode="tail">
+                                <Text style={{ fontWeight: "700" }}>{message?.shared_data?.user} </Text>
+                                <Text style={{ color: theme.textSecondary }} >
+                                    {message?.shared_data?.caption}
+                                </Text>
+                            </Text>
+                        </View>
                     </View>
                 </View>
             )

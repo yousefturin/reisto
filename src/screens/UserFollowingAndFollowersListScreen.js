@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import React, { useState } from 'react';
 import { View, Text, SafeAreaView, TouchableOpacity, Animated, Easing, Dimensions } from 'react-native';
 import EditProfileHeader from '../components/UserEditProfile/EditProfileHeader';
@@ -29,7 +35,7 @@ const UserFollowingAndFollowersListScreen = ({ route }) => {
             ...item, // Copy all properties from item
             id: item.email // Replace email with id
         };
-        navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated });
+        navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated, justSeenPost: null });
     }
 
     const handleDataSwitch = (param) => {
@@ -108,7 +114,7 @@ const UserFollowingAndFollowersListScreen = ({ route }) => {
                 )}
                 {paramFollowing.length === 0 && paramFlag === "following" && (
                     <EmptyDataParma SvgElement={"ConnectionIllustration"} theme={theme} t={t} dataMessage={"Once people follow you, you'll see theme here."} TitleDataMessage={"People who follow you"} />
-                )} 
+                )}
                 {paramFlag === "followers" ? (
                     <>
                         {paramFollower?.map((item, index) => (

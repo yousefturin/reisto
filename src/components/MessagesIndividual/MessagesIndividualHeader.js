@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import { View, Text, TouchableOpacity, Dimensions } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from "@react-navigation/native";
@@ -29,13 +35,14 @@ const MessagesIndividualHeader = ({ header, theme }) => {
                 owner_uid: data.owner_uid,
                 id: data.email
             });
-            navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated: userDataUid })
+            navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated: userDataUid ,justSeenPost: null})
         }, error => {
+            console.error("Error listening to document:", error);
             return () => { };
         });
         return () => unsubscribe()
     }
-    
+
     return (
         <>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 10, }}>

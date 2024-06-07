@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import React from 'react'
 import { View, TouchableOpacity, Dimensions } from 'react-native'
 import { useTheme } from '../../context/ThemeContext';
@@ -37,7 +43,8 @@ const NavigationStack = ({ routeName, userData }) => {
             inhered: [
                 'Home',
                 'OtherUsersProfileScreen',
-                'OthersProfilePost',],
+                'OthersProfilePost',
+                'FollowingHome'],
             activeURL: 'HomeSVG',
             inActiveURL: 'HomeSVGInActive',
         },
@@ -45,7 +52,8 @@ const NavigationStack = ({ routeName, userData }) => {
             action: 'Search',
             inhered: [
                 'Search',
-                'SearchExplorePostTimeLine',],
+                'SearchExplorePostTimeLine',
+                'AdditionalSearchScreen'],
             activeURL: 'SearchSVG',
             inActiveURL: 'SearchSVGInActive',
         },
@@ -77,7 +85,7 @@ const NavigationStack = ({ routeName, userData }) => {
     const NavigationButtons = ({ routeName }) => {
         return (
             <>
-                <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary}/>
+                <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} />
                 <View style={{ flexDirection: "row", justifyContent: "space-around", height: 80, paddingTop: 5, }}>
                     {icons.slice(0, 4).map((icon, index) => (
                         <TouchableOpacity
@@ -109,7 +117,7 @@ const NavigationStack = ({ routeName, userData }) => {
                             style={{
                                 width: moderateScale(25),
                                 height: moderateScale(25),
-                                borderRadius: 50,
+                                borderRadius: moderateScale(50),
                                 borderWidth: icons[4].action.includes(routeName) ? 1.5 : 1,
                                 borderColor: icons[4].action.includes(routeName) ? theme.textPrimary : theme.Secondary
                             }}

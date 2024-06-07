@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import React, { useContext, useEffect, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screens/HomeScreen";
@@ -28,6 +34,7 @@ import MessagingNewForFollowersAndFollowingScreen from "../screens/MessagingNewF
 import FromMessagesToSharedPost from "../screens/FromMessagesToSharedPost";
 import { colorPalette } from "../Config/Theme";
 import AdditionalSearchScreen from "../screens/AdditionalSearchScreen";
+import FollowingHomeScreen from "../screens/FollowingHomeScreen";
 
 const Stack = createStackNavigator();
 
@@ -76,7 +83,6 @@ const customCardStyleInterpolator2 = ({ current, next, layouts }) => {
     };
 };
 const getCardStyleInterpolator = (route) => {
-    console.log(route.name);
     switch (route.name) {
         case 'AdditionalSearchScreen':
             return customCardStyleInterpolator2;
@@ -132,6 +138,11 @@ const AuthAppNavigator = () => {
                 <Stack.Screen
                     name={"Home"}
                     component={HomeScreen}
+                    options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                    name={"FollowingHome"}
+                    component={FollowingHomeScreen}
                     options={{ headerShown: false }}
                 />
                 <Stack.Screen
@@ -258,13 +269,9 @@ const AuthAppNavigator = () => {
                 <Stack.Screen
                     name={"AdditionalSearchScreen"}
                     component={AdditionalSearchScreen}
-                    options={({ route }) => ({
-                        // cardStyleInterpolator: getCardStyleInterpolator(route), // Custom animation
+                    options={() => ({
                         headerShown: false,
-                        // transitionSpec: {
-                        //     open: config,
-                        //     close: config,
-                        // },
+                        gestureEnabled: false
                     })}
                 />
             </Stack.Navigator>

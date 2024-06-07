@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import { View, Text, Alert, SafeAreaView, Dimensions, TextInput, TouchableOpacity, Platform, KeyboardAvoidingView, ScrollView, Keyboard } from 'react-native'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { UserContext } from '../context/UserDataProvider';
@@ -45,15 +51,17 @@ const MessagingIndividualScreen = ({ route }) => {
             const unsubscribe = onSnapshot(qu, (snapshot) => {
                 let allMessages = snapshot.docs.map(doc => {
                     let messageData = doc.data();
+                    const id = doc.id
                     // Check if the current user is the recipient of the message
                     if (messageData.owner_id === userDataUid.owner_uid) {
                         // Mark the message as seen by the recipient
                         updateMessageSeenStatus(roomId, doc.id);
                     }
-                    return messageData;
+                    return { ...messageData, id };
                 })
                 setMessages([...allMessages]);
             }, error => {
+                console.error("Error listening to document:", error);
                 return () => { };
             });
             const keyboardDidShowListener = Keyboard.addListener(
@@ -77,7 +85,6 @@ const MessagingIndividualScreen = ({ route }) => {
             scrollViewRef?.current?.scrollToEnd({ animated: true })
         }, 100)
     }
-    
     // Function to update the seen status of a message
     const updateMessageSeenStatus = async (roomId, messageId) => {
         try {
@@ -134,7 +141,7 @@ const MessagingIndividualScreen = ({ route }) => {
             //clear the message after it send
             textRef.current = "";
             if (inputRef) inputRef?.current?.clear()
-            const newDoc = await addDoc(messagesRef, {
+            await addDoc(messagesRef, {
                 owner_id: userData?.owner_uid,
                 text: message,
                 type_of_message: messagePurpose,
@@ -145,6 +152,10 @@ const MessagingIndividualScreen = ({ route }) => {
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 seenBy: [userData?.owner_uid]
             })
+            
+            await DocRef.update({
+                lastAccess: firebase.firestore.FieldValue.serverTimestamp(),
+            })
         } catch (error) {
             Alert.alert(error.message);
         }
@@ -153,11 +164,6 @@ const MessagingIndividualScreen = ({ route }) => {
     const handleChangeText = (value) => {
         textRef.current = value;
         forceUpdate();
-    };
-
-    const forceUpdate = () => {
-        // Update the dummy state to trigger a re-render
-        setDummyState({});
     };
 
     const handleSelectImage = async () => {
@@ -189,13 +195,17 @@ const MessagingIndividualScreen = ({ route }) => {
                 [{ resize: { width: width } }],
                 { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
             );
-            const base64Image = await UploadImageToStorage(compressedImage.uri);
+            const base64Image = await UploadImageToStorage(compressedImage.uri, "/MessageImages/");
             if (base64Image) {
                 handleSendMessage("image", base64Image);
             }
         }
     };
 
+    const forceUpdate = () => {
+        // Update the dummy state to trigger a re-render
+        setDummyState({});
+    };
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <MessagesIndividualHeader header={userDataUid} theme={theme} />
@@ -213,7 +223,7 @@ const MessagingIndividualScreen = ({ route }) => {
                     keyboardShouldPersistTaps={'always'}>
                     <View style={{ flex: 1, backgroundColor: theme.Primary, justifyContent: "space-between" }}>
                         <View style={{ flex: 1 }}>
-                            <MessageList scrollViewRef={scrollViewRef} messages={messages} currentUser={userData} theme={theme} />
+                            <MessageList scrollViewRef={scrollViewRef} messages={messages} currentUser={userData} theme={theme} forwarded={userDataUid} />
                         </View>
                         <View style={{ marginBottom: 10, paddingTop: 20, }}>
                             <View style={{ flexDirection: "row", marginHorizontal: 10, justifyContent: "space-between", backgroundColor: theme.Primary, borderRadius: 50, borderWidth: 1, borderColor: theme.Secondary }}>

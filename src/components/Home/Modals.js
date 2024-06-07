@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import {
     View,
     Text,
@@ -11,6 +17,7 @@ import { Divider } from 'react-native-elements';
 import { firebase, db } from '../../firebase'
 import ReactNativeModal from 'react-native-modal';
 import { useNavigation } from "@react-navigation/native";
+import DeleteImageFromStorage from '../../utils/DeleteImageFromStorage';
 
 const screenHeight = Dimensions.get('window').height;
 const { moderateScale } = initializeScalingUtils(Dimensions);
@@ -32,8 +39,8 @@ export const ModalContentForUserWithSameId = ({ handleSavedPost, savedPosts, pos
         setIsAlertModaVisible(!isAlertModaVisible)
     }
 
-    const handlePostDeleteConfirmed = () => {
-        db.collection('users').doc(firebase.auth().currentUser.email)
+    const handlePostDeleteConfirmed = async () => {
+        await db.collection('users').doc(firebase.auth().currentUser.email)
             .collection('posts')
             .doc(post.id).delete().then(() => {
                 setIsAlertModaVisible(false)
@@ -42,8 +49,9 @@ export const ModalContentForUserWithSameId = ({ handleSavedPost, savedPosts, pos
             }).catch((error) => {
                 console.error("Error removing document: ", error);
             })
+        await DeleteImageFromStorage(post.imageURL)
     }
-    
+
     return (
         <>
             {/* if the backgroundColor is not on the TouchableOpacity then it wont change the active opacity of that background,
@@ -87,7 +95,7 @@ export const ModalContentForUserWithSameId = ({ handleSavedPost, savedPosts, pos
     )
 }
 
-export const ModalContentForUserWithDifferentSameId = ({ handleSavedPost, savedPosts, post, setIsModalVisible, theme, t }) => {
+export const ModalContentForUserWithDifferentSameId = ({ handleSavedPost, savedPosts, post, setIsModalVisible, theme, t, handleReport, setIsModalReportVisible }) => {
     const navigation = useNavigation();
     const isPostSaved = savedPosts?.saved_post_id?.includes(post.id) || false;
     const handleBeforeSavePost = (post) => {
@@ -101,6 +109,7 @@ export const ModalContentForUserWithDifferentSameId = ({ handleSavedPost, savedP
         setIsModalVisible(false);
         navigation.navigate('AboutThisUser', { ownerID: post.owner_uid })
     }
+
     return (
         <>
             <View style={{ marginHorizontal: 10, marginVertical: 10, marginTop: 25, gap: 10 }}>
@@ -125,7 +134,7 @@ export const ModalContentForUserWithDifferentSameId = ({ handleSavedPost, savedP
                     <View style={{}}>
                         <Divider width={0.5} orientation='horizontal' color={theme.modalDivider} />
                     </View>
-                    <TouchableOpacity
+                    <TouchableOpacity onPress={() => { setIsModalVisible(false); handleReport(post) }}
                         activeOpacity={0.7} style={{ flexDirection: "row", justifyContent: "flex-start", gap: 10, alignItems: "center", backgroundColor: theme.modalBtn, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, paddingHorizontal: 20 }} >
                         <SvgComponent svgKey="ReportIssueSVG" width={moderateScale(22)} height={moderateScale(22)} stroke={theme.textPrimary} />
                         <Text style={{ fontSize: 18, color: theme.textError, fontWeight: "400", padding: 20 }}>{t('screens.home.text.modals.differentUser.report')}</Text>
@@ -134,6 +143,32 @@ export const ModalContentForUserWithDifferentSameId = ({ handleSavedPost, savedP
             </View>
         </>
     )
+}
+export const ModalReport = ({ isModalReportVisible, setIsModalReportVisible, theme, }) => {
+    return (
+        <ReactNativeModal
+            isVisible={isModalReportVisible}
+            onSwipeComplete={() => setIsModalReportVisible(false)}
+            onBackdropPress={() => setIsModalReportVisible(false)}
+            swipeDirection="down"
+            swipeThreshold={170}
+            style={{
+                justifyContent: 'flex-end',
+                margin: 0,
+                opacity: 1
+            }}>
+            <View style={{
+                backgroundColor: theme.SubPrimary,
+                height: screenHeight * 0.85,
+                borderTopRightRadius: 20,
+                borderTopLeftRadius: 20
+            }}>
+                <ModalHeader theme={theme} />
+
+            </View>
+        </ReactNativeModal>
+    )
+
 }
 
 //#region  Modal header

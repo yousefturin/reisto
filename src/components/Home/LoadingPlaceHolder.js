@@ -1,4 +1,10 @@
 
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import { View } from 'react-native'
 import React from 'react'
 import { Skeleton } from 'moti/skeleton'
@@ -16,9 +22,11 @@ const LoadingPlaceHolder = ({ fromWhere, theme, isPaddingNeeded }) => {
     const SkeletonCommonProps = {
         colorMode: theme.Primary === '#050505' ? 'dark' : 'light', // if the primary color is dark then the skeleton will be dark
         backgroundColor: theme.Secondary,
-        transition: {
-            type: 'timing',
-            duration: 2000,
+        transition:{
+            opacity: {
+                type: "timing",
+                duration: 1000,
+            }
         }
     }
     return (

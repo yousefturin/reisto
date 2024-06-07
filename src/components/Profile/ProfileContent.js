@@ -1,5 +1,11 @@
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import { View, Text, TouchableOpacity, Dimensions, Modal, Animated } from 'react-native'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigation } from "@react-navigation/native";
 import { blurHash } from '../../../assets/HashBlurData';
 import { Image } from 'expo-image';
@@ -8,118 +14,21 @@ import initializeScalingUtils from '../../utils/NormalizeSize';
 import { extractDomain } from '../../utils/ExtractDomainFromLink';
 import { WebView } from 'react-native-webview';
 import { Divider } from 'react-native-elements';
-import { db, firebase } from '../../firebase';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import useCurrentUserFollowing from '../../hooks/useCurrentUserFollowing';
 
 const ProfileContent = ({ userData, userPosts, theme, t, opacityContent }) => {
     const navigation = useNavigation();
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [followersAndFollowing, setFollowersAndFollowing] = useState({ followers: '', following: '', id: '' })
     const { moderateScale } = initializeScalingUtils(Dimensions);
-    const [followersData, setFollowersData] = useState([]);
-    const [followingData, setFollowingData] = useState([]);
-    
+    const { followersData, followingData, followersAndFollowing } = useCurrentUserFollowing(userData.email)
+
+
     const handleEditProfileNavigation = () => {
         navigation.navigate("UserEditProfile", {
             userData
         })
     }
 
-    // this took my 4 hours to remove the error of unsubscribe is not a function and i am still not sure if this is the correct way to do it
-    useEffect(() => {
-        let unsubscribe;
-        const fetchData = async () => {
-            const cachedData = await AsyncStorage.getItem('followersAndFollowing');
-            if (cachedData) {
-                setFollowersAndFollowing(JSON.parse(cachedData));
-            }
-            const querySnapshot = await db.collection('users')
-                .doc(firebase.auth().currentUser.email)
-                .collection('following_followers')
-                .limit(1)
-                .get();
-
-            if (!querySnapshot.empty) {
-                const doc = querySnapshot.docs[0];
-                const docRef = doc.ref;
-                // Define snapshot listener function
-                unsubscribe = docRef.onSnapshot((snapshot) => {
-                    const data = snapshot.data();
-                    setFollowersAndFollowing({
-                        id: snapshot.id,
-                        followers: data.followers,
-                        following: data.following,
-                    });
-
-                    // Update cached data
-                    AsyncStorage.setItem('followersAndFollowing', JSON.stringify({
-                        id: snapshot.id,
-                        followers: data.followers,
-                        following: data.following,
-                    }));
-                }, (error) => {
-                    console.error("Error listening to document:", error);
-                    return () => { };
-                });
-
-            } else {
-                console.log("No document found in the collection.");
-            }
-        };
-
-        fetchData();
-
-        return () => {
-            // Unsubscribe when component unmounts
-            unsubscribe && unsubscribe();
-        };
-    }, []);
-
-    useLayoutEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
-        try {
-            const querySnapshot = await db.collection('users').doc(userData.email).collection('following_followers').limit(1).get();
-            if (!querySnapshot.empty) {
-                const doc = querySnapshot.docs[0];
-                const data = doc.data();
-
-                // Initialize an array to store batched fetch promises
-                const fetchPromises = [];
-                const fetchPromisesSecond = [];
-
-                // Push fetch promises for each follower-<<<<<<<< need to fix the issue where i have no idea what to show for users is it followers or following or both
-                for (const following of data.following) {
-                    const fetchPromise = db.collection('users').doc(following).get();
-                    fetchPromises.push(fetchPromise);
-                }
-                for (const followers of data.followers) {
-                    const fetchPromise = db.collection('users').doc(followers).get();
-                    fetchPromisesSecond.push(fetchPromise);
-                }
-
-                // Execute batched reads
-                const [followingDocs, followerDocs] = await Promise.all([Promise.all(fetchPromises), Promise.all(fetchPromisesSecond)]);
-
-                // Extract data from follower documents
-                const followersData = followerDocs
-                    .filter(doc => doc.exists)
-                    .map(doc => doc.data());
-                const followingData = followingDocs
-                    .filter(doc => doc.exists)
-                    .map(doc => doc.data());
-
-                setFollowersData(followersData);
-                setFollowingData(followingData);
-            } else {
-                console.log("No document found in the collection.");
-            }
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    };
 
     const handleUserFollowingAndFollowerDisplay = (flag) => {
         let data

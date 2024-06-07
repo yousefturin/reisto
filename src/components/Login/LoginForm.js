@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import React from 'react'
 import { View, TextInput, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native'
 import * as Yup from 'yup'
@@ -39,10 +45,12 @@ const LoginForm = ({ navigation, theme }) => {
         } catch (error) {
             let msg = error.message
             if (msg.includes('(auth/invalid-credential)')) msg = 'Invalid email or password'
+            if (msg.includes('(auth/user-not-found)')) msg = 'User not found'
+            if (msg.includes('(auth/too-many-requests)')) msg = 'Too many requests. Try again later'
+            if (msg.includes('(auth/network-request-failed)')) msg = 'Network error. Try again later'
             Alert.alert(msg)
         }
     }
-
     return (
         <Formik
             initialValues={{ email: '', password: '' }}

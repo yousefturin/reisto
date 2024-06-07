@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import React, { useState, useEffect, createContext, memo } from 'react';
 import { firebase, db } from '../firebase';
 
@@ -22,12 +28,15 @@ const UserProviderComponent = ({ children }) => {
                     owner_uid: data.owner_uid,
                     email: data.email
                 });
+            }, error => {
+                console.error("Error listening to document:", error);
+                return () => { };
             });
-            return () =>{
+            return () => {
                 console.log("Unsubscribed from user data.")
                 unsubscribe();
             }  // Unsubscribe on unmount
-        }else{
+        } else {
             console.error("No authenticated user found.");
             return () => { };
         }

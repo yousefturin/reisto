@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import { Animated, FlatList } from 'react-native'
 import React from 'react'
 import MessageMainItem from './MessageMainItem'
@@ -47,6 +53,7 @@ const MessageMainList = ({ updateLastMessage,
                             <EmptyDataParma SvgElement={"EditIllustration"} theme={theme} t={t} TitleDataMessage={"Start a new chat"} dataMessage={"Send your friend a message. You can always come back and check for new messages."} />
                         ) : (
                             <MessageLoadingPlaceHolder theme={theme} />
+
                         )
                     )
                 }

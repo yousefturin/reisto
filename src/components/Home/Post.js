@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Yusef Rayyan
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+ */
 import {
     View,
     Text,
@@ -12,7 +18,7 @@ import {
     Animated,
     Alert,
 } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SvgComponent from "../../utils/SvgComponents";
 import initializeScalingUtils from "../../utils/NormalizeSize"
 import { Divider } from 'react-native-elements';
@@ -23,10 +29,11 @@ import { blurHash } from '../../../assets/HashBlurData';
 import { Image } from 'expo-image';
 import { useNavigation } from '@react-navigation/native';
 import ReactNativeModal from 'react-native-modal';
-import { ModalContentForUserWithDifferentSameId, ModalContentForUserWithSameId, ModalHeader } from './Modals';
+import { ModalContentForUserWithDifferentSameId, ModalContentForUserWithSameId, ModalHeader, ModalReport } from './Modals';
 import { GenerateRoomId } from '../../utils/GenerateChatId';
 import { addDoc, collection } from 'firebase/firestore';
 import { useTranslation } from 'react-i18next';
+
 
 const screenHeight = Dimensions.get('window').height;
 const { moderateScale } = initializeScalingUtils(Dimensions);
@@ -46,6 +53,7 @@ const Icons = [
         notActive: 'BookmarkNotActiveSVG'
     },
 ]
+
 //#region Post
 const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme }) => {
     const { t } = useTranslation();
@@ -53,10 +61,10 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
     const [isContainerVisible, setContainerVisible] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isAlertModaVisible, setIsAlertModaVisible] = useState(false);
+    const [isModalReportVisible, setIsModalReportVisible] = useState(false);
     const [commentText, setCommentText] = useState("");
     const [savedPosts, setSavedPosts] = useState([])
     const [sharePostModal, setSharePostModal] = useState(false);
-
     const [selectedPostToShare, setSelectedPostToShare] = useState({});
     const [isButtonSharePressed, setIsButtonSharePressed] = useState(false);
     const [userToBeSharedPostWith, setUserToBeSharedPostWith] = useState({});
@@ -69,6 +77,10 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
     const toggleContainer = () => {
         setContainerVisible(!isContainerVisible);
     };
+
+    useEffect(() => {
+        getUserSavedPosts();
+    }, []);
 
     // if the currentUser is included in the likes_by_users array then negate the state otherwise make it positive 
     const handleLike = post => {
@@ -116,10 +128,6 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
                 console.error('Error updating document: ', error)
             })
     }
-
-    useEffect(() => {
-        getUserSavedPosts();
-    }, []);
 
     const getUserSavedPosts = async () => {
         try {
@@ -204,7 +212,7 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
             Alert.alert(error.message);
         }
     }
-    
+
     const handleShareMessage = async () => {
         // this is the function that will be used to share the post to the user
         // the post that is selected to be shared is selectedPostToShare
@@ -223,7 +231,7 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
             const DocRef = db.collection('messages').doc(roomId)
             const messagesRef = collection(DocRef, "private_messages");
             //clear the message after it send
-            const newDoc = await addDoc(messagesRef, {
+            await addDoc(messagesRef, {
                 owner_id: userData?.owner_uid,
                 text: message,
                 type_of_message: messagePurpose,
@@ -240,10 +248,16 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
             console.log("Message Sent")
         }
     }
-
+    // will be implemented<------------------(under construction)
+    const handleReport = (post) => {
+        // time is needed to remove collision between main modal and the report modal
+        setTimeout(() => {
+            setIsModalReportVisible(true);
+        }, 500);
+    }
 
     return (
-        <View style={{ paddingBottom: isLastPost ? 55 : 30 }}>
+        <View style={{ paddingBottom: isLastPost ? 55 : 30, height: isExpanded === false ? 660 : null }}>
             <PostHeader post={post} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}
                 userData={userData} handleSavedPost={handleSavedPost}
                 savedPosts={savedPosts}
@@ -257,10 +271,10 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
                 <Likes post={post} theme={theme} t={t} />
                 <CategoryAndTime post={post} theme={theme} t={t} />
                 <Caption post={post} isExpanded={isExpanded} toggleCaption={toggleCaption} theme={theme} t={t} />
-                {!!post.comments.length ?
+                {!!post.comments.length &&
                     <TouchableOpacity onPress={toggleContainer}>
                         <CommentSection post={post} theme={theme} t={t} />
-                    </TouchableOpacity> : null
+                    </TouchableOpacity>
                 }
 
                 <Comments post={post} setContainerVisible={setContainerVisible} handleComment={handleComment}
@@ -295,11 +309,12 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
                                 isAlertModaVisible={isAlertModaVisible} setIsAlertModaVisible={setIsAlertModaVisible} t={t} />
                         ) : (
                             <ModalContentForUserWithDifferentSameId handleSavedPost={handleSavedPost} savedPosts={savedPosts}
-                                post={post} setIsModalVisible={setIsModalVisible} theme={theme} t={t} />
+                                post={post} setIsModalVisible={setIsModalVisible} theme={theme} t={t} handleReport={handleReport} setIsModalReportVisible={setIsModalReportVisible} />
                         )
                         }
                     </View>
                 </ReactNativeModal>
+
                 <ReactNativeModal
                     isVisible={sharePostModal}
                     onSwipeComplete={() => setSharePostModal(false)}
@@ -370,6 +385,11 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
                         </View>
                     </View>
                 </ReactNativeModal>
+
+                <ModalReport isModalReportVisible={isModalReportVisible}
+                    setIsModalReportVisible={setIsModalReportVisible}
+                    theme={theme}
+                />
             </View>
         </View>
     )
@@ -403,10 +423,13 @@ const PostHeader = ({ post, isModalVisible, setIsModalVisible, userData, theme }
                     bio: data.bio,
                     link: data.link,
                     id: data.email,
-                    owner_uid: post.owner_uid
+                    owner_uid: data.owner_uid
                 };
                 // this was the only way to do it otherwise the useStat wil not be updated when it pass the Params to navigation
-                navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated });
+                navigation.navigate("OtherUsersProfileScreen", { userDataToBeNavigated, justSeenPost: post.id });
+            }, error => {
+                console.error("Error listening to document:", error);
+                return () => { };
             });
             return () => unsubscribe();
         });
@@ -431,7 +454,7 @@ const PostHeader = ({ post, isModalVisible, setIsModalVisible, userData, theme }
             <TouchableOpacity style={{ flexDirection: "row", alignItems: "center" }} activeOpacity={0.7} onPress={() => handlePostNavigationFromHome(post)}>
                 <Image
                     source={{ uri: post.profile_picture, cache: "force-cache" }}
-                    style={[styles.userImage, { borderColor: theme.textTertiary }]}
+                    style={[styles.userImage, { borderColor: theme.textTertiary, borderRadius: moderateScale(50), }]}
                     placeholder={blurHash}
                     contentFit="cover"
                     transition={50}
@@ -486,16 +509,17 @@ const PostImage = ({ post, handleLike, theme }) => {
     return (
         <TouchableOpacity
             activeOpacity={1}
-            style={{ width: '100%', height: 450 }}
+            style={{ width: '100%', height: moderateScale(400) }}
             onPress={(event) => handleDoubleTapImage(post, event)}>
             <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} />
             <Image
                 source={{ uri: post.imageURL, cache: 'force-cache' }}
-                style={{ height: '100%' }}
+                style={{ height: '100%', }}
                 placeholder={blurHash}
                 contentFit="cover"
                 cachePolicy={'memory-disk'}
-                transition={50}
+                // transition={50}
+                recyclingKey={post.imageURL}
             />
             <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} />
             {showHeart && (
@@ -521,7 +545,7 @@ const PostFooter = ({ toggleContainer, handleLike, post, handleSavedPost, savedP
     const isPostSaved = savedPosts?.saved_post_id?.includes(post.id) || false;
     const isPostLiked = post?.likes_by_users?.includes(firebase.auth().currentUser.email)
     return (
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row", }}>
             <View style={styles.leftFooterIconsContainer}>
                 <TouchableOpacity onPress={() => handleLike(post)}>
                     <Icon svgKey={isPostLiked ? Icons[0].active : Icons[0].notActive} theme={theme} />
@@ -560,7 +584,7 @@ const Likes = ({ post, theme, t }) => (
 
 //#region Category and Time Display
 const CategoryAndTime = ({ post, theme, t }) => (
-    <View style={{ flexDirection: "row", marginTop: 5, gap: 10 }}>
+    <View style={{ flexDirection: "row", marginTop: 5, gap: 10, }}>
         <LinearGradient
             colors={[theme.appGradientPrimary, theme.appGradientSecondary, theme.appGradientTertiary]}
             style={{ minWidth: "20%", maxWidth: "30%", padding: 5, borderRadius: 50, justifyContent: "center", alignItems: "center" }}>
@@ -580,7 +604,7 @@ const Caption = ({ post, isExpanded, toggleCaption, theme, t }) => (
         <View style={{ flexDirection: "row", marginTop: 5 }}>
             <Text style={{ color: theme.textPrimary }} onPress={toggleCaption}>
                 <Text style={{ fontWeight: "700" }}>{post.user} </Text>
-                {isExpanded ? post.caption : post.caption.slice(0, 100) + '... '}
+                {isExpanded ? post.caption : post.caption.slice(0, 30) + '... '}
                 <Text style={{ color: theme.textSecondary }}>
                     {isExpanded ? '' : t('screens.home.text.CaptionExpand')}
                 </Text>
