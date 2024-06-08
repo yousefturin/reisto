@@ -1,4 +1,30 @@
-# Reisto
+
+# REISTO
+
+![license](https://img.shields.io/badge/license-CC_BY_NC_4.0-blue)
+![last-commit](https://img.shields.io/github/last-commit/yousefturin/reisto?style=flat&logo=git&logoColor=white&color=0080ff)
+![repo-top-language](https://img.shields.io/github/languages/top/yousefturin/reisto?style=flat&color=0080ff)
+![repo-language-count](https://img.shields.io/github/languages/count/yousefturin/reisto?style=flat&color=0080ff)
+
+*Developed with the software and tools below.*
+
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28.svg?style=flat&logo=Firebase&logoColor=black)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E.svg?style=flat&logo=JavaScript&logoColor=black)
+![React](https://img.shields.io/badge/React-61DAFB.svg?style=flat&logo=React&logoColor=black)
+![i18next](https://img.shields.io/badge/i18next-26A69A.svg?style=flat&logo=i18next&logoColor=white)
+![Expo](https://img.shields.io/badge/Expo-000020.svg?style=flat&logo=Expo&logoColor=white)
+
+## Quick Links
+
+> - [Overview](#overview)
+> - [Features](#features)
+> - [Repository Structure](#repository-structure)
+> - [Installation](#installation)
+> - [Usage](#usage)
+> - [Technologies Used](#technologies-used)
+> - [Contributing](#contributing)
+> - [License](#license)
+> - [Contact](#contact)
 
 ## Overview
 
@@ -13,6 +39,157 @@ Reisto is a social media food recipes cross-application designed to bring togeth
 - **Social Interaction:** Like, comment, and share recipes with friends and family.
 - **User Profiles:** Create and customize your profile to showcase your culinary skills.
 - **Cross-Platform:** Available on multiple platforms for ease of access.
+
+## Repository Structure
+
+```sh
+└── reisto/
+    ├── App.js
+    ├── LICENSE
+    ├── README.md
+    ├── app.config.js
+    ├── assets
+    │   ├── HashBlurData.js
+    │   ├── icon.png
+    │   └── images
+    │       └── SVG
+    │           └── SvgStorage.js
+    ├── babel.config.js
+    ├── package.json
+    └── src
+        ├── Config
+        │   ├── Constants.js
+        │   ├── Schemas.js
+        │   └── Theme.js
+        ├── Locales
+        │   ├── ar.json
+        │   ├── en.json
+        │   ├── ru.json
+        │   └── tr.json
+        ├── Service
+        │   └── i18n.js
+        ├── components
+        │   ├── CustomComponent
+        │   │   └── EmptyDataParma.js
+        │   ├── FollowHome
+        │   │   └── FollowHomeHeader.js
+        │   ├── Home
+        │   │   ├── Header.js
+        │   │   ├── LoadingPlaceHolder.js
+        │   │   ├── Modals.js
+        │   │   ├── Navigation.js
+        │   │   └── Post.js
+        │   ├── Login
+        │   │   └── LoginForm.js
+        │   ├── Message
+        │   │   ├── MessageLoadingPlaceHolder.js
+        │   │   ├── MessageMainHeader.js
+        │   │   ├── MessageMainItem.js
+        │   │   ├── MessageMainList.js
+        │   │   └── MessageMainSearchBar.js
+        │   ├── MessagesIndividual
+        │   │   ├── MessageItem.js
+        │   │   ├── MessageList.js
+        │   │   └── MessagesIndividualHeader.js
+        │   ├── NewPost
+        │   │   ├── AddNewPost.js
+        │   │   ├── FoodCategoriesSelector.js
+        │   │   └── FormikPostUploader.js
+        │   ├── OthersProfile
+        │   │   ├── OthersProfileContent.js
+        │   │   └── OthersProfileHeader.js
+        │   ├── PostFromMessages
+        │   │   └── MessagePostHeader.js
+        │   ├── Profile
+        │   │   ├── ProfileContent.js
+        │   │   ├── ProfileHeader.js
+        │   │   └── ProfilePost.js
+        │   ├── SavedPosts
+        │   │   ├── SavedPostsGrid.js
+        │   │   └── SavedPostsHeader.js
+        │   ├── Search
+        │   │   ├── LoadingPlaceHolder.js
+        │   │   └── SearchSuggestion.js
+        │   ├── Singin
+        │   │   └── SinginForm.js
+        │   ├── UserEditProfile
+        │   │   ├── EditProfileForm.js
+        │   │   ├── EditProfileHeader.js
+        │   │   └── EditProfileImage.js
+        │   ├── UserEditProfileIndividualData
+        │   │   └── HeaderEditProfileIndividual.js
+        │   └── UserSetting
+        │       ├── LanguageSelector.js
+        │       └── ThemeSelector.js
+        ├── context
+        │   ├── MessagesNumProvider.js
+        │   ├── ThemeContext.js
+        │   └── UserDataProvider.js
+        ├── data
+        │   ├── accountUser
+        │   │   └── myAccount.js
+        │   ├── post
+        │   │   └── post.js
+        │   └── users
+        │       └── users.js
+        ├── firebase.js
+        ├── hooks
+        │   ├── useAnimation.js
+        │   ├── useCurrentUserFollowing.js
+        │   ├── useFastPosts.js
+        │   ├── useFastSavedPosts.js
+        │   ├── useFastSearchPosts.js
+        │   ├── useFollowing.js
+        │   ├── useLastMessage.js
+        │   ├── useMessages.js
+        │   ├── usePostFromMessages.js
+        │   ├── usePosts.js
+        │   ├── useSavedPosts.js
+        │   └── useShare.js
+        ├── navigation
+        │   ├── AppNavigation.js
+        │   ├── AuthNavigation.js
+        │   ├── splash.json
+        │   └── splashtest.json
+        ├── screens
+        │   ├── AboutThisUserScreen.js
+        │   ├── AddPostScreen.js
+        │   ├── AdditionalSearchScreen.js
+        │   ├── FollowingHomeScreen.js
+        │   ├── FromMessagesToSharedPost.js
+        │   ├── HomeScreen.js
+        │   ├── LoginScreen.js
+        │   ├── MessagingIndividualScreen.js
+        │   ├── MessagingMainScreen.js
+        │   ├── MessagingNewForFollowersAndFollowingScreen.js
+        │   ├── NotificationScreen.js
+        │   ├── OtherUsersProfileScreen.js
+        │   ├── OthersProfilePostScreen.js
+        │   ├── SearchExplorePostTimeLineScreen.js
+        │   ├── SearchScreen.js
+        │   ├── SignupScreen.js
+        │   ├── UserActivityScreen.js
+        │   ├── UserEditProfileIndividualDataScreen.js
+        │   ├── UserEditProfileScreen.js
+        │   ├── UserFollowingAndFollowersListScreen.js
+        │   ├── UserProfilePostScreen.js
+        │   ├── UserProfileScreen.js
+        │   ├── UserSavedPostScreen.js
+        │   ├── UserSavedPostTimeLineScreen.js
+        │   └── UserSettingScreen.js
+        └── utils
+            ├── DeleteImageFromStorage.js
+            ├── ExtractDomainFromLink.js
+            ├── FormatCreateAt.js
+            ├── GenerateChatId.js
+            ├── NormalizeSize.js
+            ├── SvgComponents.js
+            ├── ThemeUtils.js
+            ├── TimeBasedOnCreatedAt.js
+            ├── TimeDifferenceCalculator.js
+            ├── UploadImageToStorage.js
+            └── UseCustomTheme.js
+```
 
 ## Installation
 
