@@ -1,20 +1,30 @@
-![icon](https://github.com/yousefturin/reisto/assets/94796673/fc6e918e-0f1b-4a90-a008-bcf2d87730d2)
-# REISTO
 
-<img src="https://github.com/yousefturin/reisto/assets/94796673/fc6e918e-0f1b-4a90-a008-bcf2d87730d2" alt="logo" width="100"  height="100">
+<p align="center">
+  <img src="https://github.com/yousefturin/reisto/assets/94796673/fc6e918e-0f1b-4a90-a008-bcf2d87730d2" width="100" />
+</p>
+<p align="center">
+    <h1 align="center">Reisto</h1>
+</p>
+<p align="center">
+	<img src="https://img.shields.io/badge/license-CC_BY_NC_4.0-blue" alt="license">
+	<img src="https://img.shields.io/github/last-commit/yousefturin/reisto?style=flat&logo=git&logoColor=white&color=0080ff" alt="last-commit">
+	<img src="https://img.shields.io/github/languages/top/yousefturin/reisto?style=flat&color=0080ff" alt="repo-top-language">
+	<img src="https://img.shields.io/github/languages/count/yousefturin/reisto?style=flat&color=0080ff" alt="repo-language-count">
+<p>
+<p align="center">
+		<em>Developed with the software and tools below.</em>
+</p>
+<p align="center">
+	<img src="https://img.shields.io/badge/Firebase-FFCA28.svg?style=flat&logo=Firebase&logoColor=black" alt="Firebase">
+    <img alt="JavaScript" src="https://img.shields.io/badge/javascript-%23323330.svg?style=style=flat&logo=javascript&logoColor=%23F7DF1E"/>
+	<img src="https://img.shields.io/badge/React-61DAFB.svg?style=flat&logo=React&logoColor=black" alt="React">
+	<img src="https://img.shields.io/badge/i18next-26A69A.svg?style=flat&logo=i18next&logoColor=white" alt="i18next">
+	<img src="https://img.shields.io/badge/Expo-000020.svg?style=flat&logo=Expo&logoColor=white" alt="Expo">
+    <img alt="React Native" src="https://img.shields.io/badge/react_native-%2320232a.svg?style=flat&logo=react&logoColor=%2361DAFB"/>
+    <img alt="Adobe Illustrator" src="https://img.shields.io/badge/adobeillustrator-%23FF9A00.svg?style=flat&logo=adobeillustrator&logoColor=white"/>
+    <img alt="Figma" src="https://img.shields.io/badge/figma-%23F24E1E.svg?style=flat&logo=figma&logoColor=white"/>
+</p>
 
-![license](https://img.shields.io/badge/license-CC_BY_NC_4.0-blue)
-![last-commit](https://img.shields.io/github/last-commit/yousefturin/reisto?style=flat&logo=git&logoColor=white&color=0080ff)
-![repo-top-language](https://img.shields.io/github/languages/top/yousefturin/reisto?style=flat&color=0080ff)
-![repo-language-count](https://img.shields.io/github/languages/count/yousefturin/reisto?style=flat&color=0080ff)
-
-*Developed with the software and tools below.*
-
-![Firebase](https://img.shields.io/badge/Firebase-FFCA28.svg?style=flat&logo=Firebase&logoColor=black)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E.svg?style=flat&logo=JavaScript&logoColor=black)
-![React](https://img.shields.io/badge/React-61DAFB.svg?style=flat&logo=React&logoColor=black)
-![i18next](https://img.shields.io/badge/i18next-26A69A.svg?style=flat&logo=i18next&logoColor=white)
-![Expo](https://img.shields.io/badge/Expo-000020.svg?style=flat&logo=Expo&logoColor=white)
 
 ## Quick Links
 
