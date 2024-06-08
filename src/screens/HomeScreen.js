@@ -4,6 +4,10 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
+
 import { SafeAreaView, RefreshControl, FlatList, View, Text, Dimensions, Animated, TouchableOpacity } from 'react-native'
 import React, { useState, useCallback, useContext } from 'react'
 import Header from '../components/Home/Header'
@@ -42,7 +46,7 @@ const HomeScreen = () => {
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
     const navigation = useNavigation();
 
-    // statusBarColorTheme is move from auth to give access to the theme values and based on that the status bar color will be changed
+    // Move the declaration of statusBarColorTheme from the auth section to the HomeScreen component to give access to the theme values. Based on the selected theme, the status bar color will be changed.
     const statusBarColorTheme = UseCustomTheme(selectedTheme, { colorPaletteDark: "light-content", colorPaletteLight: "dark-content" })
 
     const handleShowPostOptions = () => {

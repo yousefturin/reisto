@@ -4,6 +4,10 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
+
 import { FlatList, StyleSheet, Dimensions, TouchableOpacity, Animated, View, RefreshControl } from 'react-native';
 import React, { useCallback } from 'react'
 import { Image } from 'expo-image';
@@ -38,7 +42,7 @@ const SavedPostsGrid = ({
                 scrollToIndex = index;
             }
         }
-        // console.log("scrollToIndex", scrollToIndex)
+
         
         if (navigateToScreen === "SavedPosts") {
             navigation.navigate('UserSavedPostTimeLine', {
@@ -87,7 +91,7 @@ const SavedPostsGrid = ({
         return data;
     }
 
-    //  coming from search
+    // Handle search display when coming from search
     if (fromWhereValue !== 0) {
         return (
             <AnimatedFlatList
@@ -119,7 +123,7 @@ const SavedPostsGrid = ({
             />
         )
 
-        // any place else
+    // Handle search display from any place else
     } else {
         return (
             <FlatList

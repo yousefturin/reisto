@@ -4,6 +4,10 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
+
 import { db, firebase } from "../firebase";
 import { useCallback, useEffect, useState } from 'react';
 
@@ -40,8 +44,8 @@ const useFastSearchPosts = () => {
                 const dbPostData = post.data();
                 const dbImageURL = dbPostData.imageURL
                 if (dbPostData.length === 0) { setLoading(null); }
-                // why tf i was fetching the user data and map the profile image! OMG!, only images are displayed of [posts]
-                return {
+                    // Code was improved by removing the mapping userProfile, since it will not be shown in this case.
+                    return {
                     id: post.id,
                     imageURL: dbImageURL,
                 }

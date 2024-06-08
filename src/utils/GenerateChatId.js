@@ -7,6 +7,7 @@
 
 
 
+
 /**
  * Generates a chat room ID based on two user IDs.
  *

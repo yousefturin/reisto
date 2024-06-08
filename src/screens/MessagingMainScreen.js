@@ -4,6 +4,10 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
+
 import { Dimensions, SafeAreaView, StyleSheet, Text, Keyboard, View } from 'react-native'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import MessageMainHeader from '../components/Message/MessageMainHeader'
@@ -90,11 +94,11 @@ const MessagingMainScreen = () => {
     }
     //#endregion
 
-    // This function is used to update the last message of the user,
-    // even the firebase indexing is used but it will not give the sort for the current user.<--(process of sorting is improved with firebase indexing)
+    // This function is used to update the last message of the user.
+    // The sorting process has been improved with Firebase indexing.
     //#region Update last message
     const updateLastMessage = useCallback((userId, message) => {
-        // this was moved from the MainMessageList.js to here to make the 
+        // This was moved from the MainMessageList.js to here to make the 
         //code more readable and to make the code more optimized
         setSortedData(prevData => {
             const newData = prevData.map(item => {

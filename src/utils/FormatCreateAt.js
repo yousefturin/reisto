@@ -7,6 +7,7 @@
 
 
 
+
 /**
  * Formats the given date into a string representation of the month and year.
  *

@@ -6,6 +6,8 @@
  */
 
 
+
+
 /**
  * Calculates the creation time based on the provided time object.
  * @param {Object} timeObject - The time object containing the seconds and nanoseconds.

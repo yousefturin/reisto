@@ -5,6 +5,9 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
 import { View } from 'react-native'
 import React from 'react'
 import { Skeleton } from 'moti/skeleton'
@@ -17,7 +20,6 @@ import { Skeleton } from 'moti/skeleton'
  * @param {boolean} props.isPaddingNeeded - Determines if padding is needed.
  * @returns {JSX.Element} The loading placeholder component.
  */
-// the implementation of theme is not yet done
 const LoadingPlaceHolder = ({ fromWhere, theme, isPaddingNeeded }) => {
     const SkeletonCommonProps = {
         colorMode: theme.Primary === '#050505' ? 'dark' : 'light', // if the primary color is dark then the skeleton will be dark

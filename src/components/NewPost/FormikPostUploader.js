@@ -4,6 +4,10 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
+
 import { View, Dimensions, TextInput, TouchableOpacity, Text, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
 import React, { useState } from 'react'
 import { Formik } from 'formik'
@@ -57,7 +61,7 @@ const FormikPostUploader = ({ theme, t, userData }) => {
 
     }
 
-    // this must be fixed not every image is selected needs to be stored on the cloud this is shit<<<<<<<<<<-
+    // every image is selected should not be stored on the cloud<-(FIXED)
     const pickImage = async (setFieldValue, setFieldTouched) => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -76,11 +80,11 @@ const FormikPostUploader = ({ theme, t, userData }) => {
 
             let width = originalWidth;
             let height = originalHeight;
-            // fuck me still cant find how to cut the image into 700X700
+            //find how to cut the image into 700X700. <-(FIXED)
             if (originalWidth > maxWidth) {
                 width = maxWidth;
                 // the issue with white border is that the height is for example 700.2314814814815 and that will make a problem 
-                //              showing a artifact white line to fix teh issue rounding the number is applied.
+                //              showing a artifact white line to fix the issue rounding the number is applied. <-(FIXED)
                 height = Math.round(maxWidth / aspectRatio)
             }
 
@@ -89,8 +93,7 @@ const FormikPostUploader = ({ theme, t, userData }) => {
                 [{ resize: { width, height } }],
                 { compress: 0.9, format: ImageManipulator.SaveFormat.JPEG }
             );
-            // const compressesImage = compressedImage.uri
-            // const dbImage = await UploadImageToStorage(compressedImage.uri);
+
 
             if (compressedImage.uri) {
                 setFieldValue('imageURL', compressedImage.uri);
@@ -99,7 +102,6 @@ const FormikPostUploader = ({ theme, t, userData }) => {
             setFieldTouched('imageURL', true);
         }
     };
-    // a big problem is here, when user select an image it will be uploaded to database but it must be on submit.
 
     return (
         <KeyboardAvoidingView

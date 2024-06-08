@@ -4,6 +4,10 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
+
 import { Dimensions, VirtualizedList, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 import React, { useContext, useRef } from 'react'
 import Post from '../components/Home/Post'
@@ -48,11 +52,6 @@ const OthersProfilePostScreen = ({ route }) => {
             <OwnerProfileHeader t={t} userDataToBeNavigated={userDataToBeNavigated} theme={theme} />
             {posts.length !== 0 ? (
                 <VirtualizedList
-                    // onContentSizeChange={() => {
-                    //     if (flatListRef.current && scrollToPostId && posts && posts.length) {
-                    //         flatListRef.current.scrollToIndex({ index: scrollToPostId });
-                    //     }
-                    // }}
                     viewabilityConfig={{ viewAreaCoveragePercentThreshold: 35 }}
 
                     keyboardDismissMode="on-drag"

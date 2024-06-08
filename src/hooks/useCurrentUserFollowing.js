@@ -4,6 +4,10 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db, firebase } from "../firebase";
 import { useCallback, useEffect, useState } from 'react';
@@ -57,7 +61,7 @@ const useCurrentUserFollowing = (QueryParam) => {
                 const fetchPromises = [];
                 const fetchPromisesSecond = [];
 
-                // Push fetch promises for each follower-<<<<<<<< need to fix the issue where i have no idea what to show for users is it followers or following or both
+                // Push fetch promises for each follower <- Needs to fix the issue, what to show for users is it followers or following or both?
                 for (const following of data.following) {
                     const fetchPromise = db.collection('users').doc(following).get();
                     fetchPromises.push(fetchPromise);

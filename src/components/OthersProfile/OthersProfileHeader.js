@@ -4,6 +4,10 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
+
 import { View, Text, Dimensions, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native';
@@ -18,7 +22,7 @@ const OthersProfileHeader = ({ userDataToBeNavigated, theme }) => {
         navigation.goBack()
     }
 
-    //needs more work
+    //This is only for texting purposes, will be removed in the future
     const handleNavigationToMessages = () => {
         let userDataUid = userDataToBeNavigated
         navigation.navigate('MessageIndividual', { userDataUid: userDataUid })

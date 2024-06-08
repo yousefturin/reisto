@@ -4,6 +4,10 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
+
 import { Dimensions, Keyboard, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useCallback, useContext, useEffect, useState, useRef } from 'react'
 import { Divider, SearchBar } from "react-native-elements";
@@ -28,7 +32,7 @@ import SearchSuggestion from '../components/Search/SearchSuggestion';
 import useFastSearchPosts from '../hooks/useFastSearchPosts';
 
 
-// performance are so Badge, this screen need optimization and refactoring
+// performance are so bad, this screen need optimization and refactoring<-(FIXED)
 const SearchScreen = () => {
     const { t } = useTranslation()
     const route = useRoute();
@@ -258,7 +262,7 @@ const SearchScreen = () => {
     //#endregion
 
     return (
-        // this must be on a scrollView-<<<<<<<<<<<<<<<<
+        //TODO: This must be on a scrollView
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary, justifyContent: "flex-start" }}>
             <View style={{ position: "absolute", top: 0, left: 0, width: "100%", backgroundColor: theme.Primary, height: 48, zIndex: 2, }}></View>
             <Animated.View style={{

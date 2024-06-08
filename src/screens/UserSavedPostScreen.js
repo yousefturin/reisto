@@ -4,6 +4,10 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
+
 import { SafeAreaView, View } from 'react-native'
 import React, { useContext } from 'react'
 import { UserContext } from '../context/UserDataProvider';
@@ -33,8 +37,8 @@ const UserSavedPostScreen = () => {
             <>
                 <SavedPostsHeader header={savedPostHeader} theme={theme} />
                 {loading === true ? (
-                     <LoadingPlaceHolder theme={theme} /> 
-                    
+                    <LoadingPlaceHolder theme={theme} />
+
                 ) : (
                     <SavedPostsGrid fromWhereValue={0} posts={savedPosts} userData={userData} navigateToScreen={"SavedPosts"} />
                 )}

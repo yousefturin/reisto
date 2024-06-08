@@ -4,6 +4,10 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
+
 import { db, firebase } from "../firebase";
 import { useCallback, useEffect, useState } from 'react';
 
@@ -45,7 +49,7 @@ const usePosts = (fromWhere, searchQuery = null, QueryParam = null, shouldFetch 
                         const dbProfilePicture = dbUserData.profile_picture
                         return {
                             id: post.id,
-                            profile_picture: dbProfilePicture, // this is work the picture is from the current logged in user not the one that is mapped to the post!
+                            profile_picture: dbProfilePicture, 
                             ...dbPostData
                         }
                     } catch (error) {

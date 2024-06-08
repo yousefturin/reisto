@@ -4,6 +4,10 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
+
 import { View, Text } from 'react-native'
 import React, { useContext, useState } from 'react'
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -14,7 +18,7 @@ const EditProfileForm = ({ navigation, theme, t }) => {
     const [isNamePressed, setIsNamePressed] = useState(false);
     const [isBioPressed, setIsBioPressed] = useState(false);
     const [isLinkPressed, setIsLinkPressed] = useState(false);
-    // the EditProfileForm is already has userData but to obtain the must new data i need to call the provider to get that from here 
+    // The EditProfileForm already has access to the userData, but to obtain the most up-to-date data, you can call the provider to retrieve it from here.
     const userData = useContext(UserContext);
 
     const handlePressIn = (id) => {

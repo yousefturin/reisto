@@ -4,6 +4,10 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
+
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import firebase from "firebase/compat/app";
@@ -32,12 +36,12 @@ const firebaseConfig = {
     appId: FIREBASE_APP_ID,
     measurementId: FIREBASE_MEASUREMENT_ID,
 }
-// getReactNativePersistence was pain in the ass to keep teh user logged in 2 day were spent
+// getReactNativePersistence is a helper function that returns the persistence instance for React Native.<--- This is a comment
 initializeAuth(firebase.initializeApp(firebaseConfig), {
     persistence: getReactNativePersistence(AsyncStorage),
 });
 firebase.firestore().settings({
-    cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,// or specify your preferred cache size
+    cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
     merge: true
 });
 const db = firebase.firestore()

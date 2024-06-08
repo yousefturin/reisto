@@ -4,6 +4,10 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
+
 import { View, Text, Dimensions, TouchableOpacity, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Modal from 'react-native-modal';
@@ -60,9 +64,9 @@ const LanguageSelector = ({ theme, t, i18n }) => {
                     onPress={toggleContainer}
                 >
                     <View style={{
-                        width: 24, // Set the size of the circle container
+                        width: 24, 
                         height: 24,
-                        marginRight: 10, // Spacing between the circle and text
+                        marginRight: 10, 
                         alignItems: 'center',
                         justifyContent: 'center',
                         alignContent: 'center',

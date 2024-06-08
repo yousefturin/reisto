@@ -4,6 +4,10 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
+
 import React from 'react'
 import { View, TouchableOpacity, Dimensions } from 'react-native'
 import { useTheme } from '../../context/ThemeContext';
@@ -26,7 +30,7 @@ const NavigationStack = ({ routeName, userData }) => {
     // profile image flickering issue is related to useEffect since each time the navigation is applied
     // the useEffect will run once and that will make a problem the image must be taken and then it will be stored inside the async storage.
     // The data will be stored in async storage and will be changed every time a user is changing the profile Image, or the user is
-    // signing out or logging in the the application to always fetch the newer Image.
+    // signing out or logging in the the application to always fetch the newer Image.<--(FIXED)
     // const [userData, setUserData] = useState([])
 
     // Check if userData is available before rendering
@@ -36,7 +40,7 @@ const NavigationStack = ({ routeName, userData }) => {
 
     // still needs fixing this issue where there are 
     // common screens that are used in the navigation stack and based on that 
-    // the icon show change to active or inactive.
+    // the icon show change to active or inactive.<--(FIXED)
     const icons = [
         {
             action: 'Home',
@@ -93,7 +97,7 @@ const NavigationStack = ({ routeName, userData }) => {
                             onPress={() => {
                                 // this is the navigation to the screen needs to be fixed so 
                                 // that the navigation will be done to the screen that is needed 
-                                //since the actions for the icons will be changes to include more screens sub-from home screen.
+                                //since the actions for the icons will be changes to include more screens sub-from home screen.<--(FIXED)
                                 navigation.navigate(icon.action);
                             }}
                             style={{ padding: 10 }}

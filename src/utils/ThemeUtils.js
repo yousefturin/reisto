@@ -6,6 +6,8 @@
  */
 import { Appearance } from 'react-native';
 
+
+
 /**
  * Returns the color theme based on the provided parameters.
  *

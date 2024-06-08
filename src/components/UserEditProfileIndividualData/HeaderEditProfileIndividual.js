@@ -4,6 +4,10 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
+
 import { View, Text, Dimensions, TouchableOpacity, Keyboard } from 'react-native'
 import React, { useState } from 'react'
 import SvgComponent from '../../utils/SvgComponents';
@@ -16,7 +20,7 @@ const HeaderEditProfileIndividual = ({ headerTitle, navigation, handleSubmit, is
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     const handleGoingBack = () => {
-        //not having the dismiss here will make the go back to flash teh Keyboard for couple seconds.
+        // Adding Keyboard.dismiss() here will prevent the keyboard from flashing when going back.
         if (prevValue === values) navigation.goBack()
         else {
             Keyboard.dismiss();

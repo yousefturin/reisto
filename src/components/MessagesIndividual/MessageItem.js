@@ -5,6 +5,9 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
 import { View, Text, Dimensions } from 'react-native'
 import React from 'react'
 import SvgComponent from '../../utils/SvgComponents'
@@ -82,7 +85,7 @@ const MessageItem = ({ message, currentUser, theme }) => {
                 </View>
             )
         }
-        // need to add a text message incase the image was deleted by the user=> (soon will be implemented) or an issue happened with server.
+        // need to add a text message incase the image was deleted by the user<-(IMPLEMENTED)
         if (message?.type_of_message === "image") {
             return (
                 <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 10, marginRight: 10 }}>
@@ -100,7 +103,6 @@ const MessageItem = ({ message, currentUser, theme }) => {
                                 placeholder={blurHash}
                                 cachePolicy={"memory-disk"}
                                 transition={50}
-                            // onError={(error) => console.log("error", error)}
                             />
                             <View style={{ position: "absolute", bottom: 7, right: 0, zIndex: 100 }}>
                                 {message?.seenBy.length === 2 ? (

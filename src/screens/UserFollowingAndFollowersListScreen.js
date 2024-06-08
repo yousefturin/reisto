@@ -4,6 +4,10 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
+
 import React, { useState } from 'react';
 import { View, Text, SafeAreaView, TouchableOpacity, Animated, Easing, Dimensions } from 'react-native';
 import EditProfileHeader from '../components/UserEditProfile/EditProfileHeader';
@@ -107,7 +111,6 @@ const UserFollowingAndFollowersListScreen = ({ route }) => {
                     )
                 }
             </View>
-            {/* <Divider width={0.5} orientation='horizontal' color={theme.dividerPrimary} style={{ zIndex: -1 }} /> */}
             <View>
                 {paramFollower.length === 0 && paramFlag === "followers" && (
                     <EmptyDataParma SvgElement={"ConnectionIllustration"} theme={theme} t={t} dataMessage={"Once people follow you, you'll see theme here."} TitleDataMessage={"People who follow you"} />

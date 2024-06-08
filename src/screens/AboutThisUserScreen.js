@@ -4,6 +4,10 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
+
 import { View, SafeAreaView, Text, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import SavedPostsHeader from '../components/SavedPosts/SavedPostsHeader';
@@ -37,7 +41,7 @@ const AboutThisUserScreen = ({ route }) => {
                 setUserData({
                     username: data.username,
                     profile_picture: data.profile_picture,
-                    //short cut to get the date correctly formatted before assigning 
+                    // Shortcut to get the date correctly formatted before assigning 
                     createdAt: formatCreatedAt(new Date((data.createdAt.seconds * 1000) + (data.createdAt.nanoseconds / 1000000)))
                 });
             }, error => {

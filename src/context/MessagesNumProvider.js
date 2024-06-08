@@ -4,6 +4,10 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
+
 import React, { createContext, useEffect, useState } from 'react';
 import { db, firebase } from '../firebase';
 
@@ -13,6 +17,7 @@ const MessagesNumContext = createContext();
 
 // Create a context provider component
 const MessagesNumProvider = ({ children }) => {
+    // TODO: Value of messagesNum is not being updated when a messages is opened
     // State to hold the number of messages
     const [messagesNum, setMessagesNum] = useState([]);
     const [loading, setLoading] = useState(true);

@@ -4,6 +4,10 @@
  * This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
  */
+
+
+
+
 import { Dimensions, ScrollView, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import MessageItem from './MessageItem'
@@ -85,7 +89,7 @@ const MessageList = ({ messages, currentUser, scrollViewRef, theme, forwarded })
             handleShowEmojiPicker(message)
         }
     }
-    // each user must give an emoji to the message. currently, it is only changes the old emoji with the new one from the other user.
+    // TODO: each user must give an emoji to the message. currently, it only changes the old emoji with the new one from the other user.
     const handleSendEmoji = async (emoji) => {
         let room = GenerateRoomId(currentUser.owner_uid, forwarded.owner_uid)
         setEmojiPickerVisible(false)
