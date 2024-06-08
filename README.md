@@ -1,7 +1,7 @@
 ![icon](https://github.com/yousefturin/reisto/assets/94796673/fc6e918e-0f1b-4a90-a008-bcf2d87730d2)
 # REISTO
 
-
+<img src="https://github.com/yousefturin/reisto/assets/94796673/fc6e918e-0f1b-4a90-a008-bcf2d87730d2" alt="logo" width="100"  height="100">
 
 ![license](https://img.shields.io/badge/license-CC_BY_NC_4.0-blue)
 ![last-commit](https://img.shields.io/github/last-commit/yousefturin/reisto?style=flat&logo=git&logoColor=white&color=0080ff)
