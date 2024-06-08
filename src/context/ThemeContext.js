@@ -16,7 +16,7 @@ import { Appearance, AppState, SafeAreaView, Text } from 'react-native';
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-    const [selectedTheme, setSelectedTheme] = useState("system"); // Start with a null state
+    const [selectedTheme, setSelectedTheme] = useState("system"); 
     const [systemAppearance, setSystemAppearance] = useState(Appearance.getColorScheme());
     const [isLoading, setIsLoading] = useState(true); // Track loading state
 

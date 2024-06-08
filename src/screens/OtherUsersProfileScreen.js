@@ -30,19 +30,7 @@ const OtherUsersProfileScreen = ({ route }) => {
     const { userPosts, loading, afterLoading, fetchUserSavedPosts } = useFastPosts(null, userDataToBeNavigated.id)
     const { selectedTheme } = useTheme();
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
-    // const navigation = useNavigation();
-    // // remove the justSeenPost from the navigation params so that it doesn't show up again
-    // useFocusEffect( // This hook is used to handle the screen focus event<---need fix to remove development error (The action 'SET_PARAMS' with payload {"params":{"justSeenPost":null}} was not handled by any navigator.)
-    //     React.useCallback(() => {
-    //         // This will be called when the screen is focused
-    //         return () => {
-    //             if (route.params?.justSeenPost !== undefined) {
-    //                 navigation.setParams({ justSeenPost: null });
-    //             }
-    //             // This will be called when the screen is unfocused
-    //         };
-    //     }, [navigation])
-    // );
+
     // Function to handle scroll event
     const onRefresh = useCallback(() => {
         setRefreshing(true);

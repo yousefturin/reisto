@@ -99,7 +99,7 @@ const ProfileContent = ({ userData, userPosts, theme, t, opacityContent }) => {
                 </View>
             </View>
 
-            {/* Will be connected to DB soon */}
+
             {userData.displayed_name &&
                 <View style={{ marginHorizontal: 20, maxHeight: 50, }} >
                     <Text style={{ color: theme.textPrimary, fontSize: 14, fontWeight: "700" }}>

@@ -30,7 +30,8 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
     const [userDataAfterNavigation, setUserDataAfterNavigation] = useState(userDataToBeNavigated)
     const isUserFollowed = followersAndFollowing?.following?.includes(userDataToBeNavigated.id)
 
-    // a stupid code was made before depending on the route to get all the data of the user, but now it will only be the id of the user and the rest will be fetched.
+    // a stupid code was made before depending on the route to get all the data of the user,
+    //  but now it will only be the id of the user and the rest will be fetched.
     useEffect(() => {
         const GetPostOwnerData = (userDataToBeNavigated) => {
             return new Promise((resolve, reject) => {
@@ -45,7 +46,7 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
                         id: data.email,
                         owner_uid: data.owner_uid
                     };
-                    // this was the only way to do it otherwise the useStat wil not be updated when it pass the Params to navigation
+                    // this was the only way to do it otherwise the useStat will not be updated when it pass the Params to navigation
                     setUserDataAfterNavigation(userDataNew);
                 }, error => {
                     console.error("Error listening to document:", error);
@@ -60,17 +61,12 @@ const OthersProfileContent = ({ userDataToBeNavigated, userPosts, theme, t }) =>
     }, []);
 
 
-    // there is issue in this part of code when making the user follow another user for first time.<---(not fixed)
+    // there is issue in this part of code when making the user follow another user for first time.<---(Not Fixed Yet)
     const handleFollowing = () => {
-        // console.log("current following:",currentFollowingStatus)
-        // console.log("following and follower:",followersAndFollowing.following)
         const currentFollowingStatus = !followersAndFollowing?.following?.includes(
             userDataAfterNavigation?.id
         )
-        // console.log("current nav id: ",userDataAfterNavigation?.id)
-        // console.log("current following stat: ",currentFollowingStatusForPassedUser)
 
-        // console.log("passedUser:",followersAndFollowingForPassedUser?.followers)
         const currentFollowingStatusForPassedUser = !followersAndFollowingForPassedUser.followers.includes(
             firebase.auth().currentUser.email
         )

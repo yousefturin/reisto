@@ -61,7 +61,7 @@ const useCurrentUserFollowing = (QueryParam) => {
                 const fetchPromises = [];
                 const fetchPromisesSecond = [];
 
-                // Push fetch promises for each follower-<<<<<<<< need to fix the issue where i have no idea what to show for users is it followers or following or both
+                // Push fetch promises for each follower <- Needs to fix the issue, what to show for users is it followers or following or both?
                 for (const following of data.following) {
                     const fetchPromise = db.collection('users').doc(following).get();
                     fetchPromises.push(fetchPromise);

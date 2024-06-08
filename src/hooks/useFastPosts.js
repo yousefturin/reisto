@@ -55,7 +55,7 @@ const useFastPosts = (fromWhere = null, QueryParam) => {
                 const postsProfilePictures = snapshot.docs.map(async post => {
                     const dbPostData = post.data();
                     const dbImageURL = dbPostData.imageURL
-                    // why tf i was fetching the user data and map the profile image! OMG!, only images are displayed of [posts]
+                    // Code was improved by removing the mapping userProfile, since it will not be shown in this case.
                     return {
                         id: post.id,
                         imageURL: dbImageURL,

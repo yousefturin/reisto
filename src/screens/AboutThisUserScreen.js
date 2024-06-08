@@ -41,7 +41,7 @@ const AboutThisUserScreen = ({ route }) => {
                 setUserData({
                     username: data.username,
                     profile_picture: data.profile_picture,
-                    //short cut to get the date correctly formatted before assigning 
+                    // Shortcut to get the date correctly formatted before assigning 
                     createdAt: formatCreatedAt(new Date((data.createdAt.seconds * 1000) + (data.createdAt.nanoseconds / 1000000)))
                 });
             }, error => {

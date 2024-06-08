@@ -23,7 +23,6 @@ import UseCustomTheme from '../utils/UseCustomTheme'
 import EmptyDataParma from '../components/CustomComponent/EmptyDataParma'
 import { Animated } from 'react-native'
 import LoadingPlaceHolder from '../components/Search/LoadingPlaceHolder'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import useFastPosts from '../hooks/useFastPosts'
 
 const UserProfileScreen = () => {
@@ -138,7 +137,7 @@ const UserProfileScreen = () => {
                 }}>
                     <ProfileHeader handleLogout={handleLogout} userData={userData} theme={theme} t={t} opacity={opacity} />
                 </Animated.View>
-                {/* need fix so that when the profile content is still in view then the divider should not be visible */}
+                {/*TODO: need fix so that when the profile content is still in view then the divider should not be visible */}
                 <Animated.ScrollView
                     style={{ paddingTop: 50, }}
                     keyboardDismissMode="on-drag"
@@ -164,8 +163,8 @@ const UserProfileScreen = () => {
                         <ProfilePost posts={userPosts} userData={userData} keyValue={"NavigationToMyProfile"} t={t} />
                     )}
                     {loading === true && (
-                      <LoadingPlaceHolder theme={theme} /> 
-                      
+                        <LoadingPlaceHolder theme={theme} />
+
                     )}
 
                     {afterLoading === true && loading === false && (<View style={{ minHeight: 250, }}>

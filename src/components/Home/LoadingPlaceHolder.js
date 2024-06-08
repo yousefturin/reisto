@@ -20,7 +20,6 @@ import { Skeleton } from 'moti/skeleton'
  * @param {boolean} props.isPaddingNeeded - Determines if padding is needed.
  * @returns {JSX.Element} The loading placeholder component.
  */
-// the implementation of theme is not yet done
 const LoadingPlaceHolder = ({ fromWhere, theme, isPaddingNeeded }) => {
     const SkeletonCommonProps = {
         colorMode: theme.Primary === '#050505' ? 'dark' : 'light', // if the primary color is dark then the skeleton will be dark

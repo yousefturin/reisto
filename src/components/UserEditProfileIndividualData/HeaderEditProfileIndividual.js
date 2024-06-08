@@ -20,7 +20,7 @@ const HeaderEditProfileIndividual = ({ headerTitle, navigation, handleSubmit, is
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     const handleGoingBack = () => {
-        //not having the dismiss here will make the go back to flash teh Keyboard for couple seconds.
+        // Adding Keyboard.dismiss() here will prevent the keyboard from flashing when going back.
         if (prevValue === values) navigation.goBack()
         else {
             Keyboard.dismiss();

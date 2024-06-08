@@ -22,7 +22,7 @@ const OthersProfileHeader = ({ userDataToBeNavigated, theme }) => {
         navigation.goBack()
     }
 
-    //needs more work
+    //This is only for texting purposes, will be removed in the future
     const handleNavigationToMessages = () => {
         let userDataUid = userDataToBeNavigated
         navigation.navigate('MessageIndividual', { userDataUid: userDataUid })

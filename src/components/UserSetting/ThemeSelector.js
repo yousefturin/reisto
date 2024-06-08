@@ -39,21 +39,21 @@ const ThemeSelector = ({ theme, selectedTheme, toggleTheme, t }) => {
                 activeOpacity={0.7}
             >
                 <View style={{
-                    width: 24, // Set the size of the circle container
+                    width: 24, 
                     height: 24,
-                    borderRadius: 50, // Make it a circle
-                    borderWidth: 1, // Add a border
-                    borderColor: '#add1f7', // Border color
-                    marginRight: 10, // Spacing between the circle and text
+                    borderRadius: 50, 
+                    borderWidth: 1,
+                    borderColor: '#add1f7',
+                    marginRight: 10, 
                     alignItems: 'center',
                     justifyContent: 'center',
                     alignContent: 'center',
                 }}>
                     {selectedTheme === item.value && (
                         <View style={{
-                            width: 14, // Set the size of the filled circle
+                            width: 14,
                             height: 14,
-                            borderRadius: 50, // Make it a circle
+                            borderRadius: 50, 
                             backgroundColor: '#add1f7',
                         }}></View>
                     )}

@@ -29,7 +29,7 @@ import useAnimation from '../hooks/useAnimation';
 
 
 const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
-    // the users that the current user did start a chat will be excluded from the list of users that the user can start a chat with.
+    // Exclude the users that the current user has already started a chat with from the list of users that the user can start a chat with.
     const { userData, excludedUsers } = route.params;
     const { t } = useTranslation();
     const navigation = useNavigation();
@@ -78,19 +78,19 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
         setSearchMode(true);
     };
 
-    const handleCancel = () => {
-        setRightIconContainerStyle(0);
-        Keyboard.dismiss();
-        setSearchQuery("");
-        setSearchedItems([]);
-        setSearchMode(false);
-    };
+    // const handleCancel = () => {
+    //     setRightIconContainerStyle(0);
+    //     Keyboard.dismiss();
+    //     setSearchQuery("");
+    //     setSearchedItems([]);
+    //     setSearchMode(false);
+    // };
 
-    const handleClear = () => {
-        setSearchQuery("");
-        setSearchedItems([]);
-        setClearedManually(true); // Set clearedManually flag to true when clearing manually
-    }
+    // const handleClear = () => {
+    //     setSearchQuery("");
+    //     setSearchedItems([]);
+    //     setClearedManually(true); // Set clearedManually flag to true when clearing manually
+    // }
     //#endregion
     
     return (
@@ -123,7 +123,8 @@ const MessagingNewForFollowersAndFollowingScreen = ({ route }) => {
                         placeholder={t('screens.messages.searchPlaceHolder')}
                         onChangeText={handleSearch}
                         // had to do this since even the search is disabled, the onPressIn event is still triggered
-                        onPressIn={loading === null ? null : handleSearchBarClick}
+                        // onPressIn={loading === null ? null : handleSearchBarClick}
+                        onPressIn={()=>handleSearchBarClick}
                         value={searchQuery}
                         platform="ios"
                         containerStyle={[SearchScreenStyles.searchBarContainer, { backgroundColor: theme.Primary, width: "90%", paddingHorizontal: 0, paddingRight: 10 }]} inputContainerStyle={[

@@ -50,8 +50,8 @@ const MessageMainItem = ({ item, userData, onUpdateLastMessage, flag, theme, t }
     }
 
     const renderLastMessage = () => {
-        // if i am who sent then show the you 
-        // not need to use the ? here since the condition is already will be passed only if it exist
+        // If I am the sender, show "You"
+        // No need to use the "?" here since the condition is already checked before
         if (userData?.owner_uid == lastMessage.owner_id) {
             return (
                 <>

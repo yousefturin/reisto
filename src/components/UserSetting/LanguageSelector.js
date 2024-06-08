@@ -64,9 +64,9 @@ const LanguageSelector = ({ theme, t, i18n }) => {
                     onPress={toggleContainer}
                 >
                     <View style={{
-                        width: 24, // Set the size of the circle container
+                        width: 24, 
                         height: 24,
-                        marginRight: 10, // Spacing between the circle and text
+                        marginRight: 10, 
                         alignItems: 'center',
                         justifyContent: 'center',
                         alignContent: 'center',

@@ -28,7 +28,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import UseCustomTheme from '../utils/UseCustomTheme';
 
-// two hours of debugging and then it apparently was userDataUid.owner_id and not userDataUid.owner_uid-<<<<<<<<(fixed)
+// Two hours of debugging and then it apparently was userDataUid.owner_id and not userDataUid.owner_uid<--(FIXED)
 const MessagingIndividualScreen = ({ route }) => {
     const { t } = useTranslation();
     const { userDataUid } = route.params
@@ -44,7 +44,7 @@ const MessagingIndividualScreen = ({ route }) => {
     const theme = UseCustomTheme(selectedTheme, { colorPaletteDark: colorPalette.dark, colorPaletteLight: colorPalette.light })
 
     useEffect(() => {
-        // room creation is not needed here and will be only created on send message and then it will be checked if the room exists or not
+        // Room creation is removed from here and will be created only when the user sends a message. The room will be checked if it exists or not.
         // handleCreateChat();
         try {
             let roomId = GenerateRoomId(userData.owner_uid, userDataUid.owner_uid);
@@ -111,7 +111,7 @@ const MessagingIndividualScreen = ({ route }) => {
                 await roomRef.set({
                     roomId,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    // first owner1 will always be the current user this is used in the main screen for messages to show the user who sent the message
+                    // The first owner1 will always be the current user. This is used in the main screen for messages to show the user who sent the message.
                     owner1: userData.email,
                     owner2: userDataUid.email,
                 });
@@ -179,7 +179,6 @@ const MessagingIndividualScreen = ({ route }) => {
         });
 
         if (!result.canceled) {
-            // setImage(result.assets[0].uri);
             const maxWidth = 700; // Maximum width for resizing
             const originalWidth = result.assets[0].width;
             const originalHeight = result.assets[0].height;
@@ -191,7 +190,7 @@ const MessagingIndividualScreen = ({ route }) => {
             if (originalWidth > maxWidth) {
                 width = maxWidth;
                 // the issue with white border is that the height is for example 700.2314814814815 and that will make a problem 
-                //              showing a artifact white line to fix teh issue rounding the number is applied.
+                //              showing a artifact white line to fix the issue rounding the number is applied. <-(FIXED)
                 height = Math.round(maxWidth / aspectRatio)
             }
             const compressedImage = await ImageManipulator.manipulateAsync(

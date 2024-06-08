@@ -142,7 +142,7 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
                 const data = savedPostsQuerySnapshot.docs[0].data();
                 setSavedPosts({
                     id: savedPostsQuerySnapshot.docs[0].id,
-                    saved_post_id: data.saved_post_id || [] // Assuming saved_post_id is an array
+                    saved_post_id: data.saved_post_id || [] 
                 });
             } else {
                 console.log('No saved posts found for this user.');
@@ -182,7 +182,7 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
     };
 
     const handleSharePostToggle = (post) => {
-        // open modal, since the useState of setSharePostModal is considered bad code.So it is made from the Post component.
+        // open modal, since the useState of setSharePostModal is considered bad code. So it is made from the Post component.
         setSharePostModal(true);
         const { category, captionIngredients,
             captionInstructions, comments,
@@ -296,7 +296,7 @@ const Post = React.memo(({ post, userData, isLastPost, usersForSharePosts, theme
                         justifyContent: 'flex-end',
                         margin: 0,
                         // there is no other way to create double nested Modals and hide 
-                        // one then display the other so the only bad solution is to make the opacity removed--<<<<<<<<<<<<<<<- (needs more study for a better solution)
+                        // one then display the other so the only bad solution is to make the opacity removed<--(needs more study for a better solution)
                         opacity: isAlertModaVisible ? 0 : 1
                     }}>
                     <View style={{
@@ -438,7 +438,7 @@ const PostHeader = ({ post, isModalVisible, setIsModalVisible, userData, theme }
             return () => unsubscribe();
         });
     };
-    // this does not work currently it has issue with userData and other types of passing the data<<<<<<-(Solved)
+    // this does not work currently it has issue with userData and other types of passing the data<--(FIXED)
     const handlePostNavigationFromHome = (post, theme) => {
         // if the post that is click is users own post then take them to their profile,else navigate to the user.
         if (post.owner_email === firebase.auth().currentUser.email) {
@@ -727,7 +727,8 @@ const Comments = ({ post, isContainerVisible, setContainerVisible, userData, han
                             cachePolicy={"memory-disk"}
                             transition={50}
                         />
-                        {/* why on earth this was as ScrollView!!!!!!!!!!! 2 weeks of trying to solve this issue and it was only because there was an extra scrollView */}
+                        {/* why on earth this was as ScrollView!
+                         2 weeks of trying to solve this issue and it was only because there was an extra scrollView */}
                         <View
                             style={[styles.inputControl, { borderColor: theme.dividerPrimary }]}>
                             <TextInput

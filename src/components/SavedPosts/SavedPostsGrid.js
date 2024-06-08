@@ -42,7 +42,7 @@ const SavedPostsGrid = ({
                 scrollToIndex = index;
             }
         }
-        // console.log("scrollToIndex", scrollToIndex)
+
         
         if (navigateToScreen === "SavedPosts") {
             navigation.navigate('UserSavedPostTimeLine', {
@@ -91,7 +91,7 @@ const SavedPostsGrid = ({
         return data;
     }
 
-    //  coming from search
+    // Handle search display when coming from search
     if (fromWhereValue !== 0) {
         return (
             <AnimatedFlatList
@@ -123,7 +123,7 @@ const SavedPostsGrid = ({
             />
         )
 
-        // any place else
+    // Handle search display from any place else
     } else {
         return (
             <FlatList

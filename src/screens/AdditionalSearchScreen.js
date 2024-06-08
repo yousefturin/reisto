@@ -27,7 +27,7 @@ import { UserContext } from '../context/UserDataProvider';
 const { moderateScale } = initializeScalingUtils(Dimensions);
 
 
-// need work on this screen, but the logic is correct and optimized
+// TODO: Improve the search query to be more flexible and search for more than one word.
 const AdditionalSearchScreen = ({ route }) => {
     const navigation = useNavigation();
     const { searchQuery } = route.params;
@@ -58,7 +58,7 @@ const AdditionalSearchScreen = ({ route }) => {
     }, [searchQuery])
     const fetchDataOfSearchQuery = async (searchQuery) => {
         try {
-            // need to store  the caption in small and upper case to enhance search and make it wider.
+            //TODO: Need to store the caption in small and upper case to enhance search and make it wider.
             const user = firebase.auth().currentUser;
             if (user) {
                 const querySnapshot = query(collectionGroup(db, 'posts'), where
@@ -74,7 +74,6 @@ const AdditionalSearchScreen = ({ route }) => {
                     const data = doc.data();
                     results.push({id: doc.id, ...data});
                 });
-                // console.log(results);
                 return setSearchResult(results);
             } else {
                 console.error("No authenticated user found.");
@@ -107,7 +106,6 @@ const AdditionalSearchScreen = ({ route }) => {
                         SearchScreenStyles.searchBarInputContainerTop, // when searchMode is true
                         { backgroundColor: theme.SubPrimary, }
                     ]}
-                    // rightIconContainerStyle={{ opacity: RightIconContainerStyle }}
                     inputStyle={[
                         SearchScreenStyles.searchBarInput,
                         {

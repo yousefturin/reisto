@@ -52,11 +52,6 @@ const OthersProfilePostScreen = ({ route }) => {
             <OwnerProfileHeader t={t} userDataToBeNavigated={userDataToBeNavigated} theme={theme} />
             {posts.length !== 0 ? (
                 <VirtualizedList
-                    // onContentSizeChange={() => {
-                    //     if (flatListRef.current && scrollToPostId && posts && posts.length) {
-                    //         flatListRef.current.scrollToIndex({ index: scrollToPostId });
-                    //     }
-                    // }}
                     viewabilityConfig={{ viewAreaCoveragePercentThreshold: 35 }}
 
                     keyboardDismissMode="on-drag"

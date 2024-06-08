@@ -37,13 +37,12 @@ const useLastMessage = (userData, item, onUpdateLastMessage, flag, setMessagesNu
                     let unseenMessages = 0;
                     let allMessages = snapshot.docs.map(doc => doc.data());
                     const latestMessage = allMessages[0] || null;
-                    //this code need more observation for behavior
                     unseenMessages = allMessages.filter(message => !message.seenBy.includes(userData.owner_uid));
                     setLoading(false);
                     setMessagesNum(unseenMessages.length);
                     setLastMessage(latestMessage);
-                    // using indexing from firebase currently for the messages, but this is still needed
-                    // messages are indexed in firebase without considering the user's id, so second sort is needed.
+                    // The messages are currently indexed in Firebase without considering the user's id,
+                    // so a second sort is needed to properly display the messages order.
                     if (flag === "FromMain") onUpdateLastMessage(item.owner_uid, latestMessage);
 
                 } catch (error) {

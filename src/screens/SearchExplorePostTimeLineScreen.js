@@ -81,20 +81,6 @@ const SearchExplorePostTimeLineScreen = ({ route }) => {
             <SavedPostsHeader header={searchHeader} theme={theme} />
             {loading === false ? (
                 <VirtualizedList
-                    // pagingEnabled
-                    // snapToInterval={660}
-                    // snapToAlignment="start"
-                    // decelerationRate="fast"
-                    // onContentSizeChange={() => {
-                    //     if (
-                    //         flatListRef.current &&
-                    //         scrollToPostId &&
-                    //         posts &&
-                    //         posts.length
-                    //     ) {
-                    //         flatListRef.current.scrollToIndex({ index: scrollToPostId });
-                    //     }
-                    // }}
                     viewabilityConfig={{ viewAreaCoveragePercentThreshold: 35 }}
                     keyboardDismissMode="on-drag"
                     showsVerticalScrollIndicator={false}

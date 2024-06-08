@@ -36,7 +36,6 @@ const SinginForm = ({ navigation, theme }) => {
             });
 
             savedPostCreation(userCredential);
-            // followersAndFollowingUserCreation(userCredential);
         } catch (error) {
             let msg = error.message
             if (msg.includes('(auth/email-already-in-use)')) msg = 'This email already has an account'
@@ -55,15 +54,15 @@ const SinginForm = ({ navigation, theme }) => {
         return unsubscribe
     }
 
-    const followersAndFollowingUserCreation = (userCredential) => {
-        const unsubscribe = db.collection('users').doc(userCredential.user.email)
-            .collection('following_followers').add({
-                following: [],
-                followers: [],
-                owner_email: userCredential.user.email
-            }).then(() => navigation.navigate("Home"))
-        return unsubscribe
-    }
+    // const followersAndFollowingUserCreation = (userCredential) => {
+    //     const unsubscribe = db.collection('users').doc(userCredential.user.email)
+    //         .collection('following_followers').add({
+    //             following: [],
+    //             followers: [],
+    //             owner_email: userCredential.user.email
+    //         }).then(() => navigation.navigate("Home"))
+    //     return unsubscribe
+    // }
 
     return (
         <Formik
@@ -166,7 +165,6 @@ const SinginForm = ({ navigation, theme }) => {
                 </View>
 
                 <TouchableOpacity
-                    // style={{ marginTop: "auto" }}
                     onPress={() => {
                         navigation.navigate("Login");
                     }}>

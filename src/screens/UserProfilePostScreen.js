@@ -47,7 +47,8 @@ const UserProfilePostScreen = ({ route }) => {
         setTimeout(() => { flatListRef.current?.scrollToIndex({ index: info.index, animated: false, }); }, 10);
         flatListRef.current?.scrollToOffset({ offset: offset, animated: false });
     };
-        // (ToDo) when click to see more is clicked, it goes under the post due to the height of the post being fixed to 660, which is used for scroll to index        
+        //<-(FIXED)
+             // TODO: when click to see more is clicked, it goes under the post due to the height of the post being fixed to 660, which is used for scroll to index        
     const renderItem = useCallback(({ item }) => {
         return (
             <View style={{   }}>
@@ -64,21 +65,12 @@ const UserProfilePostScreen = ({ route }) => {
             });
         }
     }, [scrollToPostId])
-    // (ToDo) onContentSizeChange must be removed from VirtualizedList.
+    // (TODO) onContentSizeChange must be removed from VirtualizedList.<-(FIXED)
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.Primary }}>
             <OwnerProfileHeader userData={userData} theme={theme} t={t} />
             {loading === false ? (
                 <VirtualizedList
-                    // pagingEnabled
-                    // snapToInterval={660}
-                    // snapToAlignment="start"
-                    // decelerationRate="fast"
-                    // onContentSizeChange={() => {
-                    //     if (flatListRef.current && scrollToPostId && posts && posts.length) {
-                    //         flatListRef.current.scrollToIndex({ index: scrollToPostId });
-                    //     }
-                    // }}
                     viewabilityConfig={{ viewAreaCoveragePercentThreshold: 35 }}
                     keyboardDismissMode="on-drag"
                     showsVerticalScrollIndicator={false}

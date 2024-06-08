@@ -15,12 +15,8 @@ import { Image } from 'expo-image';
 const screenWidth = Dimensions.get('window').width;
 const columnCount = 3;
 
-// OwnerProfilePostScreen will be move inside here, and then based on a state it will be displayed and removed over the screen
-// to keep the data re-rendered since passing the data using routs will make the data as cashed data
-
 const ProfilePost = ({ posts, userData, keyValue, userDataToBeNavigated, justSeenPost }) => {
     const navigation = useNavigation();
-    // console.log("justSeenPost", justSeenPost)
 
     const handleNavigationToPost = (postId) => {
         let scrollToIndex
@@ -85,8 +81,11 @@ const ProfilePost = ({ posts, userData, keyValue, userDataToBeNavigated, justSee
     };
 
     const formatData = (data, numColumns) => {
-        // Create a copy of the data array to avoid mutating the original array------------------------------ this shit made me scared a data updated in child
-        // will be return to parent and another child will use this data from this child! OMG react really!
+        // This code handles the case where data is updated in a child component
+        // and then returned to the parent component, causing another child component to use this updated data.
+        // This behavior can be unexpected and may lead to bugs in the application.<-(FIXED)
+        
+        // Create a copy of the data array to avoid mutating the original array
         const dataCopy = [...data];
 
         const numberOfFullRows = Math.floor(dataCopy.length / numColumns);

@@ -37,8 +37,8 @@ const UserSavedPostScreen = () => {
             <>
                 <SavedPostsHeader header={savedPostHeader} theme={theme} />
                 {loading === true ? (
-                     <LoadingPlaceHolder theme={theme} /> 
-                    
+                    <LoadingPlaceHolder theme={theme} />
+
                 ) : (
                     <SavedPostsGrid fromWhereValue={0} posts={savedPosts} userData={userData} navigateToScreen={"SavedPosts"} />
                 )}

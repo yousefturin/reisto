@@ -36,12 +36,12 @@ const firebaseConfig = {
     appId: FIREBASE_APP_ID,
     measurementId: FIREBASE_MEASUREMENT_ID,
 }
-// getReactNativePersistence was pain in the ass to keep teh user logged in 2 day were spent
+// getReactNativePersistence is a helper function that returns the persistence instance for React Native.<--- This is a comment
 initializeAuth(firebase.initializeApp(firebaseConfig), {
     persistence: getReactNativePersistence(AsyncStorage),
 });
 firebase.firestore().settings({
-    cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,// or specify your preferred cache size
+    cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
     merge: true
 });
 const db = firebase.firestore()
