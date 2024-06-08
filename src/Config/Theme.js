@@ -6,6 +6,8 @@
  */
 // Desc: Theme configuration for the app
 
+
+
 export const colorPalette = {
     light: {
         // colors related to backgrounds

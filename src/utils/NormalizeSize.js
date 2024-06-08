@@ -7,6 +7,7 @@
 
 
 
+
 /**
  * Function to initialize scaling utilities based on device dimensions.
  * @param {Object} Dimensions - The Dimensions object from react-native.

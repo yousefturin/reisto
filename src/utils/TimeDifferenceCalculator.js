@@ -7,6 +7,7 @@
 
 
 
+
 /**
  * Calculates the time difference between a given timestamp and the current time.
  * @param {Object} timestampObj - The Firestore timestamp object.
