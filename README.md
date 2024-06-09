@@ -276,9 +276,6 @@ We welcome contributions from the community! To contribute, follow these steps:
 
 ## License
 
-
-To change the licensing information to GPL-3.0, the text should be updated as follows:
-
 This project is licensed under the GNU General Public License v3.0.
 
 License: GPL-3.0
