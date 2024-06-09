@@ -276,21 +276,23 @@ We welcome contributions from the community! To contribute, follow these steps:
 
 ## License
 
-This project is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
 
-License: CC BY-NC 4.0
+To change the licensing information to GPL-3.0, the text should be updated as follows:
+
+This project is licensed under the GNU General Public License v3.0.
+
+License: GPL-3.0
 
 You are free to:
 
-- **Share** — copy and redistribute the material in any medium or format
-- **Adapt** — remix, transform, and build upon the material
-
+Share — copy and redistribute the material in any medium or format
+Adapt — remix, transform, and build upon the material for any purpose, even commercially.
 Under the following terms:
 
-- **Attribution** — You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
-- **NonCommercial** — You may not use the material for commercial purposes.
-
-For more details, visit the license page.
+Attribution — You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
+Copyleft — If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.
+No additional restrictions — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.
+For more details, visit the [license page]("https://github.com/yousefturin/reisto/blob/master/LICENSE").
 
 ## Contact
 
