@@ -6,7 +6,7 @@
     <h1 align="center">Reisto</h1>
 </p>
 <p align="center">
-	<img src="https://img.shields.io/badge/license-CC_BY_NC_4.0-blue" alt="license">
+	<img src="https://img.shields.io/github/license/yousefturin/reisto?style=flat&logo=license&logoColor=white&color=0080ff" alt="license">
 	<img src="https://img.shields.io/github/last-commit/yousefturin/reisto?style=flat&logo=git&logoColor=white&color=0080ff" alt="last-commit">
 	<img src="https://img.shields.io/github/languages/top/yousefturin/reisto?style=flat&color=0080ff" alt="repo-top-language">
 	<img src="https://img.shields.io/github/languages/count/yousefturin/reisto?style=flat&color=0080ff" alt="repo-language-count">
